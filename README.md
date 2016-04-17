@@ -1,5 +1,7 @@
 # OpenNARS2
 
+[![Build Status](https://img.shields.io/travis/opennars/opennars2.svg)](https://travis-ci.org/opennars/opennars2)
+
 A Clojure implementation of the [Non-Axiomatic Reasoning System](https://github.com/opennars/opennars) proposed by Pei Wang.
 
 ## Come chat with us
