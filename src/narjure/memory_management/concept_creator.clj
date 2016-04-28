@@ -15,9 +15,10 @@
 (defn create-concept
   "Create a concept for the supplied term in c-map and
    add a key value pair to c-map for the created concept.
-   Updates the concept count and if it the count exceeds
-   the specified limit a :concept-limit-msg is posted to
-   :forgettable-concept-collator"
+   Posts a :set-content-msg to the new concept to set the
+   :name key. Updates the concept count and if it the count
+   exceeds the specified limit a :concept-limit-msg is posted
+   to :forgettable-concept-collator"
   [term c-map]
   (let [concept-ref (spawn (concept))]
     (swap! c-map assoc term concept-ref)
@@ -35,7 +36,7 @@
   [from [_ {:keys [statement occurrence]  :as task} c-map]]
   (doseq [term (conj (:terms statement) (keyword (str occurrence)))]
     (when-not (@c-map term)
-      create-concept term c-map))
+      (create-concept term c-map)))
   (cast! from [:task-msg task])
   #_(debug aname "concept-creator - process-task"))
 
@@ -66,8 +67,9 @@
     :shutdown (shutdown-handler from message)
     (debug aname (str "unhandled msg: " type))))
 
-(def concept-creator (gen-server
-                       (reify Server
-                         (init [_] (initialise aname @self))
-                         (terminate [_ cause] (clean-up))
-                         (handle-cast [_ from id message] (msg-handler from message)))))
+(defn concept-creator []
+  (gen-server
+    (reify Server
+      (init [_] (initialise aname @self))
+      (terminate [_ cause] (clean-up))
+      (handle-cast [_ from id message] (msg-handler from message)))))

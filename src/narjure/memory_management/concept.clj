@@ -28,10 +28,17 @@
   )
 
 (defn concept-state-handler
-  ""
-  [from message]
-  ;todo
-  )
+  "Sends a copy of the actor state to requesting actor"
+  [from _]
+  (let [concept-state @state]
+    (cast! from [:concept-state-msg concept-state])))
+
+(defn set-concept-state-handler
+  "set concept state to value passed in message"
+  [from [_ new-state]]
+  (assoc new-state :general-inferencer (whereis :general-inferencer)
+                    :forgettable-concept-collator (whereis :forgettable-concept-collator))
+  (set-state! new-state))
 
 (defn task-budget-update-handler
   ""
@@ -43,7 +50,8 @@
   "Initilise the cocnept state with the term that is the content.
    This is sent from concept-creator on creation"
   [from [msg content]]
-  (set-state! (assoc @state :name content ))
+  ; update actor refs to new references
+  (set-state! (assoc @state :name content))
   #_(debug (str "set-content-msg: " content)))
 
 (defn shutdown-handler
@@ -72,7 +80,8 @@
     :task-msg (task-handler from message)
     :belief-request-msg (belief-request-handler from message)
     :inference-request-msg (inference-request-handler from message)
-    :concept-state-request (concept-state-handler from message)
+    :concept-state-request-msg (concept-state-handler from message)
+    :set-concept-state-msg (set-concept-state-handler from message)
     :task-budget-update-msg (task-budget-update-handler from message)
     :set-content-msg (set-content-handler from message)
     :shutdown (shutdown-handler from message)

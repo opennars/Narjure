@@ -1,18 +1,18 @@
 (ns narjure.defaults)
 
-(def judgement-frequency 1.0)
-(def judgement-confidence 0.9)
+(def belief-frequency 1.0)
+(def belief-confidence 0.9)
 
 (def truth-value
-  [judgement-frequency judgement-confidence])
+  [belief-frequency belief-confidence])
 
-(def judgement-priority 0.5)
-(def judgement-durability 0.8)
+(def belief-priority 0.5)
+(def belief-durability 0.8)
 ;todo clarify this
-(def judgement-quality 0.5)
+(def belief-quality 0.5)
 
-(def judgement-budget
-  [judgement-priority judgement-durability judgement-quality])
+(def belief-budget
+  [belief-priority belief-durability belief-quality])
 
 (def question-priority 0.5)
 (def question-durability 0.9)
@@ -20,12 +20,22 @@
 (def question-quality 0.5)
 
 (def question-budget
-  [judgement-priority judgement-durability judgement-quality])
+  [belief-priority belief-durability belief-quality])
+
+(def quest-budget question-budget)
 
 (def goal-confidence 0.9)
 (def goal-priority 0.5)
 (def goal-durability 0.8)
+(def goal-quality 0.9)
+
+(def goal-budget [goal-priority goal-durability goal-quality])
 
 (def budgets
-  {:judgement judgement-budget
-   :question question-budget})
+  {:belief belief-budget
+   :question question-budget
+   :goal goal-budget
+   :quest quest-budget})
+
+(def logic-ops '#{==> =|> =/> =\> --> <-> <=> <|> </>
+              seq-conj conj})

@@ -39,7 +39,7 @@
    convert tense to occurrence time if applicable"
   [sentence time id]
   {:creation time
-   :occurrence 0
+   :occurrence time
    :source :input
    :id id
    :evidence '(id)

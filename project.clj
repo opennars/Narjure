@@ -8,11 +8,13 @@
                  [instaparse "1.4.1"]
                  [com.rpl/specter "0.9.1"]
                  [org.clojure/tools.nrepl "0.2.12"]
+                 [org.clojure/data.priority-map "0.0.7"]
                  [co.paralleluniverse/pulsar "0.7.4"]
                  [org.immutant/immutant "2.1.2"]
+                 [avl.clj "0.0.9"]
                  [clj-time "0.11.0"]
-                 [com.taoensso/timbre "4.3.1"]
-                 [avl.clj "0.0.9"]]
+                 [environ "1.0.2"]
+                 [com.taoensso/timbre "4.3.1"]]
   :java-agents [[co.paralleluniverse/quasar-core "0.7.4"]]
   :main ^:skip-aot narjure.core
   :plugins [[lein-cloverage "1.0.6"]
@@ -22,3 +24,5 @@
                  :nrepl-middleware [narjure.repl/narsese-handler]}
   :profiles {:uberjar {:aot :all}}
   :jvm-opts ["-Dco.paralleluniverse.fibers.detectRunawayFibers=false -Dco.paralleluniverse.fibers.verifyInstrumentation"])
+
+

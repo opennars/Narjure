@@ -1,5 +1,6 @@
 (ns narjure.actor.utils
   (:require
+    [clojure.java.io :as io]
     [co.paralleluniverse.pulsar
      [core :refer [defsfn]]
      [actors :refer [set-state! state receive ! self register!]]]
@@ -36,3 +37,20 @@
 
 (defmacro defactor [& args]
   (apply create-actor args))
+
+(defn read-one
+  ""
+  [r]
+  (try
+    (read r)
+    (catch java.lang.RuntimeException e
+      (if (= "EOF while reading" (.getMessage e))
+        ::EOF
+        (throw e)))))
+
+(defn read-seq-from-file
+  ""
+  [path]
+  (with-open [r (java.io.PushbackReader. (clojure.java.io/reader path))]
+    (binding [*read-eval* false]
+      (doall (take-while #(not= ::EOF %) (repeatedly #(read-one r)))))))
