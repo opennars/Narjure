@@ -61,11 +61,11 @@
 
 (def ^:dynamic *default-actor-timeout*
   "Default timeout for suspendable functions related to actors in the tests"
-  50)
+  500)
 
 (def ^:dynamic *default-channel-timeout*
   "Default timeout for suspendable functions related to channels in the tests"
-  50)
+  500)
 
 (defn test-channel-empty
   "Test if a channel is empty by using a timeout.
