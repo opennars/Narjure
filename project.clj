@@ -12,11 +12,13 @@
                  [co.paralleluniverse/pulsar "0.7.4"]
                  [org.immutant/immutant "2.1.2"]
                  [clj-time "0.11.0"]
-                 [com.taoensso/timbre "4.3.1"]]
+                 [com.taoensso/timbre "4.3.1"]
+                 [midje "1.8.3"]]
   :java-agents [[co.paralleluniverse/quasar-core "0.7.4"]]
   :main ^:skip-aot narjure.core
   :plugins [[lein-cloverage "1.0.6"]
-            [cider/cider-nrepl "0.11.0-SNAPSHOT"]]
+            [cider/cider-nrepl "0.11.0-SNAPSHOT"]
+            [lein-midje "3.1.3"]]
   :target-path "target/%s"
   :repl-options {:init-ns          narjure.repl
                  :nrepl-middleware [narjure.repl/narsese-handler]}

@@ -146,4 +146,4 @@
 ; call main function
 (defn run []
   (future (start-nars)))
-(run)
+;(run)
