@@ -46,7 +46,7 @@
 (def max-concept-selections 5)                              ; don't set higher if not on a sumpercomputer, will cause trouble
 (def termlink-single-sample-evidence-amount 0.01)           ; default conf for termlink truth value
 (def concept-max-termlinks 10)                              ; max size of termlink bag per concept
-(def max-tasks 10)                                          ; max size of task bag per concept
+(def max-tasks 1000)                                          ; max size of task bag per concept
 (def max-anticipations 10)                                   ; max size of anticipation bag per concept
 (def max-concepts 1000)                                     ; do not make too small (less than 50) as causes cyclic issue between task-dispatcher and concept-manager
 (def max-derived-sentences 50)                              ; derived task bag capacity

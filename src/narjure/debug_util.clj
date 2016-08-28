@@ -77,6 +77,27 @@
              rightres))
       (str (beautify st))))))
 
+(def debug-messages 21)
+
+(defn limit-string
+  "Limit a string to cnt elements"
+  [st cnt]
+  (subs st 0 (min (count st) cnt)))
+
+(defn debuglogger
+  "Debuglogger as used by all actor components mainly for (Lense) display purposes."
+  ([display message]
+   (debuglogger (atom "") display message))
+  ([filter display message]
+   (if (> debug-messages 0)
+     (swap! display (fn [d] (let [msg (narsese-print message)]
+                              (if (every? (fn [x] (.contains msg x))
+                                          (str/split (deref filter) #"\n"))
+                                (if (< (count d) debug-messages)
+                                  (conj d [(limit-string msg 750) "§"])
+                                  (conj (drop-last d) [(limit-string msg 750) "§"]))
+                                d)))))))
+
 (defn punctuation-print
   "Print the punctuation of a task in ASCII representation."
   [task-type]
@@ -103,3 +124,13 @@
          (time-print (:occurrence task))
          " "
          (truth-print (:truth task)))))
+
+(def output-display (atom '()))
+(def output-search (atom ""))
+(defn output-task
+  "Output a task into the display."
+  [type task]
+  (let [type-print (fn [t] t)]
+    (debuglogger output-search output-display (str (type-print type)
+                                                   " "
+                                                   (task-to-narsese task)))))

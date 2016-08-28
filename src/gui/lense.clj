@@ -2,6 +2,7 @@
   (:require [quil.core :as q]
             [quil.middleware :as m]
             [gui.gui-utils :refer :all]
+            [gui.actors :refer :all]
             [gui.gui :refer [graph-gui]]
             [nal.deriver.projection-eternalization :refer [project-eternalize-to]]
             [gui.hud :refer [hud]]
@@ -18,7 +19,7 @@
 
 (def debugmessage {})
 
-(def static-graphs [graph-gui])
+(def static-graphs [graph-actors graph-gui])
 (def graphs (atom static-graphs))
 
 (defn setup []
