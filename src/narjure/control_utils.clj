@@ -1,6 +1,6 @@
 (ns narjure.control-utils
   (:require
-    [narjure.bag :as b]
+    [narjure.control.bag :as b]
     [narjure.defaults :refer :all]
     [narjure.global-atoms :refer :all]
     [clojure.math.numeric-tower :as math]))

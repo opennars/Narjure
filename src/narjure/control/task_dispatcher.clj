@@ -1,11 +1,9 @@
-(ns narjure.memory-management.task-dispatcher
+(ns narjure.control.task-dispatcher
   (:require
     [co.paralleluniverse.pulsar
      [core :refer :all]
      [actors :refer :all]]
-    [narjure.global-atoms :refer [c-bag]]
-    [narjure.memory-management.local-inference.local-inference-utils :refer [get-task-id]]
-    [narjure.bag :as b]
+    [narjure.control.bag :as b]
     [taoensso.timbre :refer [debug info]]
     [narjure.debug-util :refer :all])
   (:refer-clojure :exclude [promise await]))
@@ -19,41 +17,22 @@
   [{:keys [occurrence]}]
   (not= occurrence :eternal))
 
-(defn term-exists?
-  "Returns true if concept bag contains term"
-  [term]
-  (b/exists? @c-bag term))
-
 (defn task-handler
   "If concept, or any sub concepts, do not exist post task to concept-creator,
    otherwise, dispatch task to respective concepts. Also, if task is an event
    dispatch task to event buffer actor."
   [from [_ task]]
   (let [terms (:terms task)]
-    (if (every? term-exists? terms)
-      (let [task (dissoc task :terms)]
-        (doseq [term terms]
-          (when task-concept-id
-            (when-let [{c-ref :ref} ((:elements-map @c-bag) task-concept-id)]
-              (cast! c-ref [:link-feedback-msg [task belief-concept-id]])))
-          (when-let [{c-ref :ref} ((:elements-map @c-bag) term)]
-            (cast! c-ref [:task-msg [task]]))))
-      (cast! (whereis :concept-manager) [:create-concept-msg [task-concept-id belief-concept-id task]]))))
+    (cast! (whereis :concept-manager) [:create-concept-msg task])))
 
 (defn task-from-cmanager-handler
   "If concept, or any sub concepts, do not exist post task to concept-creator,
    otherwise, dispatch task to respective concepts. Also, if task is an event
    dispatch task to event buffer actor."
-  [from [_ [task-concept-id belief-concept-id task]]]
-  (let [terms (:terms task)]
+  [from [_ [task refs]]]
     (let [task (dissoc task :terms)]
-      (doseq [term terms]
-        (when (b/exists? @c-bag term)
-          (when task-concept-id
-            (when-let [{c-ref :ref} ((:elements-map @c-bag) task-concept-id)]
-              (cast! c-ref [:link-feedback-msg [task belief-concept-id]])))
-          (when-let [{c-ref :ref} ((:elements-map @c-bag) term)]
-            (cast! c-ref [:task-msg [task]])))))))
+      (doseq [ref refs]
+          (cast! ref [:task-msg task]))))
 
 (defn msg-handler
   "Identifies message type and selects the correct message handler.

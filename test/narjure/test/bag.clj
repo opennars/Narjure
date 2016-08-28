@@ -1,6 +1,6 @@
 (ns narjure.test.bag
   (:require [clojure.test :refer :all]
-            [narjure.bag :as b]))
+            [narjure.control.bag :as b]))
 
 (deftest test-default-bag
   (let [n 10

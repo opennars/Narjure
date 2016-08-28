@@ -1,4 +1,4 @@
-(ns narjure.memory_management.task-buffer
+(ns narjure.control.task-buffer
   (:require
     [co.paralleluniverse.pulsar
      [core :refer :all]
@@ -6,7 +6,7 @@
     [taoensso.timbre :refer [debug info]]
     [narjure.debug-util :refer :all]
     [narjure.defaults :refer :all]
-    [narjure.memory_management.bag :as b]
+    [narjure.control.bag :as b]
     [immutant.scheduling :refer :all])
   (:refer-clojure :exclude [promise await]))
 

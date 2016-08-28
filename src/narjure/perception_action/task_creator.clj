@@ -5,11 +5,11 @@
      [actors :refer :all]]
     [taoensso.timbre :refer [debug info]]
     [clojure.set :as set]
+    [narjure.control.bag :as b]
     [narjure
      [global-atoms :refer :all]
      [defaults :refer :all]
      [debug-util :refer :all]
-     [bag :as b]
      [control-utils :refer :all]]
     [nal.term_utils :refer :all]
     [nal.deriver.projection-eternalization :refer [eternalize]])

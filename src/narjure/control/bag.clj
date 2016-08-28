@@ -1,4 +1,4 @@
-(ns narjure.memory_management.bag
+(ns narjure.control.bag
   (:require [avl.clj :as avl]
             [co.paralleluniverse.pulsar
              [actors :refer [shutdown!]]

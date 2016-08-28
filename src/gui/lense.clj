@@ -9,15 +9,40 @@
             [gui.hnav :as hnav]
             [seesaw.core :refer :all]
             [gui.globals :refer :all]
+            [narjure.global-atoms :refer :all]
             [narjure.core :as nar]
             [co.paralleluniverse.pulsar.actors :refer [whereis cast!]]
+            [narjure.control.concept-manager :as concept-manager]
+            [narjure.control.inference-request-buffer :as inference-request-buffer]
+            [narjure.control.task-buffer :as task-buffer]
+            [narjure.control.task-dispatcher :as task-dispatcher]
+            [narjure.perception-action.task-creator :as task-creator]
+            [narjure.perception-action.sentence-parser :as sentence-parser]
+            [narjure.general-inference.inference-request-router :as inference-request-router]
+            [narjure.memory-management.concept :as concepts]
+            [narjure.general-inference.general-inferencer :as general-inferencer]
+            [narjure.perception-action.operator-executor :as operator-executor]
             [narjure.debug-util :refer :all]
             [narjure.defaults :refer [priority-threshold max-concept-selections max-tasks]]
             [clojure.set :as set]
             [clojure.string :as str])
   (:gen-class))
 
-(def debugmessage {})
+(def debugmessage {:inference-request-router [(fn [] (deref inference-request-router/display)) inference-request-router/search]
+                   :inference-request-buffer [(fn [] (deref inference-request-buffer/display)) inference-request-buffer/search]
+                   :general-inferencer       [(fn [] (deref general-inferencer/display)) general-inferencer/search]
+                   :concept-manager          [(fn [] (deref concept-manager/display)) concept-manager/search]
+                   :task-buffer              [(fn [] (deref task-buffer/display)) task-buffer/search]
+                   :task-dispatcher          [(fn [] (deref task-dispatcher/display)) task-dispatcher/search]
+                   :operator-executor        [(fn [] (deref operator-executor/display)) operator-executor/search]
+                   :sentence-parser          [(fn [] (deref sentence-parser/display)) sentence-parser/search]
+                   :task-creator             [(fn [] (deref task-creator/display)) task-creator/search]
+                   :concepts                 [(fn [] (deref concepts/display)) concepts/search]
+                   :input                    [(fn [] "") inputstr]
+                   :output                   [(fn [] (deref output-display)) output-search]
+                   :+prioTh.                 [(fn [] (deref prio-threshold))]
+                   :speed                    [(fn [] (deref speed))]
+                   :>                   [(fn [] (deref nars-time))]})
 
 (def static-graphs [graph-actors graph-gui])
 (def graphs (atom static-graphs))
@@ -42,7 +67,7 @@
   (q/text-size (if (= nil titlesize) 10.0 titlesize))
   (q/text (nameof name) (+ px 5) (+ py (if (= nil titlesize) 10.0 titlesize)))
   (q/text-size (if (= displaysize nil) 2.0 displaysize))
-  #_(when (contains? debugmessage name)
+  (when (contains? debugmessage name)
     (q/text (hnav/display-string debugmessage name)
             (+ px 5) (+ py 20)))
   (q/text-size 2.0))
