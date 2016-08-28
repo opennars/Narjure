@@ -1,7 +1,6 @@
 (ns gui.lense
   (:require [quil.core :as q]
             [quil.middleware :as m]
-            [gui.actors :refer [graph-actors]]
             [gui.gui-utils :refer :all]
             [gui.gui :refer [graph-gui]]
             [nal.deriver.projection-eternalization :refer [project-eternalize-to]]
@@ -11,62 +10,15 @@
             [gui.globals :refer :all]
             [narjure.core :as nar]
             [co.paralleluniverse.pulsar.actors :refer [whereis cast!]]
-            [narjure.general-inference.inference-request-router :as inference-request-router]
-            [narjure.general-inference.concept-selector :as concept-selector]
-            [narjure.general-inference.general-inferencer :as general-inferencer]
-            [narjure.memory-management.concept-manager :as concept-manager]
-            [narjure.memory-management.task-dispatcher :as task-dispatcher]
-            [narjure.perception-action.operator-executor :as operator-executor]
-            [narjure.perception-action.sentence-parser :as sentence-parser]
-            [narjure.perception-action.task-creator :as task-creator]
-    ;[narjure.perception-action.input-load-reducer :as input-load-reducer]
-            [narjure.perception-action.derived-load-reducer :as derived-load-reducer]
-            [narjure.memory-management.concept :as concepts]
-            [narjure.global-atoms :refer :all]
             [narjure.debug-util :refer :all]
-            [narjure.bag :as b]
             [narjure.defaults :refer [priority-threshold max-concept-selections max-tasks]]
             [clojure.set :as set]
             [clojure.string :as str])
   (:gen-class))
 
-(defn bag-format
-  "Bag string format: each id goes into a new line"
-  [st]
-  (clojure.string/replace (clojure.string/replace st "(:id" "\n( :id") "(\n( " "(("))
+(def debugmessage {})
 
-(defn bagfilter
-  "Filter the bag for these entries which contain the filter content"
-  [fil bag]
-  (apply vector (filter (fn [x]
-                          (every? (fn [y] (.contains (narsese-print x) y))
-                                  (str/split (deref fil) #"\n"))) bag)))
-
-(defn bagshow
-  "Show the bag, with a string length limit."
-  [bag filteratom]
-  (bag-format (limit-string
-                (narsese-print (bagfilter filteratom
-                                          (:priority-index bag))) 20000)))
-
-(def debugmessage {:inference-request-router [(fn [] (deref inference-request-router/display)) inference-request-router/search]
-                   :concept-selector         [(fn [] (deref concept-selector/display)) concept-selector/search]
-                   :general-inferencer       [(fn [] (deref general-inferencer/display)) general-inferencer/search]
-                   :concept-manager          [(fn [] (deref concept-manager/display)) concept-manager/search]
-                   :task-dispatcher          [(fn [] (deref task-dispatcher/display)) task-dispatcher/search]
-                   :operator-executor        [(fn [] (deref operator-executor/display)) operator-executor/search]
-                   :sentence-parser          [(fn [] (deref sentence-parser/display)) sentence-parser/search]
-                   :task-creator             [(fn [] (deref task-creator/display)) task-creator/search]
-                   :concepts                 [(fn [] (deref concepts/display)) concepts/search]
-                   :concept-bag              [(fn [] (bagshow @c-bag concept-filter)) concept-filter]
-                   :derived-load-reducer     [(fn [] (deref derived-load-reducer/display)) derived-load-reducer/search]
-                   :input                    [(fn [] "") inputstr]
-                   :output                   [(fn [] (deref output-display)) output-search]
-                   :+prioTh.                 [(fn [] (deref prio-threshold))]
-                   :speed                    [(fn [] (deref speed))]
-                   :>                   [(fn [] (deref nars-time))]})
-
-(def static-graphs [graph-actors graph-gui])
+(def static-graphs [graph-gui])
 (def graphs (atom static-graphs))
 
 (defn setup []
@@ -89,7 +41,7 @@
   (q/text-size (if (= nil titlesize) 10.0 titlesize))
   (q/text (nameof name) (+ px 5) (+ py (if (= nil titlesize) 10.0 titlesize)))
   (q/text-size (if (= displaysize nil) 2.0 displaysize))
-  (when (contains? debugmessage name)
+  #_(when (contains? debugmessage name)
     (q/text (hnav/display-string debugmessage name)
             (+ px 5) (+ py 20)))
   (q/text-size 2.0))
@@ -195,7 +147,7 @@
     (draw-graph state g false))
   ;(reset! graphs static-graphs)
   ;concept graph
-  (when (> (hnav/mouse-to-world-coord-x state (hnav/width)) 1600)
+  #_(when (> (hnav/mouse-to-world-coord-x state (hnav/width)) 1600)
     (try (let [elems (apply vector (:priority-index (deref c-bag)))
                a 75.0
                pxfun (fn [ratio] (+ 3500 (* a ratio (Math/cos ratio))))

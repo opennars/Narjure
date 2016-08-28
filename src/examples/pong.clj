@@ -3,7 +3,6 @@
             [quil.middleware :as m]
             [gui.hnav :as hnav]
             [gui.gui-utils :refer [invert-comp]]
-            [narjure.global-atoms :refer :all]
             [narjure.core :as nar]
             [narjure.sensorimotor :refer :all])
   (:gen-class))
@@ -59,7 +58,7 @@
   (when (= @direction 1)
     (reset! py (+ @py 3)))
   (when (= (mod (:iteration state) 25) 0)
-    (println (str "above truth " (vec (:truth (lense-max-statement-confidence-projected-to-now '[--> ballpos [int-set above]] :belief :event)))
+    #_(println (str "above truth " (vec (:truth (lense-max-statement-confidence-projected-to-now '[--> ballpos [int-set above]] :belief :event)))
                   " below truth " (vec (:truth (lense-max-statement-confidence-projected-to-now '[--> ballpos [int-set below]] :belief :event)))
                   " equal truth " (vec (:truth (lense-max-statement-confidence-projected-to-now '[--> ballpos [int-set equal]] :belief :event)))))
     (nars-input-narsese "<ballpos --> [equal]>! :|:"))

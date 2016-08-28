@@ -8,15 +8,6 @@
        [narjure.global-atoms :refer [lense-termlinks lense-taskbags nars-time]])
      (:refer-clojure :exclude [promise await]))
 
-(defn get-bag-atom [atom]
-  atom)
-
-(defn get-concept-count
-  "How many concepts are there?"
-  []
-  (let [bag (get-bag-atom narjure.global-atoms/c-bag)]
-    (narjure.bag/count-elements @bag)))
-
 (defn get-lines
   "Get the lines of a text file."
   [file]

@@ -1,7 +1,6 @@
 (ns examples.ircbot
   (:require [irclj.core :refer :all]
             [irclj.parser :refer :all]
-            [narjure.global-atoms :refer :all]
             [narjure.core :as nar]
             [narjure.narsese :refer [parse2]]
             [narjure.sensorimotor :refer :all]
@@ -44,7 +43,7 @@
 (defn concept
   "Show a concept"
   [concept-str]
-  (try
+ #_(try
     (let [statement (parse2 (str concept-str "."))]
       (dissoc
         (first (narjure.bag/get-by-id @c-bag (:statement statement)))
@@ -54,7 +53,7 @@
 (defn concepts
   "Show all the concepts"
   []
-  (:priority-index @c-bag))
+  #_(:priority-index @c-bag))
 
 (defn parse-narsese [string]
   "Input the received Narsese into the system."

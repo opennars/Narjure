@@ -29,9 +29,7 @@
             [lein-marginalia "0.9.0"]
             [lein-gorilla "0.3.6"]]
   :eastwood {:exclude-namespaces [nal.rules]}
-  :repl-options {:init-ns          narjure.repl
-                 :nrepl-middleware [narjure.repl/narsese-handler]
-                 :timeout 10000000}
+  :repl-options {:timeout 10000000}
   :profiles {:uberjar {:aot :all}}
   :marginalia { :javascript ["http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"]}
   :jvm-opts ["-Dco.paralleluniverse.fibers.detectRunawayFibers=false"])

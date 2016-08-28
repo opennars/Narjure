@@ -4,7 +4,7 @@
             [co.paralleluniverse.pulsar.actors :refer [whereis cast!]]
             [clojure.string :as str]
             [gui.gui-utils :refer :all]
-            [narjure.core :refer [start-timers shutdown run stop-timers]]))
+            [narjure.core :refer [shutdown run]]))
 
 (def backcolor [230 230 230])
 (def gui-width 50)

@@ -3,7 +3,7 @@
             [gui.globals :refer :all]
             [co.paralleluniverse.pulsar.actors :refer [whereis cast!]]
             [clojure.string :as str]
-            [narjure.core :refer [start-timers shutdown run stop-timers]]
+            [narjure.core :refer [shutdown run]]
             [gui.gui-utils :refer :all]
             [narjure.defaults :refer :all]))
 
@@ -16,18 +16,14 @@
   "Sets the speed of the reasoner to fast"
   (reset! system-tick-interval system-tick-interval-fast)
   (reset! inference-tick-interval inference-tick-interval-fast)
-  (reset! speed "fast")
-  (stop-timers)
-  (start-timers))
+  (reset! speed "fast"))
 
 ;TODO put at proper place
 (defn set-slow-speed []
   "Sets the speed of the reasoner to slow"
   (reset! system-tick-interval system-tick-interval-slow)
   (reset! inference-tick-interval inference-tick-interval-slow)
-  (reset! speed "slow")
-  (stop-timers)
-  (start-timers))
+  (reset! speed "slow"))
 
 (defn swap-speed []
   (if (= @speed "slow")
@@ -42,18 +38,14 @@
              :backcolor backcolor}
 
             {:name :> :px 0 :py 0 :onclick (fn [state]
-                                                  (stop-timers)
-                                                  (start-timers))
+                                                  )
              :displaysize 10
              :backcolor backcolor}
             {:name :|| :px 50 :py 0 :custom-w 25 :onclick (fn [state]
-                                                     (stop-timers))
+                                                     )
              :backcolor backcolor}
             {:name :>| :custom-w 25 :px 75 :py 0 :onclick (fn [state]
-                                                               (cast! (whereis :concept-selector) [:inference-tick-msg])
-                                                               (cast! (whereis :task-creator) [:system-time-tick-msg])
-                                                               (cast! (whereis :derived-load-reducer) [:system-time-tick-msg])
-                                                               (cast! (whereis :forgettor) [:system-time-tick-msg]))
+                                                               )
              :backcolor backcolor}
             {:name :reset :custom-w 35 :px 150 :py 0 :onclick (fn [state]
                                                               (shutdown)
@@ -61,13 +53,11 @@
              :backcolor backcolor}
 
             {:name :save :custom-w 35 :px 185 :py 0 :onclick (fn [state]
-                                                               (cast! (whereis :concept-manager) [:persist-state-msg []]))
+                                                               )
              :backcolor backcolor}
 
             {:name :load :custom-w 35 :px 220 :py 0 :onclick (fn [state]
-                                                               (shutdown)
-                                                               (run)
-                                                               (cast! (whereis :concept-manager) [:load-state-msg []]))
+                                                               )
              :backcolor backcolor}
 
             {:name :color :custom-w 30 :px 275 :py 0 :onclick (fn [state]
