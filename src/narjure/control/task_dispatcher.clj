@@ -5,6 +5,7 @@
      [actors :refer :all]]
     [narjure.control.bag :as b]
     [taoensso.timbre :refer [debug info]]
+    [narjure.defaults :refer [priority-threshold]]
     [narjure.debug-util :refer :all])
   (:refer-clojure :exclude [promise await]))
 
@@ -22,7 +23,7 @@
    otherwise, dispatch task to respective concepts. Also, if task is an event
    dispatch task to event buffer actor."
   [from [_ task]]
-  (let [terms (:terms task)]
+  (when (> (first (:budget task)) priority-threshold)
     (cast! (whereis :concept-manager) [:create-concept-msg task])))
 
 (defn task-from-cmanager-handler
@@ -30,9 +31,8 @@
    otherwise, dispatch task to respective concepts. Also, if task is an event
    dispatch task to event buffer actor."
   [from [_ [task refs]]]
-    (let [task (dissoc task :terms)]
-      (doseq [ref refs]
-          (cast! ref [:task-msg task]))))
+  (doseq [ref refs]
+    (cast! ref [:task-msg [task]])))
 
 (defn msg-handler
   "Identifies message type and selects the correct message handler.

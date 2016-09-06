@@ -10,15 +10,15 @@
 (def gui-width 50)
 (def gui-height 25)
 
-(def nodes [{:name :send :px 500 :py -325 :onclick (fn [state]
+(def nodes [{:name :send :px 900 :py -325 :onclick (fn [state]
                                                      (input-str (deref inputstr))
                                                      (swap! inputstr (fn [st] ""))) :backcolor backcolor}
-            {:name :paste :px 350 :py -325 :onclick (fn [state]
+            {:name :paste :px 750 :py -325 :onclick (fn [state]
                                                      (input-str (slurp-clipboard)))
              :backcolor backcolor}
-            {:name :clear :px 400 :py -325 :onclick (fn [state]
+            {:name :clear :px 800 :py -325 :onclick (fn [state]
                                                      (swap! inputstr (fn [st] ""))) :backcolor backcolor}
-            {:name :pop-up :px 450 :py -325 :onclick (fn [state]
+            {:name :pop-up :px 850 :py -325 :onclick (fn [state]
                                                       (cast! (whereis :sentence-parser) [:narsese-string-msg (str (input "Add Narsese" :to-string :name) "\n")]))
              :backcolor backcolor}
 

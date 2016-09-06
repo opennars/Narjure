@@ -22,22 +22,27 @@
    the concept bag"
   [term]
   (let [concept-ref (spawn (c/concept term))]
-    (let [el {:id term :priority c-priority :quality 0.0 :observable false :ref concept-ref}
+    (let [el {:id term :priority 1.0 :quality 0.0 :observable false :ref concept-ref}
           c-bag' (b/add-element (:c-bag @state) el)]
-      set-state! (assoc @state :c-bag c-bag'))
+      (set-state! (assoc @state :c-bag c-bag')))
     concept-ref))
 
 (defn create-concept-handler
   "Create a concept for each term in statement, if they dont
-   exist. Then post the task back to task-dispatcher."
-  [from [_ {:keys [statement] :as task}]]
+   exist. Then post the task to the respective concepts."
+  [from [_ task]]
   (let [terms (:terms task)
-        c-bag ( @state :c-bag)
-        f (fn [term] (if (b/exists? c-bag term)
-                       (:ref ((:elements-map c-bag) term))
-                       (make-general-concept term)))
-        refs (mapv f terms)]
-    (cast! from [:task-from-cmanager-msg [task refs]])))
+        c-bag (:c-bag @state)]
+    (doseq [term terms]
+      (let [ref (if (b/exists? c-bag term)
+                  (let [ref (:ref ((:elements-map c-bag) term))]
+                    ref)
+                  (let [ref (make-general-concept term)]
+                    ref))]
+
+        ; only send task to host concept
+        (when (= term (:statement task))
+          (cast! ref [:task-msg [task]]))))))
 
 (defn persist-state-handler
   "Posts :concept-state-request-msg to each concept in c-map"
@@ -104,6 +109,7 @@
   [from [type :as message]]
   (debuglogger search display message)
   (case type
+    :task-msg (create-concept-handler from message)
     :create-concept-msg (create-concept-handler from message)
     :persist-state-msg (persist-state-handler from message)
     :concept-state-msg (concept-state-handler from message)

@@ -5,7 +5,10 @@
      [actors :refer :all]]
     [taoensso.timbre :refer [debug info]]
     [clojure.core.unify :refer [unifier]]
-    [narjure.control.bag :as b]
+    [narjure.control.bounded-priority-queue :as q]
+    [nal.deriver.truth :refer :all]
+    [narjure.memory-management.local-inference
+     [process-belief :refer :all]]
     [narjure
      [global-atoms :refer :all]
      [debug-util :refer :all]
@@ -21,25 +24,33 @@
 (def display (atom '()))
 (def search (atom ""))
 
+(defn reduce-priority [task]
+  (let [[p d] (:budget task)
+        new-budget [(* p d) d]]
+    (assoc task :budget new-budget)))
+
 (defn task-handler
   [from [_ [task]]]
   (debuglogger search display ["task processed:" task])
 
   ; check observable and set if necessary
   (when-not (:observable @state)
-    ;(println "obs1")
     (let [{:keys [occurrence source]} task]
       (when (and (not= occurrence :eternal) (= source :input) (= (:statement task) (:id @state)))
         (set-state! (assoc @state :observable true)))))
 
-  #_(case (:task-type task)
-    :belief (process-belief state task 0)
-    :goal (process-goal state task 0)
-    :question (process-question state task)
-    :quest (process-quest state task)
-    :anticipation (process-anticipation state task))
-  )
+  (case (:task-type task)
+    :belief (set-state! (process-belief state task))
+    ;:goal (process-goal state task)
+    ;:question (process-question state task)
+    ;:quest (process-quest state task)
+    ;:anticipation (process-anticipation state task)
+    )
 
+  ;TEMP budget reduction
+  (let [reduced-task (reduce-priority task)]
+    (when (> (first (:budget reduced-task)) priority-threshold)
+      (cast! (:task-buffer @state) [:task-msg reduced-task]))))
 
 (defn belief-request-handler
   ""
@@ -75,9 +86,9 @@
   [from [_ new-state]]
   (set-state! (merge @state new-state))
   (let [elements (:elements-map (:tasks new-state))]
-    (set-state! (assoc @state :tasks (b/default-bag max-tasks)))
+    (set-state! (assoc @state :tasks (q/default-queue max-tasks)))
     (doseq [[_ el] elements]
-      (set-state! (assoc @state :tasks (b/add-element (:tasks @state) el))))))
+      (set-state! (assoc @state :tasks (q/push-element (:tasks @state) el))))))
 
 (defn shutdown-handler
   "Processes :shutdown-msg and shuts down actor"
@@ -92,20 +103,20 @@
   (set-state! {:id                       name
                :priority                 0.5
                :quality                  0.0
-               :tasks                    (b/default-bag max-tasks)
                :termlinks                {}
-               :anticipations            {}
                :concept-manager          (whereis :concept-manager)
                :inference-request-router (whereis :inference-request-router)
+               :task-buffer              (whereis :task-buffer)
                :last-forgotten           @nars-time
-               :observable               false}))
+               :observable               false
+               :host-belief              nil
+               :host-event               nil}))
 
 (defn msg-handler
   "Identifies message type and selects the correct message handler.
    if there is no match it generates a log message for the unhandled message"
   [from [type :as message]]
-  (when-not (= type :concept-forget-msg) (debuglogger search display message))
-
+  (debuglogger search display message)
   (case type
     :temporal-link-creation-msg (temporal-link-creation-handler from message)
     :task-msg (task-handler from message)

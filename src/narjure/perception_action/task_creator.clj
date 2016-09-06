@@ -9,8 +9,8 @@
     [narjure
      [global-atoms :refer :all]
      [defaults :refer :all]
-     [debug-util :refer :all]
-     [control-utils :refer :all]]
+     [debug-util :refer :all]]
+    [narjure.control-utils :refer :all]
     [nal.term_utils :refer :all]
     [nal.deriver.projection-eternalization :refer [eternalize]])
   (:refer-clojure :exclude [promise await]))
@@ -104,7 +104,7 @@
         task-buffer (whereis :task-buffer)]
     (cast! task-buffer [:task-msg derived-task])
     ; display task in output window
-    (output-task :derived derived-task)
+    #_(output-task :derived derived-task)
     (when (event? sentence)
       (cast! task-buffer [:task-msg (create-eternal-task derived-task)]))))
 

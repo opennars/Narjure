@@ -6,47 +6,27 @@
     [taoensso.timbre :refer [debug info]]
     [narjure.debug-util :refer :all]
     [narjure.defaults :refer :all]
-    [narjure.control.bag :as b]
-    [immutant.scheduling :refer :all])
+    [narjure.control.bounded-priority-queue :as q])
   (:refer-clojure :exclude [promise await]))
 
 (def aname :inference-request-buffer)                                ; actor name
 (def display (atom '()))                                    ; for lense output
 (def search (atom ""))                                      ; for lense output filtering
 
-(defn inference-request-buffer-element
-  "Create an element from the task"
-  [inference-req]
-  {:id inference-req :priority (first (:budget inference-req)) :task inference-req})
-
 (defn inference-req-handler
   "Processes a :inference-req-msg and adds it to buffer."
   [from [_ inference-req]]
-  (let [buffer (:buffer @state)]
-    (set-state! (assoc @state :buffer (b/add-element buffer (inference-request-buffer-element inference-req))))))
+  (debuglogger search display inference-req)
+  (let [buffer (:buffer @state)
+        [_ buffer'] (q/push-element buffer (q/el inference-req (first (:budget inference-req))))]
+    (set-state! (assoc @state :buffer buffer'))))
 
-(defn buffer-select-handler
+(defn inference-tick-handler
   [from _]
-  (let [inference-req-router (whereis :inference-req-router)]
-    (doseq [el (:element-map (:buffer @state))]
-      (cast! inference-req-router [:task-msg (:inference-req-router el)]))))
-
-
-(defn inference-tick
-  "Apply an inference tick"
-  []
-  (cast! (whereis :inference-request-buffer)
-         [:buffer-select-msg nil])
-  )
-
-(defn timer-start-handler
-  [from _]
-  (schedule inference-tick {:in    @inference-tick-interval
-                            :every @inference-tick-interval}))
-
-(defn timer-stop-handler
-  [from _]
-  (stop))
+  (let [inference-req-router (whereis :inference-request-router)]
+    (doseq [el (:priority-index (:buffer @state))]
+      (cast! inference-req-router [:inference-req el]))
+    (set-state! (assoc @state :buffer (q/default-queue max-tasks)))))
 
 (defn msg-handler
   "Identifies message type and selects the correct message handler.
@@ -55,9 +35,7 @@
   (debuglogger search display message)
   (case type
     :inference-req-msg (inference-req-handler from message)
-    :timer-start-msg (timer-start-handler from message)
-    :timer-stop-msg (timer-stop-handler from message)
-    :buffer-select-msg (buffer-select-handler from message)
+    :inference-tick-msg (inference-tick-handler from message)
     (debug aname (str "unhandled msg: " type))))
 ;
 (defn initialise
@@ -66,8 +44,7 @@
   [aname actor-ref]
   (reset! display '())
   (register! aname actor-ref)
-  (set-state! {:buffer (b/default-bag max-tasks)})
-  (timer-start-handler nil nil))
+  (set-state! {:buffer (q/default-queue max-tasks)}))
 
 (defn inference-request-buffer
   "creates gen-server for inference-request-buffer. This is used by the system supervisor"

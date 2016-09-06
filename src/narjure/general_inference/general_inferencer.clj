@@ -24,16 +24,29 @@
   "Processes :do-inference-msg:
     generates derived results, budget and occurrence time for derived tasks.
     Posts derived sentences to task creator"
-  [from [msg [task-concept-id belief-concept-id task belief]]]
+  [from [msg {{task :task belief :belief} :id}]]
+  ;(println (str "task: " task " belief: " belief))
   (try
     (when (non-overlapping-evidence? (:evidence task) (:evidence belief))
       (let [pre-filtered-derivations (inference task belief)
             filtered-derivations (filter #(not= (:statement %) (:parent-statement task)) pre-filtered-derivations)
             evidence (make-evidence (:evidence task) (:evidence belief))
-            task-buffer (whereis :task-buffer)]
+            task-creator (whereis :task-creator)]
         (when-not (empty? evidence)
           (doseq [derived filtered-derivations]
+            (println (str "derived: " derived))
+            ;TEMP - derived budget
             (let [sc (syntactic-complexity (:statement derived))
+                  derived (assoc derived :sc sc)
+                  derived-budget [0.9 0.5]                           ;(derived-budget task derived)
+                  derived-task (assoc derived :budget derived-budget
+                                              :evidence evidence
+                                              :parent-statement (:statement task))]
+              (println (str "derived-task: " derived-task))
+              (cast! task-creator [:derived-sentence-msg [nil
+                                                          nil
+                                                          derived-task]]))
+            #_(let [sc (syntactic-complexity (:statement derived))
                   derived (assoc derived :sc sc)            ; required for derived-budget
                   budget (derived-budget task derived)
                   derived-task (assoc derived :budget budget
@@ -46,8 +59,8 @@
                              (> (rand) 0.98)
                              (> (first (:truth derived-task)) 0.5))
                          (coll? (:statement derived-task)))
-                (cast! task-buffer [:derived-sentence-msg [task-concept-id
-                                                           belief-concept-id
+                (cast! task-creator [:derived-sentence-msg [nil
+                                                           nil
                                                            derived-task]])))))))
     (catch Exception e (debuglogger search display (str "inference error " (.toString e))))))
 
