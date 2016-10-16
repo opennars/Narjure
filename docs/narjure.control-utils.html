@@ -2915,7 +2915,7 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(defn select-concepts-rec
   [count n bag selected]
   (if (and (pos? n) (pos? count))
-    (let [[element bag'] (b/get-by-index bag (selection-fn count))
+    (let [[element bag'] (b/get-by-index bag (selection-fn-new count))
           selected' (conj selected element)]
       (select-concepts-rec (dec count) (dec n) bag' selected'))
     selected))</pre></td></tr><tr><td class="docs"><p>wrapper for: select-concepts-rec

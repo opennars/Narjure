@@ -2923,13 +2923,14 @@ net.brehaut.ClojureTools = (function (SH) {
         get-func (fn [f] (let [secure (fn [func t1 t2 task belief swapped time-measure]
                                         (let [belief-truth (fn [t task belief] ;2. this is why args are necessary here
                                                              (if (or (= nil belief)
-                                                                     time-measure
-                                                                     (not (:truth belief))) ;as task and belief are not aviable on rule generation
-                                                               #_(:truth (project-eternalize-to (:occurrence task) ;just to play the role of less confidence for further apart
-                                                                                              belief @nars-time)) ;not necessary as time is kept track of!!
+                                                                     (not (:truth belief)))
                                                                t
-                                                               (:truth (project-eternalize-to (:occurrence task)
-                                                                                                belief @nars-time))))]
+                                                               (if time-measure ;as task and belief are not aviable on rule generation
+                                                                 #_(:truth (project-eternalize-to (:occurrence task) ;just to play the role of less confidence for further apart
+                                                                                                belief @nars-time)) ;not necessary as time is kept track of!!
+                                                                 t
+                                                                 (:truth (project-eternalize-to (:occurrence task)
+                                                                                                belief @nars-time)))))]
                                           (if swapped
                                             (try
                                               (func (belief-truth t2 task belief) t1)

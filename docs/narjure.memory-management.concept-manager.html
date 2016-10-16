@@ -2876,6 +2876,7 @@ net.brehaut.ClojureTools = (function (SH) {
     [narjure.memory-management.concept :as c]
     [narjure.bag :as b]
     [narjure.defaults :refer [c-priority]]
+    [nal.term_utils :refer [concept-term-transform]]
     [taoensso.timbre :refer [debug info]]
     [narjure.debug-util :refer :all])
   (:refer-clojure :exclude [promise await]))</pre></td></tr><tr><td class="docs">
@@ -2891,9 +2892,10 @@ net.brehaut.ClojureTools = (function (SH) {
    exist. Then post the task back to task-dispatcher.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn create-concept-handler
   [from [_ [task-concept-id belief-concept-id {:keys [statement] :as task}]]]
-  (doseq [term (:terms task)]
-    (when-not (b/exists? @c-bag term)
-      (make-general-concept term)))
+  (doseq [term_ (:terms task)]
+    (let [term (concept-term-transform term_)]
+      (when-not (b/exists? @c-bag term)
+        (make-general-concept term))))
   (cast! from [:task-from-cmanager-msg [task-concept-id belief-concept-id task]]))</pre></td></tr><tr><td class="docs"><p>Posts :concept-state-request-msg to each concept in c-map</p>
 </td><td class="codes"><pre class="brush: clojure">(defn persist-state-handler
   [from [_ path]]

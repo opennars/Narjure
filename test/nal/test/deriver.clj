@@ -733,13 +733,13 @@
 ; TOOD taking into account that a sequence event can have a custom duration for refinement.
 
 (deftest inference_on_tense_2_nonvar
-  (is (derived "<<(John,key) --> hold> =/> <(John,room) --> enter>>."
-               "<(John,room) --> enter>. :|:"
+  (is (derived "<(John,room) --> enter>. :|:"
+                "<<(John,key) --> hold> =/> <(John,room) --> enter>>."
                ["<(John,key) --> hold>. :|0|: %1.00;0.45%"])))    ;just 0.30 because of eternalization
 
 (deftest inference_on_tense_2_nonvar_2
-  (is (derived "<<(John,key) --> hold> =/> <(John,room) --> enter>>."
-               "<(John,key) --> hold>. :|:"
+  (is (derived "<(John,key) --> hold>. :|:"
+               "<<(John,key) --> hold> =/> <(John,room) --> enter>>."
                ["<(*,John,room) --> enter>. :|0|: %1.0;0.81%"]))) ;just 0.43 because of eternalization
 
 (deftest temporal_var_introduction_concurrent

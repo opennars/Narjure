@@ -2873,7 +2873,8 @@ net.brehaut.ClojureTools = (function (SH) {
             [gui.gui-utils :refer [invert-comp]]
             [narjure.global-atoms :refer :all]
             [narjure.core :as nar]
-            [narjure.sensorimotor :refer :all]))</pre></td></tr><tr><td class="docs">
+            [narjure.sensorimotor :refer :all])
+  (:gen-class))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def py (atom 280))
 (def direction (atom 0))
 (def barheight 50)
@@ -2904,8 +2905,8 @@ net.brehaut.ClojureTools = (function (SH) {
                       :direction-y 1
                       :iteration 0}))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">&quot;
-&lt;(&amp;/,(&amp;/,&lt;ballpos --&gt; [below]&gt;,i1,&lt;(*,{SELF}) --&gt; op_down&gt;),i1) =/&gt; &lt;ballpos --&gt; [equal]&gt;&gt;.
-&lt;(&amp;/,(&amp;/,&lt;ballpos --&gt; [above]&gt;,i1,&lt;(*,{SELF}) --&gt; op_up&gt;),i1) =/&gt; &lt;ballpos --&gt; [equal]&gt;&gt;.
+&lt;(&amp;/,(&amp;/,&lt;ballpos --&gt; [below]&gt;,i4,&lt;(*,{SELF}) --&gt; op_down&gt;),i4) =/&gt; &lt;ballpos --&gt; [equal]&gt;&gt;.
+&lt;(&amp;/,(&amp;/,&lt;ballpos --&gt; [above]&gt;,i4,&lt;(*,{SELF}) --&gt; op_up&gt;),i4) =/&gt; &lt;ballpos --&gt; [equal]&gt;&gt;.
 &quot;</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def allow-continuous-feedback true)
 (def updown-state (atom &quot;equal&quot;))</pre></td></tr><tr><td class="docs"><p>World state transition</p>
@@ -2926,7 +2927,7 @@ net.brehaut.ClojureTools = (function (SH) {
                                         &quot;&lt;(*,{SELF}) --&gt; op_down&gt;! :|:&quot;
                                         #_&quot;&lt;(*,{SELF}) --&gt; op_stop&gt;! :|:&quot;]))))
   ;also give info from time to time
-  (when (= (mod (:iteration state) 80) 0)                    ;1
+  #_(when (= (mod (:iteration state) 80) 0)                    ;1
     #_(nars-input-narsese (str &quot;&lt;{&quot; (int (* 100 (quot (:ball-py state) 100))) &quot;} --&gt; ballpos&gt;. :|:&quot; ))
     #_(nars-input-narsese (str &quot;&lt;{&quot; (int (* 100 (quot @py 100))) &quot;} --&gt; barpos&gt;. :|:&quot; ))
     (if (and (&gt;= (:ball-py state) @py)
@@ -2957,8 +2958,8 @@ net.brehaut.ClojureTools = (function (SH) {
              (&lt;= (:ball-py state) (+ @py barheight)))
       (when (not= @updown-state &quot;equal&quot;)
         (nars-input-narsese &quot;&lt;ballpos --&gt; [equal]&gt;. :|: %1.0;0.9%&quot;)
-        (nars-input-narsese &quot;&lt;ballpos --&gt; [above]&gt;. :|: %0%&quot;)
-        (nars-input-narsese &quot;&lt;ballpos --&gt; [below]&gt;. :|: %0%&quot;)
+        #_(nars-input-narsese &quot;&lt;ballpos --&gt; [above]&gt;. :|: %0%&quot;)
+        #_(nars-input-narsese &quot;&lt;ballpos --&gt; [below]&gt;. :|: %0%&quot;)
         (reset! updown-state &quot;equal&quot;)
         #_(when allow-continuous-feedback
             ;(println &quot;good NARS&quot;)
@@ -2966,16 +2967,16 @@ net.brehaut.ClojureTools = (function (SH) {
       (if (&gt; (:ball-py state) @py)
         (when (not= @updown-state &quot;below&quot;)
           (nars-input-narsese &quot;&lt;ballpos --&gt; [below]&gt;. :|:&quot;)
-          (nars-input-narsese &quot;&lt;ballpos --&gt; [above]&gt;. :|: %0%&quot;)
-          (nars-input-narsese &quot;&lt;ballpos --&gt; [equal]&gt;. :|: %0%&quot;)
+          #_(nars-input-narsese &quot;&lt;ballpos --&gt; [above]&gt;. :|: %0%&quot;)
+          #_(nars-input-narsese &quot;&lt;ballpos --&gt; [equal]&gt;. :|: %0%&quot;)
           (reset! updown-state &quot;below&quot;)
           #_(when allow-continuous-feedback
               ;(println &quot;bad NARS&quot;)
               (nars-input-narsese &quot;&lt;{SELF} --&gt; [good]&gt;. :|: %0.0;0.9%&quot;)))
         (when (not= @updown-state &quot;above&quot;)
           (nars-input-narsese &quot;&lt;ballpos --&gt; [above]&gt;. :|:&quot;)
-          (nars-input-narsese &quot;&lt;ballpos --&gt; [below]&gt;. :|: %0%&quot;)
-          (nars-input-narsese &quot;&lt;ballpos --&gt; [equal]&gt;. :|: %0%&quot;)
+          #_(nars-input-narsese &quot;&lt;ballpos --&gt; [below]&gt;. :|: %0%&quot;)
+          #_(nars-input-narsese &quot;&lt;ballpos --&gt; [equal]&gt;. :|: %0%&quot;)
           (reset! updown-state &quot;above&quot;)
           #_(when allow-continuous-feedback
               ;(println &quot;bad NARS&quot;)
@@ -3033,17 +3034,18 @@ net.brehaut.ClojureTools = (function (SH) {
   (q/fill 128)
   (q/rect 25 @py 10 barheight)
   (q/rect (:ball-px state) (:ball-py state) 10 10))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(q/defsketch pong
-             :size [(hnav/width) (hnav/height)]
-             :setup setup-pong
-             :draw draw-pong
-             :update update-pong
-             :mouse-pressed (partial hnav/mouse-pressed [] {} false)
-             :mouse-dragged hnav/mouse-dragged
-             :mouse-wheel hnav/mouse-wheel
-             :middleware [m/fun-mode]
-             :features [ :resizable ]
-             :title &quot;OpenNARS 2.0.0: Pong&quot;)</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/gdeer81/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
+</td><td class="codes"><pre class="brush: clojure">(defn -main []
+  (q/defsketch pong
+              :size [(hnav/width) (hnav/height)]
+              :setup setup-pong
+              :draw draw-pong
+              :update update-pong
+              :mouse-pressed (partial hnav/mouse-pressed [] {} false)
+              :mouse-dragged hnav/mouse-dragged
+              :mouse-wheel hnav/mouse-wheel
+              :middleware [m/fun-mode]
+              :features [:resizable]
+              :title &quot;OpenNARS 2.0.0: Pong&quot;))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/gdeer81/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
 SyntaxHighlighter.all();
 
 // hackity hack

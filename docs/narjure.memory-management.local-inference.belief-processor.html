@@ -2877,6 +2877,8 @@ net.brehaut.ClojureTools = (function (SH) {
     [narjure.control-utils :refer :all]
     [narjure.global-atoms :refer :all]
     [narjure.defaults :refer :all]
+    [nal.term_utils :refer [not-statement-and-conceptid-equal
+                            statement-and-conceptid-equal]]
     [narjure.perception-action.task-creator :refer [event? get-id]]
     [narjure.memory-management.local-inference.local-inference-utils :refer :all]
     [nal.term_utils :refer :all]
@@ -2920,18 +2922,21 @@ net.brehaut.ClojureTools = (function (SH) {
   in Narsese-negation representation.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn create-negated-negative-confirmation-task
   [neg-confirmation]
-  (assoc neg-confirmation :statement ['-- (:statement neg-confirmation)] :truth (nal.deriver.truth/negation (:truth neg-confirmation) [0.0 0.0])))</pre></td></tr><tr><td class="docs"><p>Is the task observable and derived so potentially predicted?</p>
+  (assoc neg-confirmation :statement ['-- (:statement neg-confirmation)] :truth (nal.deriver.truth/negation (:truth neg-confirmation) [0.0 0.0])))</pre></td></tr><tr><td class="docs"><p>Is the t
+  ask observable and derived so potentially predicted?</p>
 </td><td class="codes"><pre class="brush: clojure">(defn confirmable-observable?
   [task]
-  (and (:observable @state) (not= (:occurrence task) :eternal)
+  (and #_(:observable @state) (not= (:occurrence task) :eternal)
        (= (:source task) :derived)))</pre></td></tr><tr><td class="docs"><p>The by anticipation disappointment created task.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn create-anticipation-task
   [task]
-  (let [k anticipation-scale-dependent-tolerance
-        scale (/ (Math/abs (- (:occurrence task) @nars-time)) k)]
+  (let [  ;example: i23 would still be i16 but i25 would be i32, border 24
+          ;i13 would be i16, but i11 would be i8, border 12
+        leftborder (/ (Math/abs (- (:occurrence task) @nars-time)) 4.0)
+        rightborder (/ (Math/abs (- (:occurrence task) @nars-time)) 2.0)]
     (assoc task :task-type :anticipation
-                :minconfirm (- (:occurrence task) scale) ;left side limit
-               :expiry (+ (:occurrence task scale)))))      ;right side limit</pre></td></tr><tr><td class="docs"><p>right side limit</p>
+                :minconfirm (- (:occurrence task) leftborder) ;left side limit
+               :expiry (+ (:occurrence task) rightborder))))      ;right side limit</pre></td></tr><tr><td class="docs"><p>right side limit</p>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Budget change based on the satisfaction of the goal by the belief</p>
 </td><td class="codes"><pre class="brush: clojure">(defn satisfaction-based-budget-change
   [state belief-task goals]
@@ -2979,7 +2984,7 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(defn process-belief
   [state task cnt]
     ;also allow revision in subterm concepts! this is why statement is compared to task statement, not to ID!!
-  (when (not (and (= (:statement task) (:id @state))
+  (when true #_(not (and (= (:statement task) (:id @state))
                   (:observable @state)
                   (= (:task-type task) :belief)
                   (= (:occurrence task) :eternal)))
@@ -2995,7 +3000,7 @@ net.brehaut.ClojureTools = (function (SH) {
            (satisfaction-based-budget-change state (:task (first (b/get-by-id (:tasks @state) (get-task-id processed-task)))) (filter #(= (:task-type %) :goal) (get-tasks state)))
            (answer-based-budget-change state (:task (first (b/get-by-id (:tasks @state) (get-task-id processed-task)))) (filter #(= (:task-type %) :question) (get-tasks state))))))
     ; processing revised anticipations
-  (when (and (event? task) (= (:source task) :input) (belief? task))
+  (when (and (event? task) #_(= (:source task) :input) (belief? task))
     (when (pos? (count (:anticipations @state)))
       (doseq [[id anticipation] (:anticipations @state)]  ;{task-id task task-id2 task2}
         (when (and (= (:statement anticipation) (:statement task))
@@ -3019,13 +3024,13 @@ net.brehaut.ClojureTools = (function (SH) {
            (cast! (whereis :task-dispatcher) [:task-msg [nil nil negated-neg-confirmation]])
            ;hypothesis correction:
            (when (:anticipation-precondition-task neg-confirmation)
-             (cast! (whereis :inference-request-router) [:do-inference-msg [nil nil neg-confirmation (:anticipation-precondition-task neg-confirmation)]])
+             (cast! (whereis :inference-request-router) [:do-inference-msg [nil nil (:anticipation-precondition-task neg-confirmation) neg-confirmation :belief]])
              (println &quot;hypothesis corrected!!! with task: &quot; (:anticipation-precondition-task neg-confirmation) &quot;\n&quot;
                       &quot;belief: &quot; neg-confirmation))))))
     ;when task is confirmable and observabnle
     ;add an anticipation tasks to tasks
     (when (and (= (:task-type task) :belief)
-            (= (:statement task)                             ;only allow anticipation with concept content
+            (statement-and-conceptid-equal (:statement task)                             ;only allow anticipation with concept content
               (:id @state)))
       (when (and (confirmable-observable? task)
                  (&gt; (:occurrence task) @nars-time))

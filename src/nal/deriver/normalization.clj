@@ -12,7 +12,7 @@
 ;commutative:	<-> <=> <|> & | && ||
 ;not commutative: --> ==> =/> =\> </> &/ - ~
 
-(def commutative-ops #{'<-> '<=> '<|> '| '|| 'conj 'ext-inter})
+(def commutative-ops #{'<-> '<=> '<|> '| '|| 'conj 'ext-inter '&|})
 
 (defn infix->prefix
   "Makes transformaitions like [A --> B] to [--> A B]."
@@ -59,6 +59,7 @@
         statement))
     :else statement))
 
+;todo make recursive:
 (defn sort-commutative
   "provide an order for the commutative ops, so that <a <-> b> and <b <-> a> will both be <b <-> a>,
   this is needed because they need to end up in the same concept!"

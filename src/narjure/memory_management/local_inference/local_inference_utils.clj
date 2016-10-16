@@ -13,7 +13,8 @@
     [nal.deriver :refer [occurrence-type]]
     [nal.deriver.truth :refer [t-and t-or frequency confidence expectation]]
     [nal.deriver.projection-eternalization :refer [project-eternalize-to]]
-    [narjure.debug-util :refer :all])
+    [narjure.debug-util :refer :all]
+    [narjure.budget-functions :refer [derived-budget]])
   (:refer-clojure :exclude [promise await]))
 
 (defn truth-round
@@ -26,8 +27,8 @@
 
 (defn get-task-id
   "The ID defining when elements in the task bag need to be merged."
-  [task]
-  [(:statement task) (:task-type task) (occurrence-type (:occurrence task))])
+  [task] ;not using concept-term-transform would demand huge task bag size or less bias in complexity
+  [(concept-term-transform (:statement task)) (:task-type task) (occurrence-type (:occurrence task))])
 
 (defn get-anticipation-id
   "The ID defining when elements in the anticipations bag need to be merged."
@@ -97,16 +98,26 @@
   "Update an existing task bag element"
   [state task old-task]
   (let [[element bag] (b/get-by-id (:tasks @state) (get-task-id old-task))]
-    (when (not= nil element)
+    (when element
       (set-state! (assoc @state :tasks bag))))
   (set-state! (assoc @state :tasks (b/add-element (:tasks @state) (make-element task)))))
+
+(defn inc-budget ;task was revised, this is further evidence for the quality of the task
+  [[p d q]] ;as it seems to take part in summarizing experience instead of describing one-time phenomena
+  [(t-or p 0.3) (t-or d 0.1) (t-or q 0.3)])
 
 (defn revise
   "Revision of two tasks."
   [t1 t2]
   (let [revised-truth (nal.deriver.truth/revision (:truth t1) (:truth t2))
-        evidence (make-evidence (:evidence t1) (:evidence t2))]
-    (assoc t1 :truth revised-truth :source :derived :evidence evidence :budget (max-budget (:budget t1) (:budget t2)))))
+        evidence (make-evidence (:evidence t1) (:evidence t2))
+        lbudget-left (if-let [budg (:lbudgets t1)] budg {})
+        lbudget-right (if-let [budg (:lbudgets t2)] budg {})]
+    (let [revised-task (dissoc (assoc t1 :truth revised-truth :source :derived :evidence evidence
+                                 :budget (max-budget (:budget t1) (:budget t2))
+                                         :lbudgets (merge lbudget-left lbudget-right))
+                       :record)]
+      (assoc revised-task :budget (inc-budget (:budget revised-task)) #_(derived-budget t1 revised-task)))))
 
 (defn answer-quality
   "The quality of an answer, which is the confidence for y/n questions,

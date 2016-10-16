@@ -2873,25 +2873,27 @@ net.brehaut.ClojureTools = (function (SH) {
      [actors :refer :all]]
     [nal
      [deriver :refer [inference]]
-     [term_utils :refer [syntactic-complexity]]]
-    [nal.deriver :refer [inference]]
-    [taoensso.timbre :refer [debug info]]
-    [narjure
+     [term_utils :refer [syntactic-complexity operation? interval?]]]
+[nal.deriver :refer [inference]]
+[taoensso.timbre :refer [debug info]]
+    [narjure.memory-management.concept-utils :refer [concept-priority]]
+[narjure
      [debug-util :refer :all]
      [budget-functions :refer [derived-budget]]
      [defaults :refer :all]
-     [control-utils :refer [make-evidence non-overlapping-evidence?]]])
+     [control-utils :refer [make-evidence non-overlapping-evidence?]]]
+    [narjure.memory-management.local-inference.local-inference-utils :refer [get-task-id]])
   (:refer-clojure :exclude [promise await]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def display (atom '()))
 (def search (atom ))</pre></td></tr><tr><td class="docs"><p>Processes :do-inference-msg:
     generates derived results, budget and occurrence time for derived tasks.
     Posts derived sentences to task creator</p>
 </td><td class="codes"><pre class="brush: clojure">(defn do-inference-handler
-  [from [msg [task-concept-id belief-concept-id task belief]]]
+  [from [msg [task-concept-id belief-concept-id task belief debug]]]
   (try
     (when (non-overlapping-evidence? (:evidence task) (:evidence belief))
       (let [pre-filtered-derivations (inference task belief)
-            filtered-derivations (filter #(not= (:statement %) (:parent-statement task)) pre-filtered-derivations)
+            filtered-derivations (filter #(not= (:statement %) (second (:parent-statement task))) pre-filtered-derivations)
             evidence (make-evidence (:evidence task) (:evidence belief))
             derived-load-reducer (whereis :derived-load-reducer)]
         (when-not (empty? evidence)
@@ -2900,15 +2902,35 @@ net.brehaut.ClojureTools = (function (SH) {
                   derived (assoc derived :sc sc)            ; required for derived-budget
                   budget (derived-budget task derived)
                   derived-task (assoc derived :budget budget
-                                              :parent-statement (:statement task)
-                                              :evidence evidence)]
+                                              :parent-statement [(get-task-id task) (:statement task)]
+                                              :evidence evidence)
+                  implies (fn [a b] (or (not a) b))]
               (when (and budget
-                         (&lt; sc max-term-complexity)
+                         (&lt; sc @max-term-complexity)
                          (&gt; (first budget) priority-threshold)
                          (or (not (:truth derived-task))
-                             (&gt; (rand) 0.98)
-                             (&gt; (first (:truth derived-task)) 0.5))
-                         (coll? (:statement derived-task)))
+                             ;negation handling:
+                             (implies (or ;if one is the negation of the other, then the derivation is fine if
+                                          (= (:statement derived-task)
+                                             ['-- (:statement task)])
+                                          (= (:statement task)
+                                             ['-- (:statement derived-task)]))
+                                  (or (&gt; (concept-priority (:statement derived-task)) negation-rule-priority-threshold)
+                                      (&lt; (first (:truth task)) 0.5)))) ;the task concept priority was high or frequency was smaller 0.5
+                         (let [st (:statement derived-task)]
+                           (and
+                                (not (and (coll? st)   ;not allow interval to be the subject of predicate of ==&gt;
+                                          (or (= (first st) 'pred-impl)
+                                              (= (first st) '=|&gt;)
+                                              (= (first st) '&lt;|&gt;)
+                                              (= (first st) '&lt;/&gt;)
+                                              (= (first st) '==&gt;)
+                                              (= (first st) '&lt;=&gt;))
+                                          (or (interval? (second st))
+                                              (interval? (nth st 2)))))))
+                         #_(coll? (:statement derived-task)))
+                #_(when debug
+                  (println (str &quot;|||||\n&quot; derived-task)))
                 (cast! derived-load-reducer [:derived-sentence-msg [task-concept-id
                                                                     belief-concept-id
                                                                     derived-task]])))))))

@@ -2872,6 +2872,7 @@ net.brehaut.ClojureTools = (function (SH) {
      [core :refer :all]
      [actors :refer :all]]    [narjure.global-atoms :refer [c-bag lense-taskbags lense-termlinks]]
     [narjure.bag :as b]
+    [nal.term_utils :refer [syntactic-complexity interval?]]
     [narjure.defaults :refer [max-concept-selections]]
     [clojure.math.numeric-tower :as math]
     [narjure.memory-management.concept-utils :refer [concept-observable]]
@@ -2881,14 +2882,35 @@ net.brehaut.ClojureTools = (function (SH) {
   (:refer-clojure :exclude [promise await]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def aname :concept-selector)
 (def display (atom '()))
-(def search (atom ))</pre></td></tr><tr><td class="docs"><p> creates a term-link between last-selected concept and the currently selected concept</p>
+(def search (atom ))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn temporal-conjunction-observable?
+  [id]
+  (and (sequential? id)
+       (or (and (= (first id) 'seq-conj)
+                (not (interval? (last id)))) ;these are for predictions
+           #_(= (first id) '&amp;|))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn observable-temporal-conjunction?
+  [id]  ;a temporal conjunction is observable if it is a temporal conjunction that is observable or
+  (and (temporal-conjunction-observable? id) ;where each element is either a observable temporal conjunctions itself,
+       (or (concept-observable id) ;observable, or an interval
+         (let [cnt (count id)]
+           (every? (fn [z] (or (interval? z)
+                               (concept-observable z)
+                               (observable-temporal-conjunction? z)))
+                   (for [i (range 1 cnt)]
+                     (id i))))))) ;or all components are observable</pre></td></tr><tr><td class="docs"><p>or all components are observable</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn temporal-linkage-justified
+  [id]
+  (or (concept-observable id)
+      (observable-temporal-conjunction? id)))</pre></td></tr><tr><td class="docs"><p> creates a term-link between last-selected concept and the currently selected concept</p>
 </td><td class="codes"><pre class="brush: clojure">(defn strengthen-temporal-link
   [state selected]
   (when-let [last-selected (:last-selected state)] ;the last selected observable concept
-    (when (concept-observable (:id selected))   ; todo need to be able to link to itself here (&amp;/, a, a) is valid sequence
+    (when (temporal-linkage-justified (:id selected))   ; todo need to be able to link to itself here (&amp;/, a, a) is valid sequence
       (cast! (:ref selected) [:termlink-strengthen-msg [(:id last-selected)]])
       (cast! (:ref last-selected) [:termlink-strengthen-msg [(:id selected)]])))
-  (when (concept-observable (:id selected))
+  (when (concept-observable (:id selected)) ;one needs to be observable directly to justify linkage
     (set-state! (assoc state :last-selected selected))))</pre></td></tr><tr><td class="docs"><p>Select n concepts for inference and post
    inference-request-message to each selected
    concept</p>

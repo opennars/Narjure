@@ -2977,7 +2977,6 @@ net.brehaut.ClojureTools = (function (SH) {
   (prn args)
   (println))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn -main [&amp; args]
-  (set-fast-speed)
   (println &quot;Connecting...&quot; server)
   (def irc (connect server port bot-nick :callbacks {:privmsg callback}))
   (setup-nars irc)

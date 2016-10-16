@@ -2895,32 +2895,37 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(def c-priority 0.5)                                        ; default concept priority</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def ^{:type double} horizon 1)                             ; personality factor for evidential horizon</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def max-evidence 10)                                       ; maximum length of evidence trail</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def temporal-window-duration 10)                           ; number of system cycles to consider as concurrent</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def max-term-complexity 22)                                ; maximum number of terms and sub terms in a statement - syntactic complexity</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def priority-threshold 0.001)                              ; concepts and tasks have to be above this to be processed</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def temporal-window-duration 1)                           ; number of system cycles to consider as concurrent</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def term-complexity-offset 11) ;todo a better budget function instead</pre></td></tr><tr><td class="docs"><p>todo a better budget function instead</p>
+</td><td class="codes"><pre class="brush: clojure">(def max-term-complexity-init 10)
+(def max-term-complexity (atom max-term-complexity-init))                                ; maximum number of terms and sub terms in a statement - syntactic complexity</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def priority-threshold 0.0)                              ; concepts and tasks have to be above this to be processed</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def max-concept-selections 5)                              ; don't set higher if not on a sumpercomputer, will cause trouble</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def termlink-single-sample-evidence-amount 0.01)           ; default conf for termlink truth value</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def concept-max-termlinks 10)                              ; max size of termlink bag per concept</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def max-tasks 10)                                          ; max size of task bag per concept</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def max-tasks 30)                                          ; max size of task bag per concept</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def max-anticipations 10)                                   ; max size of anticipation bag per concept</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def max-concepts 1000)                                     ; do not make too small (less than 50) as causes cyclic issue between task-dispatcher and concept-manager</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def max-concepts 250)                                     ; do not make too small (less than 50) as causes cyclic issue between task-dispatcher and concept-manager</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def max-derived-sentences 50)                              ; derived task bag capacity</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def max-derived-selections 10)                             ; max derived selections per cycle</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def max-event-selections 10)                               ; no longer used - number of events to select per cycle</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def inverse-decay-rate 10)                                        ; forgetting adjustment rate for concepts e^-lt where l = (1.0 - durabiity) / decay-rate</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def system-tick-interval-slow 150)
-(def inference-tick-interval-slow 110)
-(def system-tick-interval-fast 50)
-(def inference-tick-interval-fast 25)
-(def system-tick-interval (atom system-tick-interval-slow))                               ;make big enough</pre></td></tr><tr><td class="docs"><p>make big enough</p>
-</td><td class="codes"><pre class="brush: clojure">(def inference-tick-interval (atom inference-tick-interval-slow))
+</td><td class="codes"><pre class="brush: clojure">(def system-tick-interval-slow 136)
+(def inference-tick-interval-slow 100)
+(def system-tick-interval-medium 50)
+(def inference-tick-interval-medium 25)
+(def system-tick-interval-fast 20)
+(def inference-tick-interval-fast 10)
+(def system-tick-interval (atom system-tick-interval-medium))                               ;make big enough</pre></td></tr><tr><td class="docs"><p>make big enough</p>
+</td><td class="codes"><pre class="brush: clojure">(def inference-tick-interval (atom inference-tick-interval-medium))
 (def anticipation-scale-dependent-tolerance 4.0)            ;has to be 4 since interval rounding has to agree with time measurement in 2-power</pre></td></tr><tr><td class="docs"><p>has to be 4 since interval rounding has to agree with time measurement in 2-power</p>
 </td><td class="codes"><pre class="brush: clojure">(def anticipation-disappointment-priority-gain 1.5)         ;should be &gt;=1.0 !</pre></td></tr><tr><td class="docs"><p>should be >=1.0 !</p>
 </td><td class="codes"><pre class="brush: clojure">(def termlink-default-budget [0.1 0.9])
 (def concept-selection-introduced-termlink-default-budget [0.1 0.3])
 (def termlink-context-adaptations-speed 0.05)
 (def revision-relevant-event-distance 30.0)                  ;TODO check its relation to temporal window and the parameter in projection</pre></td></tr><tr><td class="docs"><p>TODO check its relation to temporal window and the parameter in projection</p>
-</td><td class="codes"></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/gdeer81/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
+</td><td class="codes"><pre class="brush: clojure">(def termlink-record-size concept-max-termlinks)
+(def negation-rule-priority-threshold 0.9) </pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/gdeer81/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
 SyntaxHighlighter.all();
 
 // hackity hack

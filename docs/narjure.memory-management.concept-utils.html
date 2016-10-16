@@ -2885,6 +2885,7 @@ net.brehaut.ClojureTools = (function (SH) {
      [goal-processor :refer [process-goal]]
      [quest-processor :refer [process-quest]]
      [question-processor :refer [process-question]]]
+    [nal.term_utils :refer [syntactic-complexity]]
     [nal.deriver
      [truth :refer [w2c t-or t-and confidence frequency expectation revision]]
      [projection-eternalization :refer [project-eternalize-to]]])
@@ -2911,13 +2912,13 @@ net.brehaut.ClojureTools = (function (SH) {
         budget (:budget task)
         lambda (/ (- 1.0 (second budget)) inverse-decay-rate)
         temporal-distance (if (= el-time :eternal) 0.0 (Math/abs (- el-time @nars-time)))
-        occurrence-decay (if (= el-time :eternal) 1.0 (/ 1.0 (+ 1.0 (* temporal-distance
+        occurrence-decay 1.0 #_(if (= el-time :eternal) 1.0 (/ 1.0 (+ 1.0 (* temporal-distance
                                                                        temporal-distance))))
         k-quality-occurrence-decay 10000.0
         distance-for-quality (/ temporal-distance k-quality-occurrence-decay)
-        occurrence-decay-for-quality (if (= el-time :eternal) 1.0 (/ 1.0 (+ 1.0 (* distance-for-quality
+        occurrence-decay-for-quality (if (= el-time :eternal) 0.9 (/ 1.0 (+ 1.0 (* distance-for-quality
                                                                                    distance-for-quality))))
-        new-quality (* occurrence-decay-for-quality (nth budget 2))
+        new-quality (* #_occurrence-decay-for-quality (nth budget 2))
         fr (Math/exp (* -1.0 (* lambda (- @nars-time last-forgotten))))
         new-priority (max (round2 4 (* (:priority el) fr occurrence-decay))
                           new-quality) ;quality of task
@@ -2936,14 +2937,24 @@ net.brehaut.ClojureTools = (function (SH) {
         ;(println (str &quot;forgetting: &quot; (get-in el' [:task :statement])))
         (set-state! (assoc @state :tasks (b/add-element (:tasks @state) el')))))
     (set-state! (assoc @state :last-forgotten @nars-time))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn concept-has-by-task-not-yet-recorded-link [state task]
+  (let [recorded-terms (if (:record task) (map first (:record task)) [])
+        links (:termlinks state)]
+    (some (fn [tl-term] (not (some #{tl-term} recorded-terms)))
+          (map first links))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn update-concept-budget [state, self]
   &quot;Update the concept budget&quot;
   (let [els (:elements-map (:tasks state))      ; :priority-index ok here
         n (count els)
-        p (round2 3 (reduce max 0 (for [[id {task :task}] els] (first (:budget task)))))
+        p (/ (/ (round2 3 (reduce + 0 (for [[id {task :task}] els] ;rec
+                                        (if (concept-has-by-task-not-yet-recorded-link state task)
+                                          (first (:budget task))
+                                          0.0 #_(nth (:budget task) 2)))))
+                (syntactic-complexity (:id state)))
+             max-tasks)
         q (round2 3 (reduce + 0 (for [[id {task :task}] els] (nth (:budget task) 2))))
         k  0.9999                                             ; long term quality forgetting
-        new-q (if (pos? n) (* k (/ q n)) 0.0)
+        new-q 0.0 #_(if (pos? n) (* k (/ q n)) 0.0) ;already managed by tasks
         el {:id       (:id state)
             :priority (max p new-q)
             :quality new-q

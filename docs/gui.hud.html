@@ -2884,6 +2884,13 @@ net.brehaut.ClojureTools = (function (SH) {
   (reset! speed &quot;fast&quot;)
   (stop-timers)
   (start-timers))</pre></td></tr><tr><td class="docs"><p>TODO put at proper place</p>
+</td><td class="codes"><pre class="brush: clojure">(defn set-medium-speed []
+  &quot;Sets the speed of the reasoner to fast&quot;
+  (reset! system-tick-interval system-tick-interval-medium)
+  (reset! inference-tick-interval inference-tick-interval-medium)
+  (reset! speed &quot;medium&quot;)
+  (stop-timers)
+  (start-timers))</pre></td></tr><tr><td class="docs"><p>TODO put at proper place</p>
 </td><td class="codes"><pre class="brush: clojure">(defn set-slow-speed []
   &quot;Sets the speed of the reasoner to slow&quot;
   (reset! system-tick-interval system-tick-interval-slow)
@@ -2894,7 +2901,9 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(defn swap-speed []
   (if (= @speed &quot;slow&quot;)
     (set-fast-speed)
-    (set-slow-speed)))</pre></td></tr><tr><td class="docs">
+    (if (= @speed &quot;fast&quot;)
+      (set-medium-speed)
+      (set-slow-speed))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def nodes [{:name :pop-up :px 710 :py 0 :onclick (fn [state]
                                                        (cast! (whereis :sentence-parser) [:narsese-string-msg (str (input &quot;Add Narsese&quot; :to-string :name) &quot;\n&quot;)]))
              :backcolor backcolor}

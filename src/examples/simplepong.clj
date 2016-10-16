@@ -1,4 +1,4 @@
-(ns examples.pong
+(ns examples.simplepong
   (:require [quil.core :as q]
             [quil.middleware :as m]
             [gui.hnav :as hnav]
@@ -10,7 +10,7 @@
 
 (def py (atom 280))
 (def direction (atom 0))
-(def barheight 50)
+(def barheight 125)
 (def fieldmax 760)
 (def fieldmin 20)
 
@@ -18,23 +18,26 @@
   #_(println (str x))
   x)
 
+;e <-> <ballpos --> [equal]>
+;u <-> ballpos --> [above]
+
 (defn setup-pong
   "Registers the operations"
   []
-  (nars-input-narsese "<ballpos --> [equal]>! :|:")
+  (nars-input-narsese "equal! :|:")
   (q/frame-rate 100)
-  (nars-register-operation 'op_up (fn [args operationgoal]
+  (nars-register-operation 'self_op_up (fn [args operationgoal]
                                     (do
                                       (when (= (:source operationgoal) :derived)
                                         #_(println "system decided up"))
                                       (reset! direction -1)
-                                      true #_(with-print (not= @py fieldmin)))))
-  (nars-register-operation 'op_down (fn [args operationgoal]
+                                      (with-print (not= @py fieldmin)))))
+  (nars-register-operation 'self_op_down (fn [args operationgoal]
                                       (do
                                         (when (= (:source operationgoal) :derived)
                                           #_(println "system decided down"))
                                         (reset! direction 1)
-                                        true #_(with-print (not= @py (- fieldmax barheight (- fieldmin)))))))
+                                        (with-print (not= @py (- fieldmax barheight (- fieldmin)))))))
 
   (merge hnav/states {:ball-px 380
                       :ball-py 400
@@ -43,8 +46,8 @@
                       :iteration 0}))
 
 "
-<(&/,(&/,<ballpos --> [below]>,i4,<(*,{SELF}) --> op_down>),i4) =/> <ballpos --> [equal]>>.
-<(&/,(&/,<ballpos --> [above]>,i4,<(*,{SELF}) --> op_up>),i4) =/> <ballpos --> [equal]>>.
+<(&/,(&/,below,i4,self_op_down),i4) =/> equal>.
+<(&/,(&/,above,i4,self_op_up),i4) =/> equal>.
 "
 
 (def allow-continuous-feedback true)
@@ -59,14 +62,14 @@
   (when (= @direction 1)
     (reset! py (+ @py 3)))
   (when (= (mod (:iteration state) 25) 0)
-    (println (str "above truth " (vec (:truth (lense-max-statement-confidence-projected-to-now '[--> ballpos [int-set above]] :belief :event)))
-                  " below truth " (vec (:truth (lense-max-statement-confidence-projected-to-now '[--> ballpos [int-set below]] :belief :event)))
-                  " equal truth " (vec (:truth (lense-max-statement-confidence-projected-to-now '[--> ballpos [int-set equal]] :belief :event)))))
-    (nars-input-narsese "<ballpos --> [equal]>! :|:"))
-  (when (= (mod (:iteration state) 250) 1)
+    #_(println (str "above truth " (vec (:truth (lense-max-statement-confidence-projected-to-now 'above :belief :event)))
+                  " below truth " (vec (:truth (lense-max-statement-confidence-projected-to-now 'below :belief :event)))
+                  " equal truth " (vec (:truth (lense-max-statement-confidence-projected-to-now 'equal :belief :event)))))
+    (nars-input-narsese "equal! :|:"))
+  (when (= (mod (:iteration state) 125) 1)
     (println "rand action")
-    (nars-input-narsese (str (rand-nth ["<(*,{SELF}) --> op_up>! :|:"
-                                        "<(*,{SELF}) --> op_down>! :|:"
+    (nars-input-narsese (str (rand-nth ["self_op_up! :|:"
+                                        "self_op_down! :|:"
                                         #_"<(*,{SELF}) --> op_stop>! :|:"]))))
 
 
@@ -103,9 +106,9 @@
     (if (and (>= (:ball-py state) @py)
              (<= (:ball-py state) (+ @py barheight)))
       (when (not= @updown-state "equal")
-        (nars-input-narsese "<ballpos --> [equal]>. :|: %1.0;0.9%")
-        #_(nars-input-narsese "<ballpos --> [above]>. :|: %0%")
-        #_(nars-input-narsese "<ballpos --> [below]>. :|: %0%")
+        (nars-input-narsese "equal. :|: %1.0;0.9%")
+        #_(nars-input-narsese "above. :|: %0%")
+        #_(nars-input-narsese "below. :|: %0%")
         (reset! updown-state "equal")
         #_(when allow-continuous-feedback
             ;(println "good NARS")
@@ -113,17 +116,17 @@
 
       (if (> (:ball-py state) @py)
         (when (not= @updown-state "below")
-          (nars-input-narsese "<ballpos --> [below]>. :|:")
-          #_(nars-input-narsese "<ballpos --> [above]>. :|: %0%")
-          #_(nars-input-narsese "<ballpos --> [equal]>. :|: %0%")
+          (nars-input-narsese "below. :|:")
+          #_(nars-input-narsese "above. :|: %0%")
+          #_ (nars-input-narsese "equal. :|: %0%")
           (reset! updown-state "below")
           #_(when allow-continuous-feedback
               ;(println "bad NARS")
               (nars-input-narsese "<{SELF} --> [good]>. :|: %0.0;0.9%")))
         (when (not= @updown-state "above")
-          (nars-input-narsese "<ballpos --> [above]>. :|:")
-          #_(nars-input-narsese "<ballpos --> [below]>. :|: %0%")
-          #_(nars-input-narsese "<ballpos --> [equal]>. :|: %0%")
+          (nars-input-narsese "above. :|:")
+          #_(nars-input-narsese "below. :|: %0%")
+          #_(nars-input-narsese "equal. :|: %0%")
           (reset! updown-state "above")
           #_(when allow-continuous-feedback
               ;(println "bad NARS")
@@ -132,8 +135,8 @@
   (let [kset-x (+ 0.6 (/ (Math/random) 2.0))
         kset-y (+ 0.6 (/ (Math/random) 2.0))
         state2 (assoc state
-                 :ball-px #_(:ball-px state) (+ (:ball-px state) (* (:direction-x state) 1 3))
-                 :ball-py #_(:ball-py state) (+ (:ball-py state) (* (:direction-y state) 1 3)))
+                 :ball-px #_(:ball-px state) (+ (:ball-px state) (* (:direction-x state) 1 1))
+                 :ball-py #_(:ball-py state) (+ (:ball-py state) (* (:direction-y state) 1 1)))
 
         state3 (if (>= (:ball-px state2)                     ;collided on right wall
                        fieldmax)

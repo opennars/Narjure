@@ -1,0 +1,15 @@
+//background knowledge about language, and its meaning related to assistant-typical interactions.
+(&/,<(*,my,#1,was,built,in,#2) --> said>,<(*,{SELF},(*,is,your,#1,rusty)) --> ^ask>)!
+(&/,<(*,my,#1,was,built,in,#2) --> said>,<(*,{SELF},(*,can,I,buy,the,#1)) --> ^ask>)!
+(&/,<(*,my,#1,was,built,in,#2) --> said>,<(*,you,can,buy,it) --> said>,<(*,{SELF},(/,REPRESENT,#1,_)) --> ^buy>)!
+//if you buy something then you own it
+<<(*,{SELF},$1) --> ^buy> =/> <(*,{SELF},$1) --> own>>.
+
+//input:
+<(*,my,car,was,built,in,1994) --> said>. :|:
+
+//after system asking whether it can buy it:
+<(*,you,can,buy,it) --> said>. :|:
+
+//Test whether the implication was considered:
+<(*,?who,(/,REPRESENT,car,_)) --> own>?

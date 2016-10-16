@@ -2876,7 +2876,7 @@ net.brehaut.ClojureTools = (function (SH) {
     'ext-inter 'conj})</pre></td></tr><tr><td class="docs"><p>commutative:    &lt;-> &lt;=> &lt;|> &amp; | &amp;&amp; ||
 not commutative: --> ==> =/> => </> &amp;/ - ~</p>
 </td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def commutative-ops #{'&lt;-&gt; '&lt;=&gt; '&lt;|&gt; '| '|| 'conj 'ext-inter})</pre></td></tr><tr><td class="docs"><p>Makes transformaitions like [A --> B] to [--> A B].</p>
+</td><td class="codes"><pre class="brush: clojure">(def commutative-ops #{'&lt;-&gt; '&lt;=&gt; '&lt;|&gt; '| '|| 'conj 'ext-inter '&amp;|})</pre></td></tr><tr><td class="docs"><p>Makes transformaitions like [A --> B] to [--> A B].</p>
 </td><td class="codes"><pre class="brush: clojure">(defn infix-&gt;prefix
   [premise]
   (if (coll? premise)
@@ -2914,6 +2914,8 @@ not commutative: --> ==> =/> => </> &amp;/ - ~</p>
         statement))
     :else statement))</pre></td></tr><tr><td class="docs"><p>provide an order for the commutative ops, so that <a &lt;-> b> and <b &lt;-> a> will both be <b &lt;-> a>,
   this is needed because they need to end up in the same concept!</p>
+
+<p>todo make recursive:</p>
 </td><td class="codes"><pre class="brush: clojure">(defn sort-commutative
   [conclusions]
   (if (coll? conclusions)

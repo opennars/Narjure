@@ -20,7 +20,7 @@
     (let [op (nth st 2)]
       (and (not (coll? op))
            (clojure.string/starts-with? (name op) "op_")))
-    false))
+    (clojure.string/starts-with? (str st) "self_op_")))
 
 (defn negation-of-operation?
   "Checks whether st is the negation of an operation"
@@ -54,17 +54,6 @@
   #{'--> '<-> 'instance 'property 'instance-property '==> 'pred-impl '=|> 'retro-impl '<=> '</> '<|> 'ext-set 'int-set 'ext-inter '| '- 'int-dif '* 'ext-image 'int-image '-- '|| 'conj 'seq-conj '&|})
 
 (defn placeholder? [t] (= '_ t))
-
-(defn termlink-subterms
-  "Extract the termlink relevant subterms of the term up to 3 levels as demanded by the NAL rules"
-  ([level content]
-   (if (and (< level 3) (compound? content))
-     (reduce set/union #{content} (map (partial termlink-subterms (inc level)) content))
-     #{content}))
-  ([content]
-   (remove #(or (logic-ops %) (interval? %) (placeholder? %) (variable? %))
-           (termlink-subterms 0 content))))
-
 
 (defn is-singular-sequence [st]
   "Checks whether the sequence is of (&/,a) form"
@@ -167,7 +156,8 @@
                (/ x 2))))))
 
 (defn str-is-integer [s]
-  (every? #(Character/isDigit %) s))
+  (when (not= s "")
+    (every? #(Character/isDigit %) s)))
 
 (defn interval-atom-to-interval
   "Change the interval atom to an interval"
@@ -197,6 +187,45 @@
              (for [x t]
                (apply-interval-precision x))))
     t))
+
+(defn apply-interval-concept-term-transform [t]
+  "all intervals are changed to the next interval precision point
+  in this magnitude"
+  (if (coll? t)
+    (if (= (first t) :interval)
+      [:interval "x"]
+      (apply vector
+             (for [x t]
+               (apply-interval-concept-term-transform x))))
+    t))
+
+(defn concept-term-transform [t]
+  (let [term (if (and (coll? t)   ;conceptualize (&/,a,i13) as a
+                      (= (count t) 3)
+                      (= (first t) 'seq-conj)
+                      (interval? (last t)))
+               (second t)
+               t)]
+    (apply-interval-concept-term-transform term)))
+
+(defn statement-and-conceptid-equal [statement concept-id]
+  "same in respect to intervals"
+  (= (concept-term-transform statement)
+     concept-id))
+
+(defn not-statement-and-conceptid-equal [statement concept-id]
+  "not same in respect to intervals"
+  (not (statement-and-conceptid-equal statement concept-id)))
+
+(defn termlink-subterms
+  "Extract the termlink relevant subterms of the term up to 3 levels as demanded by the NAL rules"
+  ([level content]
+   (if (and (< level 3) (compound? content))
+     (reduce set/union #{content} (map (partial termlink-subterms (inc level)) content))
+     #{content}))
+  ([content]
+   (remove #(or (logic-ops %) (interval? %) (placeholder? %) (variable? %))
+           (map concept-term-transform (termlink-subterms 0 content)))))
 
 (defn no-truth-for-questions-and-quests [st]         ;sentence util
   "makes absolutely sure that goals and beliefs have no truth and desire value for now"
@@ -249,6 +278,7 @@
         additional-condition (fn [z] (and (not= (second z) nil)
                                           (operation? ((second z) '?operation))
                                           (not (operation? ((second z) '?precondition)))
+                                          (interval? ((second z) '?interval1))
                                           (not (negation-of-operation? ((second z) '?precondition)))
                                           (not (operation? ((second z) '?goal)))
                                           (not (negation-of-operation? ((second z) '?goal)))))]

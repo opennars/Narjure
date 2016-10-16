@@ -9,6 +9,8 @@
     [narjure.control-utils :refer :all]
     [narjure.global-atoms :refer :all]
     [narjure.defaults :refer :all]
+    [nal.term_utils :refer [not-statement-and-conceptid-equal
+                            statement-and-conceptid-equal]]
     [narjure.perception-action.task-creator :refer [event? get-id]]
     [narjure.memory-management.local-inference.local-inference-utils :refer :all]
     [nal.term_utils :refer :all]
@@ -60,7 +62,8 @@
   (assoc neg-confirmation :statement ['-- (:statement neg-confirmation)] :truth (nal.deriver.truth/negation (:truth neg-confirmation) [0.0 0.0])))
 
 (defn confirmable-observable?
-  "Is the task observable and derived so potentially predicted?"
+  "Is the t
+  ask observable and derived so potentially predicted?"
   [task]
   (and #_(:observable @state) (not= (:occurrence task) :eternal)
        (= (:source task) :derived)))
@@ -68,11 +71,13 @@
 (defn create-anticipation-task
   "The by anticipation disappointment created task."
   [task]
-  (let [k anticipation-scale-dependent-tolerance
-        scale (/ (Math/abs (- (:occurrence task) @nars-time)) k)]
+  (let [  ;example: i23 would still be i16 but i25 would be i32, border 24
+          ;i13 would be i16, but i11 would be i8, border 12
+        leftborder (/ (Math/abs (- (:occurrence task) @nars-time)) 4.0)
+        rightborder (/ (Math/abs (- (:occurrence task) @nars-time)) 2.0)]
     (assoc task :task-type :anticipation
-                :minconfirm (- (:occurrence task) scale) ;left side limit
-               :expiry (+ (:occurrence task scale)))))      ;right side limit
+                :minconfirm (- (:occurrence task) leftborder) ;left side limit
+               :expiry (+ (:occurrence task) rightborder))))      ;right side limit
 
 (defn satisfaction-based-budget-change
   "Budget change based on the satisfaction of the goal by the belief"
@@ -172,14 +177,14 @@
            (cast! (whereis :task-dispatcher) [:task-msg [nil nil negated-neg-confirmation]])
            ;hypothesis correction:
            (when (:anticipation-precondition-task neg-confirmation)
-             (cast! (whereis :inference-request-router) [:do-inference-msg [nil nil neg-confirmation (:anticipation-precondition-task neg-confirmation)]])
+             (cast! (whereis :inference-request-router) [:do-inference-msg [nil nil (:anticipation-precondition-task neg-confirmation) neg-confirmation :belief]])
              (println "hypothesis corrected!!! with task: " (:anticipation-precondition-task neg-confirmation) "\n"
                       "belief: " neg-confirmation))))))
 
     ;when task is confirmable and observabnle
     ;add an anticipation tasks to tasks
     (when (and (= (:task-type task) :belief)
-            (= (:statement task)                             ;only allow anticipation with concept content
+            (statement-and-conceptid-equal (:statement task)                             ;only allow anticipation with concept content
               (:id @state)))
       (when (and (confirmable-observable? task)
                  (> (:occurrence task) @nars-time))

@@ -70,13 +70,18 @@
 
 (defn generate-conclusions
   "Generate all conclusions between task t1 and task t2"
-  [{p1 :statement :as t1} {p2 :statement :as t2}]
+  [{p1_ :statement :as t1} {p2 :statement :as t2}]
   ;assign statement
-  (let [iterate-n (fn [next-it prev-shuffles prev-results x]
+  (let [p1 (if                                       ;ok the first one is eternal the second not, so lets use
+             (and (= (:occurrence p1_) :eternal)     ;the occurence time of the second to not lose the temporal information (valid since it is eternal anyway)
+                  (not= (:occurrence p2) :eternal))  ;this way eternalization is left to eternalization
+             (assoc p1_ :occurrence (:occurrence p2)) ;note that we use the eternal belief also anyway currently
+             p1_)                                     ;so the eternal case is not lost!!
+        iterate-n (fn [next-it prev-shuffles prev-results x]
                     (let [shuffled-p1 (shuffle-term p1)
                           shuffled-p2 (shuffle-term p2)
                           shuffle-pair [shuffled-p1 shuffled-p2]
-                          unification-power 10] ;how much shuffle attempts
+                          unification-power 5] ;how much shuffle attempts
                       (if (< x unification-power)
                         (if (some #{shuffle} prev-shuffles)
                           (next-it next-it prev-shuffles prev-results (inc x)) ;generate-conclusions-no-commutativity is expensive this is why we avoid it

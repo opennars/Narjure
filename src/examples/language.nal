@@ -2,7 +2,7 @@
 <(tim,buys,beer) --> sentence>.
 //and given syntactical knowledge that buys is a verb
 <buys --> VERB>.
-//identify drinks as a verb because of its position
+//identify drinks as a verb because of its position in the sentence
 <(tim,drinks,beer) --> sentence>.
 <drinks --> VERB>?
 

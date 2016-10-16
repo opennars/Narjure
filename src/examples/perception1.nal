@@ -1,0 +1,20 @@
+//Simple perception example 1
+//"""""""""""""""""""""""""""
+
+// given the imperfectly observed pattern
+//    | ▒ |
+//    |█ ▓|
+
+//p_1_1. :|: %0.0%
+p_1_2. :|: %0.7%
+//p_1_3. :|: %0.0%
+p_2_1. :|: %1.0%
+//p_2_2. :|: %0.0%
+p_2_3. :|: %0.8%
+
+// to what extent was
+//    | █ |
+//    |█ █|
+//observed in experience?
+
+(&|,p_1_2,(&|,p_2_1,p_2_3))?

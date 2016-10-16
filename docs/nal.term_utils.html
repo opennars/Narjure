@@ -2884,7 +2884,7 @@ net.brehaut.ClojureTools = (function (SH) {
     (let [op (nth st 2)]
       (and (not (coll? op))
            (clojure.string/starts-with? (name op) &quot;op_&quot;)))
-    false))</pre></td></tr><tr><td class="docs"><p>Checks whether st is the negation of an operation</p>
+    (clojure.string/starts-with? (str st) &quot;self_op_&quot;)))</pre></td></tr><tr><td class="docs"><p>Checks whether st is the negation of an operation</p>
 </td><td class="codes"><pre class="brush: clojure">(defn negation-of-operation?
   [st]
   (and (coll? st)
@@ -2906,15 +2906,7 @@ net.brehaut.ClojureTools = (function (SH) {
     1))</pre></td></tr><tr><td class="docs"><p>todo -  temp function below should be in nal.clj - Patham9 to resolve</p>
 </td><td class="codes"><pre class="brush: clojure">(def logic-ops
   #{'--&gt; '&lt;-&gt; 'instance 'property 'instance-property '==&gt; 'pred-impl '=|&gt; 'retro-impl '&lt;=&gt; '&lt;/&gt; '&lt;|&gt; 'ext-set 'int-set 'ext-inter '| '- 'int-dif '* 'ext-image 'int-image '-- '|| 'conj 'seq-conj '&amp;|})</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn placeholder? [t] (= '_ t))</pre></td></tr><tr><td class="docs"><p>Extract the termlink relevant subterms of the term up to 3 levels as demanded by the NAL rules</p>
-</td><td class="codes"><pre class="brush: clojure">(defn termlink-subterms
-  ([level content]
-   (if (and (&lt; level 3) (compound? content))
-     (reduce set/union #{content} (map (partial termlink-subterms (inc level)) content))
-     #{content}))
-  ([content]
-   (remove #(or (logic-ops %) (interval? %) (placeholder? %) (variable? %))
-           (termlink-subterms 0 content))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn placeholder? [t] (= '_ t))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn is-singular-sequence [st]
   &quot;Checks whether the sequence is of (&amp;/,a) form&quot;
   (and (coll? st)
@@ -3007,7 +2999,8 @@ net.brehaut.ClojureTools = (function (SH) {
                x
                (/ x 2))))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn str-is-integer [s]
-  (every? #(Character/isDigit %) s))</pre></td></tr><tr><td class="docs"><p>Change the interval atom to an interval</p>
+  (when (not= s )
+    (every? #(Character/isDigit %) s)))</pre></td></tr><tr><td class="docs"><p>Change the interval atom to an interval</p>
 </td><td class="codes"><pre class="brush: clojure">(defn interval-atom-to-interval
   [t]
   (let [pot-ival (name t)
@@ -3033,6 +3026,39 @@ net.brehaut.ClojureTools = (function (SH) {
              (for [x t]
                (apply-interval-precision x))))
     t))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn apply-interval-concept-term-transform [t]
+  &quot;all intervals are changed to the next interval precision point
+  in this magnitude&quot;
+  (if (coll? t)
+    (if (= (first t) :interval)
+      [:interval &quot;x&quot;]
+      (apply vector
+             (for [x t]
+               (apply-interval-concept-term-transform x))))
+    t))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn concept-term-transform [t]
+  (let [term (if (and (coll? t)   ;conceptualize (&amp;/,a,i13) as a
+                      (= (count t) 3)
+                      (= (first t) 'seq-conj)
+                      (interval? (last t)))
+               (second t)
+               t)]
+    (apply-interval-concept-term-transform term)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn statement-and-conceptid-equal [statement concept-id]
+  &quot;same in respect to intervals&quot;
+  (= (concept-term-transform statement)
+     concept-id))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn not-statement-and-conceptid-equal [statement concept-id]
+  &quot;not same in respect to intervals&quot;
+  (not (statement-and-conceptid-equal statement concept-id)))</pre></td></tr><tr><td class="docs"><p>Extract the termlink relevant subterms of the term up to 3 levels as demanded by the NAL rules</p>
+</td><td class="codes"><pre class="brush: clojure">(defn termlink-subterms
+  ([level content]
+   (if (and (&lt; level 3) (compound? content))
+     (reduce set/union #{content} (map (partial termlink-subterms (inc level)) content))
+     #{content}))
+  ([content]
+   (remove #(or (logic-ops %) (interval? %) (placeholder? %) (variable? %))
+           (map concept-term-transform (termlink-subterms 0 content)))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn no-truth-for-questions-and-quests [st]         ;sentence util
   &quot;makes absolutely sure that goals and beliefs have no truth and desire value for now&quot;
   (if (or (= (:task-type st) :quest)
@@ -3077,6 +3103,7 @@ net.brehaut.ClojureTools = (function (SH) {
         additional-condition (fn [z] (and (not= (second z) nil)
                                           (operation? ((second z) '?operation))
                                           (not (operation? ((second z) '?precondition)))
+                                          (interval? ((second z) '?interval1))
                                           (not (negation-of-operation? ((second z) '?precondition)))
                                           (not (operation? ((second z) '?goal)))
                                           (not (negation-of-operation? ((second z) '?goal)))))]

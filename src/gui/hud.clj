@@ -21,6 +21,15 @@
   (start-timers))
 
 ;TODO put at proper place
+(defn set-medium-speed []
+  "Sets the speed of the reasoner to fast"
+  (reset! system-tick-interval system-tick-interval-medium)
+  (reset! inference-tick-interval inference-tick-interval-medium)
+  (reset! speed "medium")
+  (stop-timers)
+  (start-timers))
+
+;TODO put at proper place
 (defn set-slow-speed []
   "Sets the speed of the reasoner to slow"
   (reset! system-tick-interval system-tick-interval-slow)
@@ -32,7 +41,9 @@
 (defn swap-speed []
   (if (= @speed "slow")
     (set-fast-speed)
-    (set-slow-speed)))
+    (if (= @speed "fast")
+      (set-medium-speed)
+      (set-slow-speed))))
 
 (def nodes [{:name :pop-up :px 710 :py 0 :onclick (fn [state]
                                                        (cast! (whereis :sentence-parser) [:narsese-string-msg (str (input "Add Narsese" :to-string :name) "\n")]))

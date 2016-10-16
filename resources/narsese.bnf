@@ -75,7 +75,7 @@
            desire ::= <"%">plausibility[<";">desirability]<"%"> (* two numbers in [0,1]x(0,1) *)
            budget ::= <"$">priority[<";">durability][<";">quality]<"$"> (* three numbers in [0,1]x(0,1)x[0,1] *)
 
-               word : #"\w+"                                  (* unicode string *)    
+               word : #"\w+|(\"\w+\")"                               (* unicode string *)
            priority : #"([0]?\.[0-9]+|1\.[0]*|1|0)"           (* 0 <= x <= 1 *)
          durability : #"[0]?\.[0]*[1-9]{1}[0-9]*"             (* 0 <  x <  1 *)
             quality : #"([0]?\.[0-9]+|1\.[0]*|1|0)"           (* 0 <= x <= 1 *)

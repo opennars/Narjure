@@ -2884,7 +2884,7 @@ net.brehaut.ClojureTools = (function (SH) {
     [clojure.core.unify :refer [unifier]]
     [nal.term_utils :refer [syntactic-complexity termlink-subterms]]
     [narjure.memory-management.local-inference
-     [local-inference-utils :refer [get-task-id get-tasks]]
+     [local-inference-utils :refer [get-task-id get-tasks update-task-in-tasks]]
      [belief-processor :refer [process-belief]]
      [goal-processor :refer [process-goal]]
      [quest-processor :refer [process-quest]]
@@ -2901,15 +2901,18 @@ net.brehaut.ClojureTools = (function (SH) {
   [links]
   (filter #(b/exists? @c-bag %) (keys links)))</pre></td></tr><tr><td class="docs"><p>This one is for absolute forgetting of links: Remove termlinks whose concepts were forgot,
   remove worst termlinks if above max termlink count.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn forget-termlinks
+</td><td class="codes"><pre class="brush: clojure">(defn forget-termlinks-absolute
   []
-  ;TODO test
   (doseq [[tl _] (:termlinks @state)]
     (when (not (b/exists? @c-bag tl))
       (set-state! (assoc @state :termlinks (dissoc (:termlinks @state) tl)))))
   (while (&gt; (count (:termlinks @state)) concept-max-termlinks)
     (let [worst (apply min-key (comp expectation second) (:termlinks @state))]
-      (set-state! (assoc @state :termlinks (dissoc (:termlinks @state) (first worst)))))))</pre></td></tr><tr><td class="docs"><p>Adds a termlink with term tl and strength strength.</p>
+      (set-state! (assoc @state :termlinks (dissoc (:termlinks @state) (first worst)))))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn forget-termlinks-relative []
+  &quot;Forget termlinks relative.&quot;
+  (set-state! (assoc @state :termlinks (apply merge (for [[tl [f c]] (:termlinks @state)]
+                                                      {tl (revision [f c] [0.0 0.001])})))))</pre></td></tr><tr><td class="docs"><p>Adds a termlink with term tl and strength strength.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn add-termlink
   [tl strength]
   (set-state! (assoc @state :termlinks (assoc (:termlinks @state)
@@ -2917,16 +2920,20 @@ net.brehaut.ClojureTools = (function (SH) {
   ;(forget-termlinks))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn calc-link-strength
   ([tl]
-    (calc-link-strength tl [0.5 0.0]))
+    (calc-link-strength tl [0.5 0.01]))
   ([tl old-strength]
-  (let [prio-me (concept-priority (:id @state))
+  old-strength
+    #_(let [prio-me (concept-priority (:id @state))
         prio-other (concept-priority tl)
+        evidence-mul 0.5
         association (t-and prio-me prio-other)
         disassocation (t-and prio-me (- 1.0 prio-other))]
-    (revision [0.0 disassocation] (revision old-strength [1.0 association])))))</pre></td></tr><tr><td class="docs">
+    (revision [0.0 (* evidence-mul disassocation)]
+              (revision old-strength [1.0 (* evidence-mul association)])))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn update-termlink [tl]                                  ;term
   (let [old-strength ((:termlinks @state) tl)]
-    (add-termlink tl (calc-link-strength tl old-strength))))</pre></td></tr><tr><td class="docs">
+    (add-termlink tl (calc-link-strength tl (if old-strength old-strength [0.5 0.0])))
+    (forget-termlinks-absolute)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn use-stronger [t1 t2]
   (let [all-keys (set/union (map first t1) (map first t2))]
     (apply merge (for [k all-keys]
@@ -2950,44 +2957,68 @@ net.brehaut.ClojureTools = (function (SH) {
                                                                                                          (concept-prio tl)) (second termlink-default-budget)]}))
                             (:termlinks @state))
         valid-links (select-keys newtermlinks (get-existing-terms-from-links newtermlinks))];only these keys which exist in concept bag
-    (set-state! (merge @state {:termlinks valid-links}))))</pre></td></tr><tr><td class="docs"><p>Link growth by contextual relevance of the inference and the result, as well as usefulness of the result.</p>
+    (set-state! (merge @state {:termlinks valid-links}))))</pre></td></tr><tr><td class="docs"><p>https://clojuredocs.org/clojure.core/when-let</p>
+</td><td class="codes"><pre class="brush: clojure">(defmacro when-let*
+  ([bindings &amp; body]
+   (if (seq bindings)
+     `(when-let [~(first bindings) ~(second bindings)]
+        (when-let* ~(drop 2 bindings) ~@body))
+     `(do ~@body))))</pre></td></tr><tr><td class="docs"><p>Link growth by contextual relevance of the inference and the result, as well as usefulness of the result.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn link-feedback-handler
   [from [_ [derived-task belief-concept-id]]]                       ;this one uses the usual priority durability semantics
   (try
     ;TRADITIONAL BUDGET INFERENCE (BLINK PART)
-    (let [complexity (if (:truth derived-task) (syntactic-complexity belief-concept-id) 1.0)
-          truth-quality (if (:truth derived-task)
+    (let [truth-quality (if (:truth derived-task)
                  (truth-to-quality (:truth derived-task))
                  (w2c 1.0))
-          #_quality #_(/ truth-quality complexity)
           truth-quality-to-confidence (* truth-quality 1.0)
-          [result-concept _]  (b/get-by-id @c-bag (:statement derived-task))
-          #_activation #_(:priority result-concept)
-          [f c] ((:termlinks @state) belief-concept-id)]
+          [f c] ((:termlinks @state) belief-concept-id)
+          premise-task-id (first (:parent-statement derived-task))]
       (when (and f c (:truth derived-task)) ;just revise by using the truth value directly
-        ;as evidence for the usefulness
-        (add-termlink belief-concept-id [1.0 truth-quality-to-confidence])))
-    (catch Exception e () #_(println &quot;fail&quot;))))</pre></td></tr><tr><td class="docs"><p>Get the link endpoints, namely the concepts which the concept links to: their id as well as priority.</p>
+        (add-termlink belief-concept-id (revision [1.0 truth-quality-to-confidence] [f c]))
+        (forget-termlinks-absolute)
+        (when-let* [[element _] (b/get-by-id (:tasks @state) premise-task-id)
+                   elem-task (:task element)
+                    lbudgets (if-let [buds (:lbudgets elem-task)] buds {})
+                    lbudget (if-let [bud (belief-concept-id lbudgets)] bud [0.5 0.0])
+                    lbudget* (revision [1.0 truth-quality-to-confidence] lbudget)
+                    lbudgets* (assoc lbudgets belief-concept-id lbudget*)
+                    task* (assoc elem-task :lbudgets lbudgets*)]
+                   (update-task-in-tasks state task* elem-task))))
+    (catch Exception e () #_(println &quot;fail&quot;))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn not-outdated-record-entry [[id time]]
+  (&lt; (- @nars-time time) 25))</pre></td></tr><tr><td class="docs"><p>Get the link endpoints, namely the concepts which the concept links to: their id as well as priority.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn get-termlink-endpoints
-  []
-  (let [initbag (b/default-bag concept-max-termlinks)]
+  [record link-budgets]
+  (let [initbag (b/default-bag concept-max-termlinks)
+        get-link-budget-exp (fn [k] (if (and link-budgets (k link-budgets))
+                                  (expectation (k link-budgets))
+                                  0.0))
+        individual-budget-weight 1.0]
     (try
-      (reduce (fn [a b] (b/add-element a b)) initbag (for [[k v] (:termlinks @state)]
-                                                      {:priority (+ (expectation v)
-                                                                       (:priority (first (b/get-by-id @c-bag k))))
+      (reduce (fn [a b] (b/add-element a b)) initbag (for [[k v] (filter (fn [[k _]] (or (nil? record)
+                                                                                         (not (some (fn [[id time]]
+                                                                                                      (and
+                                                                                                        (not-outdated-record-entry [id time])
+                                                                                                        (= id k)))
+                                                                                                    record))))
+                                                                         (:termlinks @state))]
+                                                      {:priority (+    (expectation v)
+                                                                       (* individual-budget-weight (get-link-budget-exp k))
+                                                                   (:priority (first (b/get-by-id @c-bag k))))
                                                        :id       k}))
       (catch Exception e (print &quot;&quot;)
                          ;(println (str &quot;error in get-termlink-endpoints: &quot; e)))))</pre></td></tr><tr><td class="docs"><p>Select the termlink probabilistically, taking link strength and target priorities into account.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn select-termlink-ref
-  []
+  [record link-budgets]
   ;now search through termlinks, get the endpoint concepts, and form a bag of them
   (let [initbag (b/default-bag concept-max-termlinks)
-        resbag (get-termlink-endpoints)]
+        resbag (get-termlink-endpoints record link-budgets)]
     ;now select an element from this bag
     (if (and resbag (pos? (b/count-elements resbag)))
       (let [[beliefconcept _] (b/get-by-index resbag (selection-fn (b/count-elements resbag)))]
         #_(forget-termlink (:id beliefconcept))               ;apply forgetting for termlinks only on selection
-        (get-ref-from-term (:id beliefconcept)))
+        [(:id beliefconcept) (get-ref-from-term (:id beliefconcept))])
       nil)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/gdeer81/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
 SyntaxHighlighter.all();
 

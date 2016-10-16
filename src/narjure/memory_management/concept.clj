@@ -5,6 +5,8 @@
      [actors :refer :all]]
     [taoensso.timbre :refer [debug info]]
     [clojure.core.unify :refer [unifier]]
+    [nal.term_utils :refer [not-statement-and-conceptid-equal
+                            statement-and-conceptid-equal]]
     [nal.deriver
      [truth :refer [w2c t-or t-and confidence frequency expectation revision]]
      [projection-eternalization :refer [project-eternalize-to]]]
@@ -18,6 +20,7 @@
     [narjure.memory-management
      [concept-utils :refer :all]
      [termlink-utils :refer :all]]
+    [nal.term_utils :refer [syntactic-complexity]]
     [narjure.memory-management.local-inference
      [local-inference-utils :refer [get-task-id get-tasks]]
      [belief-processor :refer [process-belief]]
@@ -30,27 +33,38 @@
 (def search (atom ""))
 
 (defn task-handler
-  [from [_ [task]]]
-  (debuglogger search display ["task processed:" task])
+  [from [_ [task_]]]
+  (when true
+    (let [foreign-penalty (if (not-statement-and-conceptid-equal (:statement task_)
+                            (:id @state))
+                            1.0
+                            1.0)
+          eternal-penalty (if (= (:occurrence task_) :eternal)
+                            1.0
+                            1.0)
+          task (assoc task_ :budget [(* foreign-penalty eternal-penalty (first (:budget task_)))
+                                     (second (:budget task_))
+                                     (nth (:budget task_) 2)])]
+      (debuglogger search display ["task processed:" task])
 
-  (refresh-termlinks task)
+      (refresh-termlinks task)
 
-  ; check observable and set if necessary
-  (when-not (:observable @state)
-    ;(println "obs1")
-    (let [{:keys [occurrence source]} task]
-      (when (and (not= occurrence :eternal) (= source :input) (= (:statement task) (:id @state)))
-        (set-state! (assoc @state :observable true)))))
+      ; check observable and set if necessary
+      (when-not (:observable @state)
+        ;(println "obs1")
+        (let [{:keys [occurrence source]} task]
+          (when (and (not= occurrence :eternal) (= source :input) (statement-and-conceptid-equal (:statement task) (:id @state)))
+            (set-state! (assoc @state :observable true)))))
 
-  #_(when (and (= (:task-type task) :goal)
-          (= (:statement task) '[--> ballpos [int-set equal]]))
-    (println "concept ballpos equ exists"))
+      #_(when (and (= (:task-type task) :goal)
+                   (= (:statement task) '[--> ballpos [int-set equal]]))
+          (println "concept ballpos equ exists"))
 
-  (case (:task-type task)
-    :belief (process-belief state task 0)
-    :goal (process-goal state task 0)
-    :question (process-question state task)
-    :quest (process-quest state task)))
+      (case (:task-type task)
+        :belief (process-belief state task 0)
+        :goal (process-goal state task 0)
+        :question (process-question state task)
+        :quest (process-quest state task)))))
 
 (defn belief-request-handler
   ""
@@ -63,7 +77,7 @@
   ;todo get a belief which has highest confidence when projected to task time
   (try
     (let [tasks (get-tasks state)
-          beliefs (filter #(and (= (:statement %) (:id @state))
+          beliefs (filter #(and (statement-and-conceptid-equal (:statement %) (:id @state))
                                 (= (:task-type %) :belief)) tasks)
           projected-belief-tuples (map (fn [z] [z (project-eternalize-to (:occurrence task) z @nars-time)]) beliefs)]
 
@@ -83,11 +97,23 @@
   [from message]
   (let [task-bag (:tasks @state)]
     (when true
+      ;(println (syntactic-complexity (:id @state)))
       (when (pos? (b/count-elements task-bag))
         (let [[el] (b/lookup-by-index task-bag (selection-fn (b/count-elements task-bag)))]
           (debuglogger search display ["selected inference task:" el])
-          (when-let [[c-id c-ref] (select-termlink-ref)]
-            (try                                                      ;update termlinks at first
+          (when-let [[c-id c-ref] (select-termlink-ref (:record (:task el)) (:lbudgets (:task el)))]
+            (set-state!
+              (assoc @state :tasks
+                            (b/update-element task-bag
+                                              (assoc-in el [:task :record]
+                                                        (if (nil? (:record (:task el)))
+                                                          [[c-id @nars-time]];;;
+                                                          (if (some (fn [[id _]] (= id c-id)) (:record (:task el)))
+                                                            (filter not-outdated-record-entry (:record (:task el)))
+                                                            (take termlink-record-size (filter not-outdated-record-entry
+                                                                                               (concat [[c-id @nars-time]]
+                                                                                                       (:record (:task el)))))))))))
+            (try                                                  ;update termlinks at first
               (update-termlink c-id)          ;task concept here
               (catch Exception e (debuglogger search display (str "task side termlink strength error " (.toString e)))))
             (cast! c-ref [:belief-request-msg [(:id @state) (:task el)]])))))))
@@ -98,9 +124,10 @@
   [from [_ [term]]]
   (try (let
          [termlinks (:termlinks @state)
-          old-link-strength (termlinks term)
-          new-link-strength (calc-link-strength term (if old-link-strength old-link-strength [0.5 0.0]))]
-     (set-state! (assoc-in @state [:termlinks term] new-link-strength)))
+          old-link-strength (when termlinks (termlinks term))
+          temporal-link-bonus [0.5 0.01]
+          new-link-strength (calc-link-strength term (if old-link-strength old-link-strength temporal-link-bonus))]
+         (set-state! (assoc-in @state [:termlinks term] new-link-strength)))
        (catch Exception e (println "termlink strenghten fatal error"))))
 
 (defn concept-state-handler
@@ -116,13 +143,14 @@
   (let [elements (:elements-map (:tasks new-state))]
     (set-state! (assoc @state :tasks (b/default-bag max-tasks)))
     (doseq [[_ el] elements]
-     (set-state! (assoc @state :tasks (b/add-element (:tasks @state) el))))))
+      (set-state! (assoc @state :tasks (b/add-element (:tasks @state) el))))))
 
 (defn concept-forget-handler
   "update cocnept budget"
   [from [_ new-state]]
   (forget-tasks)
-  (forget-termlinks)
+  (forget-termlinks-relative)
+  (forget-termlinks-absolute)
   (update-concept-budget @state @self))
 
 (defn shutdown-handler
@@ -136,7 +164,7 @@
   "Initialises actor: registers actor and sets actor state"
   [name]
   (set-state! {:id                       name
-               :priority                 0.5
+               :priority                 0.01
                :quality                  0.0
                :tasks                    (b/default-bag max-tasks)
                :termlinks                {}

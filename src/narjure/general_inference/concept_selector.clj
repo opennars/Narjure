@@ -4,6 +4,7 @@
      [core :refer :all]
      [actors :refer :all]]    [narjure.global-atoms :refer [c-bag lense-taskbags lense-termlinks]]
     [narjure.bag :as b]
+    [nal.term_utils :refer [syntactic-complexity interval?]]
     [narjure.defaults :refer [max-concept-selections]]
     [clojure.math.numeric-tower :as math]
     [narjure.memory-management.concept-utils :refer [concept-observable]]
@@ -16,14 +17,37 @@
 (def display (atom '()))
 (def search (atom ""))
 
+(defn temporal-conjunction-observable?
+  [id]
+  (and (sequential? id)
+       (or (and (= (first id) 'seq-conj)
+                (not (interval? (last id)))) ;these are for predictions
+           #_(= (first id) '&|))))
+
+(defn observable-temporal-conjunction?
+  [id]  ;a temporal conjunction is observable if it is a temporal conjunction that is observable or
+  (and (temporal-conjunction-observable? id) ;where each element is either a observable temporal conjunctions itself,
+       (or (concept-observable id) ;observable, or an interval
+         (let [cnt (count id)]
+           (every? (fn [z] (or (interval? z)
+                               (concept-observable z)
+                               (observable-temporal-conjunction? z)))
+                   (for [i (range 1 cnt)]
+                     (id i))))))) ;or all components are observable
+
+(defn temporal-linkage-justified
+  [id]
+  (or (concept-observable id)
+      (observable-temporal-conjunction? id)))
+
 (defn strengthen-temporal-link
   " creates a term-link between last-selected concept and the currently selected concept"
   [state selected]
   (when-let [last-selected (:last-selected state)] ;the last selected observable concept
-    (when (concept-observable (:id selected))   ; todo need to be able to link to itself here (&/, a, a) is valid sequence
+    (when (temporal-linkage-justified (:id selected))   ; todo need to be able to link to itself here (&/, a, a) is valid sequence
       (cast! (:ref selected) [:termlink-strengthen-msg [(:id last-selected)]])
       (cast! (:ref last-selected) [:termlink-strengthen-msg [(:id selected)]])))
-  (when (concept-observable (:id selected))
+  (when (concept-observable (:id selected)) ;one needs to be observable directly to justify linkage
     (set-state! (assoc state :last-selected selected))))
 
 (defn inference-tick-handler

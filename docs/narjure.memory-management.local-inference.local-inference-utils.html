@@ -2881,7 +2881,8 @@ net.brehaut.ClojureTools = (function (SH) {
     [nal.deriver :refer [occurrence-type]]
     [nal.deriver.truth :refer [t-and t-or frequency confidence expectation]]
     [nal.deriver.projection-eternalization :refer [project-eternalize-to]]
-    [narjure.debug-util :refer :all])
+    [narjure.debug-util :refer :all]
+    [narjure.budget-functions :refer [derived-budget]])
   (:refer-clojure :exclude [promise await]))</pre></td></tr><tr><td class="docs"><p>Truth rounding to 2 commas</p>
 </td><td class="codes"><pre class="brush: clojure">(defn truth-round
   [[f c :as truth]]
@@ -2890,8 +2891,8 @@ net.brehaut.ClojureTools = (function (SH) {
     [(round2 2 f)
     (round2 2 c)]))</pre></td></tr><tr><td class="docs"><p>The ID defining when elements in the task bag need to be merged.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn get-task-id
-  [task]
-  [(:statement task) (:task-type task) (occurrence-type (:occurrence task))])</pre></td></tr><tr><td class="docs"><p>The ID defining when elements in the anticipations bag need to be merged.</p>
+  [task] ;not using concept-term-transform would demand huge task bag size or less bias in complexity
+  [(concept-term-transform (:statement task)) (:task-type task) (occurrence-type (:occurrence task))])</pre></td></tr><tr><td class="docs"><p>The ID defining when elements in the anticipations bag need to be merged.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn get-anticipation-id
   [task]
   [(:statement task) (:task-type task) (:occurrence task)])</pre></td></tr><tr><td class="docs"><p>The budget evaluation for task bag element quality.</p>
@@ -2946,14 +2947,23 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(defn update-task-in-tasks
   [state task old-task]
   (let [[element bag] (b/get-by-id (:tasks @state) (get-task-id old-task))]
-    (when (not= nil element)
+    (when element
       (set-state! (assoc @state :tasks bag))))
-  (set-state! (assoc @state :tasks (b/add-element (:tasks @state) (make-element task)))))</pre></td></tr><tr><td class="docs"><p>Revision of two tasks.</p>
+  (set-state! (assoc @state :tasks (b/add-element (:tasks @state) (make-element task)))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn inc-budget ;task was revised, this is further evidence for the quality of the task
+  [[p d q]] ;as it seems to take part in summarizing experience instead of describing one-time phenomena
+  [(t-or p 0.3) (t-or d 0.1) (t-or q 0.3)])</pre></td></tr><tr><td class="docs"><p>Revision of two tasks.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn revise
   [t1 t2]
   (let [revised-truth (nal.deriver.truth/revision (:truth t1) (:truth t2))
-        evidence (make-evidence (:evidence t1) (:evidence t2))]
-    (assoc t1 :truth revised-truth :source :derived :evidence evidence :budget (max-budget (:budget t1) (:budget t2)))))</pre></td></tr><tr><td class="docs"><p>The quality of an answer, which is the confidence for y/n questions,
+        evidence (make-evidence (:evidence t1) (:evidence t2))
+        lbudget-left (if-let [budg (:lbudgets t1)] budg {})
+        lbudget-right (if-let [budg (:lbudgets t2)] budg {})]
+    (let [revised-task (dissoc (assoc t1 :truth revised-truth :source :derived :evidence evidence
+                                 :budget (max-budget (:budget t1) (:budget t2))
+                                         :lbudgets (merge lbudget-left lbudget-right))
+                       :record)]
+      (assoc revised-task :budget (inc-budget (:budget revised-task)) #_(derived-budget t1 revised-task)))))</pre></td></tr><tr><td class="docs"><p>The quality of an answer, which is the confidence for y/n questions,
   and the truth expectation, also taking complexity into account for what-questions</p>
 </td><td class="codes"><pre class="brush: clojure">(defn answer-quality
   [question solution]

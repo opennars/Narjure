@@ -2866,7 +2866,7 @@ net.brehaut.ClojureTools = (function (SH) {
   };
 })(SyntaxHighlighter);
 </script><script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script><title>narjure -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name"><a href="https://github.com/jarradh/narjure">narjure</a></h1><h2 class="project-version">0.1.0-SNAPSHOT</h2><br /><p>A Clojure implementation of the Non-Axiomatic Reasoning System proposed by Pei Wang.</p>
-</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.8.0</td></tr><tr><td class="dep-name">org.clojure/core.logic</td><td class="dotted"><hr /></td><td class="dep-version">0.8.10</td></tr><tr><td class="dep-name">instaparse</td><td class="dotted"><hr /></td><td class="dep-version">1.4.1</td></tr><tr><td class="dep-name">com.rpl/specter</td><td class="dotted"><hr /></td><td class="dep-version">0.9.1</td></tr><tr><td class="dep-name">org.clojure/tools.nrepl</td><td class="dotted"><hr /></td><td class="dep-version">0.2.12</td></tr><tr><td class="dep-name">org.clojure/data.priority-map</td><td class="dotted"><hr /></td><td class="dep-version">0.0.7</td></tr><tr><td class="dep-name">org.clojure/core.match</td><td class="dotted"><hr /></td><td class="dep-version">0.3.0-alpha4</td></tr><tr><td class="dep-name">org.clojure/core.unify</td><td class="dotted"><hr /></td><td class="dep-version">0.5.5</td></tr><tr><td class="dep-name">co.paralleluniverse/pulsar</td><td class="dotted"><hr /></td><td class="dep-version">0.7.5</td></tr><tr><td class="dep-name">org.immutant/immutant</td><td class="dotted"><hr /></td><td class="dep-version">2.1.2</td></tr><tr><td class="dep-name">clj-time</td><td class="dotted"><hr /></td><td class="dep-version">0.11.0</td></tr><tr><td class="dep-name">com.taoensso/timbre</td><td class="dotted"><hr /></td><td class="dep-version">4.3.1</td></tr><tr><td class="dep-name">avl.clj</td><td class="dotted"><hr /></td><td class="dep-version">0.0.9</td></tr><tr><td class="dep-name">org.clojure/math.numeric-tower</td><td class="dotted"><hr /></td><td class="dep-version">0.0.4</td></tr><tr><td class="dep-name">quil</td><td class="dotted"><hr /></td><td class="dep-version">2.4.0</td></tr><tr><td class="dep-name">seesaw</td><td class="dotted"><hr /></td><td class="dep-version">1.4.5</td></tr><tr><td class="dep-name">irclj</td><td class="dotted"><hr /></td><td class="dep-version">0.5.0-alpha4</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#nal.core">nal.core</a></li><li><a href="#nal.deriver.backward-rules">nal.deriver.backward-rules</a></li><li><a href="#nal.deriver.key-path">nal.deriver.key-path</a></li><li><a href="#nal.deriver.list-expansion">nal.deriver.list-expansion</a></li><li><a href="#nal.deriver.matching">nal.deriver.matching</a></li><li><a href="#nal.deriver.normalization">nal.deriver.normalization</a></li><li><a href="#nal.deriver.preconditions">nal.deriver.preconditions</a></li><li><a href="#nal.deriver.premises-swapping">nal.deriver.premises-swapping</a></li><li><a href="#nal.deriver.projection-eternalization">nal.deriver.projection-eternalization</a></li><li><a href="#nal.deriver.rules">nal.deriver.rules</a></li><li><a href="#nal.deriver.set-functions">nal.deriver.set-functions</a></li><li><a href="#nal.deriver.substitution">nal.deriver.substitution</a></li><li><a href="#nal.deriver.terms-permutation">nal.deriver.terms-permutation</a></li><li><a href="#nal.deriver.truth">nal.deriver.truth</a></li><li><a href="#nal.deriver.utils">nal.deriver.utils</a></li><li><a href="#nal.deriver">nal.deriver</a></li><li><a href="#nal.reader">nal.reader</a></li><li><a href="#nal.rules">nal.rules</a></li><li><a href="#nal.term_utils">nal.term_utils</a></li><li><a href="#nal.test_utils">nal.test_utils</a></li><li><a href="#narjure.actor.utils">narjure.actor.utils</a></li><li><a href="#narjure.bag">narjure.bag</a></li><li><a href="#narjure.budget-functions">narjure.budget-functions</a></li><li><a href="#narjure.control-utils">narjure.control-utils</a></li><li><a href="#narjure.core">narjure.core</a></li><li><a href="#narjure.debug-util">narjure.debug-util</a></li><li><a href="#narjure.defaults">narjure.defaults</a></li><li><a href="#narjure.general-inference.concept-selector">narjure.general-inference.concept-selector</a></li><li><a href="#narjure.general-inference.general-inferencer">narjure.general-inference.general-inferencer</a></li><li><a href="#narjure.general-inference.inference-request-router">narjure.general-inference.inference-request-router</a></li><li><a href="#narjure.global-atoms">narjure.global-atoms</a></li><li><a href="#narjure.memory-management.concept">narjure.memory-management.concept</a></li><li><a href="#narjure.memory-management.concept-manager">narjure.memory-management.concept-manager</a></li><li><a href="#narjure.memory-management.concept-utils">narjure.memory-management.concept-utils</a></li><li><a href="#narjure.memory-management.forgettor">narjure.memory-management.forgettor</a></li><li><a href="#narjure.memory-management.local-inference.belief-processor">narjure.memory-management.local-inference.belief-processor</a></li><li><a href="#narjure.memory-management.local-inference.goal-processor">narjure.memory-management.local-inference.goal-processor</a></li><li><a href="#narjure.memory-management.local-inference.local-inference-utils">narjure.memory-management.local-inference.local-inference-utils</a></li><li><a href="#narjure.memory-management.local-inference.question-processor">narjure.memory-management.local-inference.question-processor</a></li><li><a href="#narjure.memory-management.local-inference.quest-processor">narjure.memory-management.local-inference.quest-processor</a></li><li><a href="#narjure.memory-management.task-dispatcher">narjure.memory-management.task-dispatcher</a></li><li><a href="#narjure.memory-management.termlink-utils">narjure.memory-management.termlink-utils</a></li><li><a href="#narjure.narsese">narjure.narsese</a></li><li><a href="#narjure.perception-action.derived-load-reducer">narjure.perception-action.derived-load-reducer</a></li><li><a href="#narjure.perception-action.operator-executor">narjure.perception-action.operator-executor</a></li><li><a href="#narjure.perception-action.sentence-parser">narjure.perception-action.sentence-parser</a></li><li><a href="#narjure.perception-action.task-creator">narjure.perception-action.task-creator</a></li><li><a href="#narjure.projection-utils">narjure.projection-utils</a></li><li><a href="#narjure.repl">narjure.repl</a></li><li><a href="#narjure.runtime-utils">narjure.runtime-utils</a></li><li><a href="#narjure.sensorimotor">narjure.sensorimotor</a></li><li><a href="#gui.actors">gui.actors</a></li><li><a href="#gui.globals">gui.globals</a></li><li><a href="#gui.gui">gui.gui</a></li><li><a href="#gui.gui-utils">gui.gui-utils</a></li><li><a href="#gui.hnav">gui.hnav</a></li><li><a href="#gui.hud">gui.hud</a></li><li><a href="#gui.lense">gui.lense</a></li><li><a href="#examples.ircbot">examples.ircbot</a></li><li><a href="#examples.pong">examples.pong</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#nal.core" name="nal.core"><h1 class="project-name">nal.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.8.0</td></tr><tr><td class="dep-name">org.clojure/core.logic</td><td class="dotted"><hr /></td><td class="dep-version">0.8.10</td></tr><tr><td class="dep-name">instaparse</td><td class="dotted"><hr /></td><td class="dep-version">1.4.1</td></tr><tr><td class="dep-name">com.rpl/specter</td><td class="dotted"><hr /></td><td class="dep-version">0.9.1</td></tr><tr><td class="dep-name">org.clojure/tools.nrepl</td><td class="dotted"><hr /></td><td class="dep-version">0.2.12</td></tr><tr><td class="dep-name">org.clojure/data.priority-map</td><td class="dotted"><hr /></td><td class="dep-version">0.0.7</td></tr><tr><td class="dep-name">org.clojure/core.match</td><td class="dotted"><hr /></td><td class="dep-version">0.3.0-alpha4</td></tr><tr><td class="dep-name">org.clojure/core.unify</td><td class="dotted"><hr /></td><td class="dep-version">0.5.5</td></tr><tr><td class="dep-name">co.paralleluniverse/pulsar</td><td class="dotted"><hr /></td><td class="dep-version">0.7.5</td></tr><tr><td class="dep-name">org.immutant/immutant</td><td class="dotted"><hr /></td><td class="dep-version">2.1.2</td></tr><tr><td class="dep-name">clj-time</td><td class="dotted"><hr /></td><td class="dep-version">0.11.0</td></tr><tr><td class="dep-name">com.taoensso/timbre</td><td class="dotted"><hr /></td><td class="dep-version">4.3.1</td></tr><tr><td class="dep-name">avl.clj</td><td class="dotted"><hr /></td><td class="dep-version">0.0.9</td></tr><tr><td class="dep-name">org.clojure/math.numeric-tower</td><td class="dotted"><hr /></td><td class="dep-version">0.0.4</td></tr><tr><td class="dep-name">quil</td><td class="dotted"><hr /></td><td class="dep-version">2.4.0</td></tr><tr><td class="dep-name">seesaw</td><td class="dotted"><hr /></td><td class="dep-version">1.4.5</td></tr><tr><td class="dep-name">irclj</td><td class="dotted"><hr /></td><td class="dep-version">0.5.0-alpha4</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#nal.core">nal.core</a></li><li><a href="#nal.deriver.backward-rules">nal.deriver.backward-rules</a></li><li><a href="#nal.deriver.key-path">nal.deriver.key-path</a></li><li><a href="#nal.deriver.list-expansion">nal.deriver.list-expansion</a></li><li><a href="#nal.deriver.matching">nal.deriver.matching</a></li><li><a href="#nal.deriver.normalization">nal.deriver.normalization</a></li><li><a href="#nal.deriver.preconditions">nal.deriver.preconditions</a></li><li><a href="#nal.deriver.premises-swapping">nal.deriver.premises-swapping</a></li><li><a href="#nal.deriver.projection-eternalization">nal.deriver.projection-eternalization</a></li><li><a href="#nal.deriver.rules">nal.deriver.rules</a></li><li><a href="#nal.deriver.set-functions">nal.deriver.set-functions</a></li><li><a href="#nal.deriver.substitution">nal.deriver.substitution</a></li><li><a href="#nal.deriver.terms-permutation">nal.deriver.terms-permutation</a></li><li><a href="#nal.deriver.truth">nal.deriver.truth</a></li><li><a href="#nal.deriver.utils">nal.deriver.utils</a></li><li><a href="#nal.deriver">nal.deriver</a></li><li><a href="#nal.reader">nal.reader</a></li><li><a href="#nal.rules">nal.rules</a></li><li><a href="#nal.term_utils">nal.term_utils</a></li><li><a href="#nal.test_utils">nal.test_utils</a></li><li><a href="#narjure.actor.utils">narjure.actor.utils</a></li><li><a href="#narjure.bag">narjure.bag</a></li><li><a href="#narjure.budget-functions">narjure.budget-functions</a></li><li><a href="#narjure.control-utils">narjure.control-utils</a></li><li><a href="#narjure.core">narjure.core</a></li><li><a href="#narjure.debug-util">narjure.debug-util</a></li><li><a href="#narjure.defaults">narjure.defaults</a></li><li><a href="#narjure.general-inference.concept-selector">narjure.general-inference.concept-selector</a></li><li><a href="#narjure.general-inference.general-inferencer">narjure.general-inference.general-inferencer</a></li><li><a href="#narjure.general-inference.inference-request-router">narjure.general-inference.inference-request-router</a></li><li><a href="#narjure.global-atoms">narjure.global-atoms</a></li><li><a href="#narjure.memory-management.concept">narjure.memory-management.concept</a></li><li><a href="#narjure.memory-management.concept-manager">narjure.memory-management.concept-manager</a></li><li><a href="#narjure.memory-management.concept-utils">narjure.memory-management.concept-utils</a></li><li><a href="#narjure.memory-management.forgettor">narjure.memory-management.forgettor</a></li><li><a href="#narjure.memory-management.local-inference.belief-processor">narjure.memory-management.local-inference.belief-processor</a></li><li><a href="#narjure.memory-management.local-inference.goal-processor">narjure.memory-management.local-inference.goal-processor</a></li><li><a href="#narjure.memory-management.local-inference.local-inference-utils">narjure.memory-management.local-inference.local-inference-utils</a></li><li><a href="#narjure.memory-management.local-inference.question-processor">narjure.memory-management.local-inference.question-processor</a></li><li><a href="#narjure.memory-management.local-inference.quest-processor">narjure.memory-management.local-inference.quest-processor</a></li><li><a href="#narjure.memory-management.task-dispatcher">narjure.memory-management.task-dispatcher</a></li><li><a href="#narjure.memory-management.termlink-utils">narjure.memory-management.termlink-utils</a></li><li><a href="#narjure.narsese">narjure.narsese</a></li><li><a href="#narjure.perception-action.derived-load-reducer">narjure.perception-action.derived-load-reducer</a></li><li><a href="#narjure.perception-action.operator-executor">narjure.perception-action.operator-executor</a></li><li><a href="#narjure.perception-action.sentence-parser">narjure.perception-action.sentence-parser</a></li><li><a href="#narjure.perception-action.task-creator">narjure.perception-action.task-creator</a></li><li><a href="#narjure.projection-utils">narjure.projection-utils</a></li><li><a href="#narjure.repl">narjure.repl</a></li><li><a href="#narjure.runtime-utils">narjure.runtime-utils</a></li><li><a href="#narjure.sensorimotor">narjure.sensorimotor</a></li><li><a href="#gui.actors">gui.actors</a></li><li><a href="#gui.globals">gui.globals</a></li><li><a href="#gui.gui">gui.gui</a></li><li><a href="#gui.gui-utils">gui.gui-utils</a></li><li><a href="#gui.hnav">gui.hnav</a></li><li><a href="#gui.hud">gui.hud</a></li><li><a href="#gui.lense">gui.lense</a></li><li><a href="#examples.ircbot">examples.ircbot</a></li><li><a href="#examples.pong">examples.pong</a></li><li><a href="#examples.simplenario">examples.simplenario</a></li><li><a href="#examples.simplepong">examples.simplepong</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#nal.core" name="nal.core"><h1 class="project-name">nal.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns nal.core
   (:require [nal.deriver.truth :as t]
             [nal.deriver :refer [generate-conclusions]]
@@ -3080,13 +3080,14 @@ net.brehaut.ClojureTools = (function (SH) {
         get-func (fn [f] (let [secure (fn [func t1 t2 task belief swapped time-measure]
                                         (let [belief-truth (fn [t task belief] ;2. this is why args are necessary here
                                                              (if (or (= nil belief)
-                                                                     time-measure
-                                                                     (not (:truth belief))) ;as task and belief are not aviable on rule generation
-                                                               #_(:truth (project-eternalize-to (:occurrence task) ;just to play the role of less confidence for further apart
-                                                                                              belief @nars-time)) ;not necessary as time is kept track of!!
+                                                                     (not (:truth belief)))
                                                                t
-                                                               (:truth (project-eternalize-to (:occurrence task)
-                                                                                                belief @nars-time))))]
+                                                               (if time-measure ;as task and belief are not aviable on rule generation
+                                                                 #_(:truth (project-eternalize-to (:occurrence task) ;just to play the role of less confidence for further apart
+                                                                                                belief @nars-time)) ;not necessary as time is kept track of!!
+                                                                 t
+                                                                 (:truth (project-eternalize-to (:occurrence task)
+                                                                                                belief @nars-time)))))]
                                           (if swapped
                                             (try
                                               (func (belief-truth t2 task belief) t1)
@@ -3358,7 +3359,7 @@ net.brehaut.ClojureTools = (function (SH) {
     'ext-inter 'conj})</pre></td></tr><tr><td class="docs"><p>commutative:    &lt;-> &lt;=> &lt;|> &amp; | &amp;&amp; ||
 not commutative: --> ==> =/> => </> &amp;/ - ~</p>
 </td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def commutative-ops #{'&lt;-&gt; '&lt;=&gt; '&lt;|&gt; '| '|| 'conj 'ext-inter})</pre></td></tr><tr><td class="docs"><p>Makes transformaitions like [A --> B] to [--> A B].</p>
+</td><td class="codes"><pre class="brush: clojure">(def commutative-ops #{'&lt;-&gt; '&lt;=&gt; '&lt;|&gt; '| '|| 'conj 'ext-inter '&amp;|})</pre></td></tr><tr><td class="docs"><p>Makes transformaitions like [A --> B] to [--> A B].</p>
 </td><td class="codes"><pre class="brush: clojure">(defn infix-&gt;prefix
   [premise]
   (if (coll? premise)
@@ -3396,6 +3397,8 @@ not commutative: --> ==> =/> => </> &amp;/ - ~</p>
         statement))
     :else statement))</pre></td></tr><tr><td class="docs"><p>provide an order for the commutative ops, so that <a &lt;-> b> and <b &lt;-> a> will both be <b &lt;-> a>,
   this is needed because they need to end up in the same concept!</p>
+
+<p>todo make recursive:</p>
 </td><td class="codes"><pre class="brush: clojure">(defn sort-commutative
   [conclusions]
   (if (coll? conclusions)
@@ -4252,12 +4255,28 @@ http://stackoverflow.com/questions/24553212/how-to-take-n-random-items-from-a-co
         (shuffle-term x))
       A)))</pre></td></tr><tr><td class="docs"><p>Generate all conclusions between task t1 and task t2</p>
 </td><td class="codes"><pre class="brush: clojure">(defn generate-conclusions
-  [rules {p1 :statement :as t1} {p2 :statement :as t2}]
+  [{p1_ :statement :as t1} {p2 :statement :as t2}]
   ;assign statement
-  (apply set/union (for [x (range 50)]
-     (generate-conclusions-no-commutativity rules
-                                            (assoc t1 :statement (shuffle-term p1))
-                                            (assoc t2 :statement (shuffle-term p2))))))</pre></td></tr><tr><td class="docs"><p>Valid statement filter.
+  (let [p1 (if                                       ;ok the first one is eternal the second not, so lets use
+             (and (= (:occurrence p1_) :eternal)     ;the occurence time of the second to not lose the temporal information (valid since it is eternal anyway)
+                  (not= (:occurrence p2) :eternal))  ;this way eternalization is left to eternalization
+             (assoc p1_ :occurrence (:occurrence p2)) ;note that we use the eternal belief also anyway currently
+             p1_)                                     ;so the eternal case is not lost!!
+        iterate-n (fn [next-it prev-shuffles prev-results x]
+                    (let [shuffled-p1 (shuffle-term p1)
+                          shuffled-p2 (shuffle-term p2)
+                          shuffle-pair [shuffled-p1 shuffled-p2]
+                          unification-power 5] ;how much shuffle attempts
+                      (if (&lt; x unification-power)
+                        (if (some #{shuffle} prev-shuffles)
+                          (next-it next-it prev-shuffles prev-results (inc x)) ;generate-conclusions-no-commutativity is expensive this is why we avoid it
+                          (let [new-results (set/union prev-results
+                                                       (set (generate-conclusions-no-commutativity (r/rules (:task-type t1))
+                                                                                                   (assoc t1 :statement shuffled-p1)
+                                                                                                   (assoc t2 :statement shuffled-p2))))]
+                            (next-it next-it (set/union prev-shuffles #{shuffle-pair}) (set/union prev-results new-results) (inc x))))
+                        prev-results)))]
+    (iterate-n iterate-n #{} #{} 0)))</pre></td></tr><tr><td class="docs"><p>Valid statement filter.
   The filter is a preliminary solution to get rid of statements that are not valid NAL statements.
   Some of these need detailled analysis and a lot of care / inference rule condition improvement to get rid of.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn valid-statement
@@ -4287,13 +4306,7 @@ http://stackoverflow.com/questions/24553212/how-to-take-n-random-items-from-a-co
   [occ]
   (case occ
     :eternal :eternal
-    :event))</pre></td></tr><tr><td class="docs"><p>Inference between both tasks, where the occurrence prefers the :event here when one is :event.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn gen-conclusions
-  [parsed-p1 parsed-p2]
-  (generate-conclusions
-      (r/rules (:task-type parsed-p1))
-      parsed-p1
-      parsed-p2))</pre></td></tr><tr><td class="docs"><p>Inference between two premises</p>
+    :event))</pre></td></tr><tr><td class="docs"><p>Inference between two premises</p>
 
 <p>this is the inference function we should use</p>
 </td><td class="codes"><pre class="brush: clojure">(defn inference
@@ -4310,7 +4323,7 @@ http://stackoverflow.com/questions/24553212/how-to-take-n-random-items-from-a-co
                                             (some #{'qu-var} (flatten (:statement st)))))))
                     (map no-truth-for-questions-and-quests
                          (map interval-reduction
-                              (gen-conclusions parsed-p1 parsed-p2)))))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#nal.reader" name="nal.reader"><h1 class="project-name">nal.reader</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+                              (generate-conclusions parsed-p1 parsed-p2)))))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#nal.reader" name="nal.reader"><h1 class="project-name">nal.reader</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns nal.reader
   (:require [clojure.string :as s])
   (:import (clojure.lang LispReader)))</pre></td></tr><tr><td class="docs">
@@ -4962,7 +4975,7 @@ So these rules are for bringing NAL-statements into a different, implied and mor
     (let [op (nth st 2)]
       (and (not (coll? op))
            (clojure.string/starts-with? (name op) &quot;op_&quot;)))
-    false))</pre></td></tr><tr><td class="docs"><p>Checks whether st is the negation of an operation</p>
+    (clojure.string/starts-with? (str st) &quot;self_op_&quot;)))</pre></td></tr><tr><td class="docs"><p>Checks whether st is the negation of an operation</p>
 </td><td class="codes"><pre class="brush: clojure">(defn negation-of-operation?
   [st]
   (and (coll? st)
@@ -4984,15 +4997,7 @@ So these rules are for bringing NAL-statements into a different, implied and mor
     1))</pre></td></tr><tr><td class="docs"><p>todo -  temp function below should be in nal.clj - Patham9 to resolve</p>
 </td><td class="codes"><pre class="brush: clojure">(def logic-ops
   #{'--&gt; '&lt;-&gt; 'instance 'property 'instance-property '==&gt; 'pred-impl '=|&gt; 'retro-impl '&lt;=&gt; '&lt;/&gt; '&lt;|&gt; 'ext-set 'int-set 'ext-inter '| '- 'int-dif '* 'ext-image 'int-image '-- '|| 'conj 'seq-conj '&amp;|})</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn placeholder? [t] (= '_ t))</pre></td></tr><tr><td class="docs"><p>Extract the termlink relevant subterms of the term up to 3 levels as demanded by the NAL rules</p>
-</td><td class="codes"><pre class="brush: clojure">(defn termlink-subterms
-  ([level content]
-   (if (and (&lt; level 3) (compound? content))
-     (reduce set/union #{content} (map (partial termlink-subterms (inc level)) content))
-     #{content}))
-  ([content]
-   (remove #(or (logic-ops %) (interval? %) (placeholder? %) (variable? %))
-           (termlink-subterms 0 content))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn placeholder? [t] (= '_ t))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn is-singular-sequence [st]
   &quot;Checks whether the sequence is of (&amp;/,a) form&quot;
   (and (coll? st)
@@ -5085,7 +5090,8 @@ So these rules are for bringing NAL-statements into a different, implied and mor
                x
                (/ x 2))))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn str-is-integer [s]
-  (every? #(Character/isDigit %) s))</pre></td></tr><tr><td class="docs"><p>Change the interval atom to an interval</p>
+  (when (not= s )
+    (every? #(Character/isDigit %) s)))</pre></td></tr><tr><td class="docs"><p>Change the interval atom to an interval</p>
 </td><td class="codes"><pre class="brush: clojure">(defn interval-atom-to-interval
   [t]
   (let [pot-ival (name t)
@@ -5111,6 +5117,39 @@ So these rules are for bringing NAL-statements into a different, implied and mor
              (for [x t]
                (apply-interval-precision x))))
     t))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn apply-interval-concept-term-transform [t]
+  &quot;all intervals are changed to the next interval precision point
+  in this magnitude&quot;
+  (if (coll? t)
+    (if (= (first t) :interval)
+      [:interval &quot;x&quot;]
+      (apply vector
+             (for [x t]
+               (apply-interval-concept-term-transform x))))
+    t))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn concept-term-transform [t]
+  (let [term (if (and (coll? t)   ;conceptualize (&amp;/,a,i13) as a
+                      (= (count t) 3)
+                      (= (first t) 'seq-conj)
+                      (interval? (last t)))
+               (second t)
+               t)]
+    (apply-interval-concept-term-transform term)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn statement-and-conceptid-equal [statement concept-id]
+  &quot;same in respect to intervals&quot;
+  (= (concept-term-transform statement)
+     concept-id))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn not-statement-and-conceptid-equal [statement concept-id]
+  &quot;not same in respect to intervals&quot;
+  (not (statement-and-conceptid-equal statement concept-id)))</pre></td></tr><tr><td class="docs"><p>Extract the termlink relevant subterms of the term up to 3 levels as demanded by the NAL rules</p>
+</td><td class="codes"><pre class="brush: clojure">(defn termlink-subterms
+  ([level content]
+   (if (and (&lt; level 3) (compound? content))
+     (reduce set/union #{content} (map (partial termlink-subterms (inc level)) content))
+     #{content}))
+  ([content]
+   (remove #(or (logic-ops %) (interval? %) (placeholder? %) (variable? %))
+           (map concept-term-transform (termlink-subterms 0 content)))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn no-truth-for-questions-and-quests [st]         ;sentence util
   &quot;makes absolutely sure that goals and beliefs have no truth and desire value for now&quot;
   (if (or (= (:task-type st) :quest)
@@ -5155,6 +5194,7 @@ So these rules are for bringing NAL-statements into a different, implied and mor
         additional-condition (fn [z] (and (not= (second z) nil)
                                           (operation? ((second z) '?operation))
                                           (not (operation? ((second z) '?precondition)))
+                                          (interval? ((second z) '?interval1))
                                           (not (negation-of-operation? ((second z) '?precondition)))
                                           (not (operation? ((second z) '?goal)))
                                           (not (negation-of-operation? ((second z) '?goal)))))]
@@ -5365,13 +5405,12 @@ with lowest priority will be removed on addition</p>
      [defaults :refer :all]
      [global-atoms :refer :all]
      [control-utils :refer [round2]]
-     [debug-util :refer :all]]
-    [narjure.memory-management.concept-utils :refer :all]))</pre></td></tr><tr><td class="docs"><p>The task quality judged by its truth.</p>
+     [debug-util :refer :all]]))</pre></td></tr><tr><td class="docs"><p>The task quality judged by its truth.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn truth-to-quality
   [t]
   (let [exp (expectation t)
         positive-truth-bias 0.75]
-    (max exp (* (- 1.0 exp) positive-truth-bias))))</pre></td></tr><tr><td class="docs"><p>Occurrence budget penalty. Currently not used as forgetting seems to suffice.</p>
+    exp #_(max exp (* (- 1.0 exp) positive-truth-bias))))</pre></td></tr><tr><td class="docs"><p>Occurrence budget penalty. Currently not used as forgetting seems to suffice.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn occurrence-penalty-tr
   [occ]
   (let [k 0.0001]
@@ -5389,10 +5428,6 @@ with lowest priority will be removed on addition</p>
     (if (and (:truth derived-task)
              match)
       (do
-        ;(println &quot;1&quot;)
-        ;(println (str &quot;1.1&quot; match))
-        ;(println (str &quot;1.2&quot; (match '?goal)))
-        ;(println (str &quot;1.3&quot; (highest-desire-in-respect-to-now (match '?goal))))
         (let [goal (match '?goal)
               precondition (match '?precondition)
               goal-desire (highest-desire-in-respect-to-now goal)]
@@ -5400,30 +5435,32 @@ with lowest priority will be removed on addition</p>
           (if (= precondition goal)
             nil
             (if goal-desire
-              (let [quality (max (nth budget 2)
-                                 (t-or (expectation (:truth derived-task)) (t-or (second goal-desire) 0.8)))] ;TODO see goal-processor (unify)
+              (let [quality (t-or (t-or (expectation (:truth derived-task))
+                                        (nth budget 2))
+                                       (t-or (second goal-desire)
+                                             (t-or (/ 1.0 (:sc derived-task))
+                                                   0.3)))] ;TODO see goal-processor (unify)
                 (do
                   (println &quot;INCREASED DERIVED BUDGET&quot;)
                   (println (narsese-print (:statement derived-task)) &quot; &quot; (:truth derived-task) &quot; &quot; (:occurrence derived-task))
-                  [(max (first budget) quality)
-                   (max (second budget) 0.9)
-                   (nth budget 2)]))
+                  [(max (first budget) quality) #_(max (first budget) quality)
+                   (second budget) #_(max (second budget) 0.9)
+                   (t-or 0.6 (t-or (nth budget 2) (/ 1.0 (:sc derived-task))))]))
               not-matched-or-not-desired-budget))))
       not-matched-or-not-desired-budget))                   ;tODO too radical)</pre></td></tr><tr><td class="docs"><p>The budget of a by general inference derived task.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn derived-budget
   [task derived-task]
-  (when (&lt; (:sc derived-task) max-term-complexity)
-    (let [activation-gain 0.95
-          priority (max 1.0 (t-or activation-gain (first (:budget task))))
-         durability (/ (second (:budget task)) (Math/sqrt (:sc derived-task)))
-         truth-quality (if (:truth derived-task) (truth-to-quality (:truth derived-task))
-                                                 0.0 #_(w2c 1.0))
-         complexity (:sc derived-task)
-         rescale-factor 0.3 ;should probably not above input belief quality!
-         quality (* truth-quality
-                    rescale-factor
-                    #_(/ 1.0 (Math/sqrt complexity)))]
-     (structural-reward-budget [priority durability quality] derived-task))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#narjure.control-utils" name="narjure.control-utils"><h1 class="project-name">narjure.control-utils</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+  (when (&lt; (:sc derived-task) @max-term-complexity)
+    (let [durability (/ (second (:budget task)) (:sc derived-task))
+          truth-quality (if (:truth derived-task) (truth-to-quality (:truth derived-task))
+                                                  0.0)
+          priority (/ (* (t-or truth-quality (first (:budget task)))
+                         (occurrence-penalty-tr (:occurrence derived-task)))
+                      (/ (:sc derived-task) 1.0))
+          rescale-factor 0.1 ;should probably not above input belief quality!
+          quality (* priority
+                     rescale-factor)]
+      (structural-reward-budget [priority durability quality] derived-task))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#narjure.control-utils" name="narjure.control-utils"><h1 class="project-name">narjure.control-utils</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns narjure.control-utils
   (:require
     [narjure.bag :as b]
@@ -5473,7 +5510,7 @@ with lowest priority will be removed on addition</p>
 </td><td class="codes"><pre class="brush: clojure">(defn select-concepts-rec
   [count n bag selected]
   (if (and (pos? n) (pos? count))
-    (let [[element bag'] (b/get-by-index bag (selection-fn count))
+    (let [[element bag'] (b/get-by-index bag (selection-fn-new count))
           selected' (conj selected element)]
       (select-concepts-rec (dec count) (dec n) bag' selected'))
     selected))</pre></td></tr><tr><td class="docs"><p>wrapper for: select-concepts-rec
@@ -5513,7 +5550,7 @@ with lowest priority will be removed on addition</p>
      [operator-executor :refer [operator-executor]]
      [sentence-parser :refer [sentence-parser]]
      [derived-load-reducer :refer [derived-load-reducer]]
-     [task-creator :refer [task-creator]]]
+     [task-creator :refer [task-creator lastevent]]]
     [narjure.narsese :refer [parse2]]
     [taoensso.timbre :refer [info set-level!]]
     [narjure.bag :as b]
@@ -5579,6 +5616,8 @@ with lowest priority will be removed on addition</p>
     [&quot;8&quot; :permanent 5 5 :sec 100 (sentence-parser)]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def sup (atom '()))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn run []
+  (reset! lastevent nil)
+  (reset! max-term-complexity max-term-complexity-init)
   (info &quot;reset question filter&quot;)
   (reset! last-qu-answers [])
   (info &quot;Resetting concepts bagss:&quot;)
@@ -5780,38 +5819,44 @@ with lowest priority will be removed on addition</p>
 </td><td class="codes"><pre class="brush: clojure">(def c-priority 0.5)                                        ; default concept priority</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def ^{:type double} horizon 1)                             ; personality factor for evidential horizon</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def max-evidence 10)                                       ; maximum length of evidence trail</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def temporal-window-duration 10)                           ; number of system cycles to consider as concurrent</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def max-term-complexity 22)                                ; maximum number of terms and sub terms in a statement - syntactic complexity</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def priority-threshold 0.001)                              ; concepts and tasks have to be above this to be processed</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def temporal-window-duration 1)                           ; number of system cycles to consider as concurrent</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def term-complexity-offset 11) ;todo a better budget function instead</pre></td></tr><tr><td class="docs"><p>todo a better budget function instead</p>
+</td><td class="codes"><pre class="brush: clojure">(def max-term-complexity-init 10)
+(def max-term-complexity (atom max-term-complexity-init))                                ; maximum number of terms and sub terms in a statement - syntactic complexity</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def priority-threshold 0.0)                              ; concepts and tasks have to be above this to be processed</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def max-concept-selections 5)                              ; don't set higher if not on a sumpercomputer, will cause trouble</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def termlink-single-sample-evidence-amount 0.01)           ; default conf for termlink truth value</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def concept-max-termlinks 10)                              ; max size of termlink bag per concept</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def max-tasks 10)                                          ; max size of task bag per concept</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def max-tasks 30)                                          ; max size of task bag per concept</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def max-anticipations 10)                                   ; max size of anticipation bag per concept</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def max-concepts 1000)                                     ; do not make too small (less than 50) as causes cyclic issue between task-dispatcher and concept-manager</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def max-concepts 250)                                     ; do not make too small (less than 50) as causes cyclic issue between task-dispatcher and concept-manager</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def max-derived-sentences 50)                              ; derived task bag capacity</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def max-derived-selections 10)                             ; max derived selections per cycle</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def max-event-selections 10)                               ; no longer used - number of events to select per cycle</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def inverse-decay-rate 10)                                        ; forgetting adjustment rate for concepts e^-lt where l = (1.0 - durabiity) / decay-rate</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def system-tick-interval-slow 150)
-(def inference-tick-interval-slow 110)
-(def system-tick-interval-fast 50)
-(def inference-tick-interval-fast 25)
-(def system-tick-interval (atom system-tick-interval-slow))                               ;make big enough</pre></td></tr><tr><td class="docs"><p>make big enough</p>
-</td><td class="codes"><pre class="brush: clojure">(def inference-tick-interval (atom inference-tick-interval-slow))
+</td><td class="codes"><pre class="brush: clojure">(def system-tick-interval-slow 136)
+(def inference-tick-interval-slow 100)
+(def system-tick-interval-medium 50)
+(def inference-tick-interval-medium 25)
+(def system-tick-interval-fast 20)
+(def inference-tick-interval-fast 10)
+(def system-tick-interval (atom system-tick-interval-medium))                               ;make big enough</pre></td></tr><tr><td class="docs"><p>make big enough</p>
+</td><td class="codes"><pre class="brush: clojure">(def inference-tick-interval (atom inference-tick-interval-medium))
 (def anticipation-scale-dependent-tolerance 4.0)            ;has to be 4 since interval rounding has to agree with time measurement in 2-power</pre></td></tr><tr><td class="docs"><p>has to be 4 since interval rounding has to agree with time measurement in 2-power</p>
 </td><td class="codes"><pre class="brush: clojure">(def anticipation-disappointment-priority-gain 1.5)         ;should be &gt;=1.0 !</pre></td></tr><tr><td class="docs"><p>should be >=1.0 !</p>
 </td><td class="codes"><pre class="brush: clojure">(def termlink-default-budget [0.1 0.9])
 (def concept-selection-introduced-termlink-default-budget [0.1 0.3])
 (def termlink-context-adaptations-speed 0.05)
 (def revision-relevant-event-distance 30.0)                  ;TODO check its relation to temporal window and the parameter in projection</pre></td></tr><tr><td class="docs"><p>TODO check its relation to temporal window and the parameter in projection</p>
-</td><td class="codes"></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#narjure.general-inference.concept-selector" name="narjure.general-inference.concept-selector"><h1 class="project-name">narjure.general-inference.concept-selector</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def termlink-record-size concept-max-termlinks)
+(def negation-rule-priority-threshold 0.9) </pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#narjure.general-inference.concept-selector" name="narjure.general-inference.concept-selector"><h1 class="project-name">narjure.general-inference.concept-selector</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns narjure.general-inference.concept-selector
   (:require
     [co.paralleluniverse.pulsar
      [core :refer :all]
      [actors :refer :all]]    [narjure.global-atoms :refer [c-bag lense-taskbags lense-termlinks]]
     [narjure.bag :as b]
+    [nal.term_utils :refer [syntactic-complexity interval?]]
     [narjure.defaults :refer [max-concept-selections]]
     [clojure.math.numeric-tower :as math]
     [narjure.memory-management.concept-utils :refer [concept-observable]]
@@ -5821,14 +5866,35 @@ with lowest priority will be removed on addition</p>
   (:refer-clojure :exclude [promise await]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def aname :concept-selector)
 (def display (atom '()))
-(def search (atom ))</pre></td></tr><tr><td class="docs"><p> creates a term-link between last-selected concept and the currently selected concept</p>
+(def search (atom ))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn temporal-conjunction-observable?
+  [id]
+  (and (sequential? id)
+       (or (and (= (first id) 'seq-conj)
+                (not (interval? (last id)))) ;these are for predictions
+           #_(= (first id) '&amp;|))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn observable-temporal-conjunction?
+  [id]  ;a temporal conjunction is observable if it is a temporal conjunction that is observable or
+  (and (temporal-conjunction-observable? id) ;where each element is either a observable temporal conjunctions itself,
+       (or (concept-observable id) ;observable, or an interval
+         (let [cnt (count id)]
+           (every? (fn [z] (or (interval? z)
+                               (concept-observable z)
+                               (observable-temporal-conjunction? z)))
+                   (for [i (range 1 cnt)]
+                     (id i))))))) ;or all components are observable</pre></td></tr><tr><td class="docs"><p>or all components are observable</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn temporal-linkage-justified
+  [id]
+  (or (concept-observable id)
+      (observable-temporal-conjunction? id)))</pre></td></tr><tr><td class="docs"><p> creates a term-link between last-selected concept and the currently selected concept</p>
 </td><td class="codes"><pre class="brush: clojure">(defn strengthen-temporal-link
   [state selected]
   (when-let [last-selected (:last-selected state)] ;the last selected observable concept
-    (when (concept-observable (:id selected))   ; todo need to be able to link to itself here (&amp;/, a, a) is valid sequence
+    (when (temporal-linkage-justified (:id selected))   ; todo need to be able to link to itself here (&amp;/, a, a) is valid sequence
       (cast! (:ref selected) [:termlink-strengthen-msg [(:id last-selected)]])
       (cast! (:ref last-selected) [:termlink-strengthen-msg [(:id selected)]])))
-  (when (concept-observable (:id selected))
+  (when (concept-observable (:id selected)) ;one needs to be observable directly to justify linkage
     (set-state! (assoc state :last-selected selected))))</pre></td></tr><tr><td class="docs"><p>Select n concepts for inference and post
    inference-request-message to each selected
    concept</p>
@@ -5871,25 +5937,27 @@ with lowest priority will be removed on addition</p>
      [actors :refer :all]]
     [nal
      [deriver :refer [inference]]
-     [term_utils :refer [syntactic-complexity]]]
-    [nal.deriver :refer [inference]]
-    [taoensso.timbre :refer [debug info]]
-    [narjure
+     [term_utils :refer [syntactic-complexity operation? interval?]]]
+[nal.deriver :refer [inference]]
+[taoensso.timbre :refer [debug info]]
+    [narjure.memory-management.concept-utils :refer [concept-priority]]
+[narjure
      [debug-util :refer :all]
      [budget-functions :refer [derived-budget]]
      [defaults :refer :all]
-     [control-utils :refer [make-evidence non-overlapping-evidence?]]])
+     [control-utils :refer [make-evidence non-overlapping-evidence?]]]
+    [narjure.memory-management.local-inference.local-inference-utils :refer [get-task-id]])
   (:refer-clojure :exclude [promise await]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def display (atom '()))
 (def search (atom ))</pre></td></tr><tr><td class="docs"><p>Processes :do-inference-msg:
     generates derived results, budget and occurrence time for derived tasks.
     Posts derived sentences to task creator</p>
 </td><td class="codes"><pre class="brush: clojure">(defn do-inference-handler
-  [from [msg [task-concept-id belief-concept-id task belief]]]
+  [from [msg [task-concept-id belief-concept-id task belief debug]]]
   (try
     (when (non-overlapping-evidence? (:evidence task) (:evidence belief))
       (let [pre-filtered-derivations (inference task belief)
-            filtered-derivations (filter #(not= (:statement %) (:parent-statement task)) pre-filtered-derivations)
+            filtered-derivations (filter #(not= (:statement %) (second (:parent-statement task))) pre-filtered-derivations)
             evidence (make-evidence (:evidence task) (:evidence belief))
             derived-load-reducer (whereis :derived-load-reducer)]
         (when-not (empty? evidence)
@@ -5898,15 +5966,35 @@ with lowest priority will be removed on addition</p>
                   derived (assoc derived :sc sc)            ; required for derived-budget
                   budget (derived-budget task derived)
                   derived-task (assoc derived :budget budget
-                                              :parent-statement (:statement task)
-                                              :evidence evidence)]
+                                              :parent-statement [(get-task-id task) (:statement task)]
+                                              :evidence evidence)
+                  implies (fn [a b] (or (not a) b))]
               (when (and budget
-                         (&lt; sc max-term-complexity)
+                         (&lt; sc @max-term-complexity)
                          (&gt; (first budget) priority-threshold)
                          (or (not (:truth derived-task))
-                             (&gt; (rand) 0.98)
-                             (&gt; (first (:truth derived-task)) 0.5))
-                         (coll? (:statement derived-task)))
+                             ;negation handling:
+                             (implies (or ;if one is the negation of the other, then the derivation is fine if
+                                          (= (:statement derived-task)
+                                             ['-- (:statement task)])
+                                          (= (:statement task)
+                                             ['-- (:statement derived-task)]))
+                                  (or (&gt; (concept-priority (:statement derived-task)) negation-rule-priority-threshold)
+                                      (&lt; (first (:truth task)) 0.5)))) ;the task concept priority was high or frequency was smaller 0.5
+                         (let [st (:statement derived-task)]
+                           (and
+                                (not (and (coll? st)   ;not allow interval to be the subject of predicate of ==&gt;
+                                          (or (= (first st) 'pred-impl)
+                                              (= (first st) '=|&gt;)
+                                              (= (first st) '&lt;|&gt;)
+                                              (= (first st) '&lt;/&gt;)
+                                              (= (first st) '==&gt;)
+                                              (= (first st) '&lt;=&gt;))
+                                          (or (interval? (second st))
+                                              (interval? (nth st 2)))))))
+                         #_(coll? (:statement derived-task)))
+                #_(when debug
+                  (println (str &quot;|||||\n&quot; derived-task)))
                 (cast! derived-load-reducer [:derived-sentence-msg [task-concept-id
                                                                     belief-concept-id
                                                                     derived-task]])))))))
@@ -6007,6 +6095,8 @@ this variable is purely for visualization/debugging purposes!!</p>
      [actors :refer :all]]
     [taoensso.timbre :refer [debug info]]
     [clojure.core.unify :refer [unifier]]
+    [nal.term_utils :refer [not-statement-and-conceptid-equal
+                            statement-and-conceptid-equal]]
     [nal.deriver
      [truth :refer [w2c t-or t-and confidence frequency expectation revision]]
      [projection-eternalization :refer [project-eternalize-to]]]
@@ -6020,6 +6110,7 @@ this variable is purely for visualization/debugging purposes!!</p>
     [narjure.memory-management
      [concept-utils :refer :all]
      [termlink-utils :refer :all]]
+    [nal.term_utils :refer [syntactic-complexity]]
     [narjure.memory-management.local-inference
      [local-inference-utils :refer [get-task-id get-tasks]]
      [belief-processor :refer [process-belief]]
@@ -6030,23 +6121,34 @@ this variable is purely for visualization/debugging purposes!!</p>
 </td><td class="codes"><pre class="brush: clojure">(def display (atom '()))
 (def search (atom ))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn task-handler
-  [from [_ [task]]]
-  (debuglogger search display [&quot;task processed:&quot; task])
-  (refresh-termlinks task)
-  ; check observable and set if necessary
-  (when-not (:observable @state)
-    ;(println &quot;obs1&quot;)
-    (let [{:keys [occurrence source]} task]
-      (when (and (not= occurrence :eternal) (= source :input) (= (:statement task) (:id @state)))
-        (set-state! (assoc @state :observable true)))))
-  #_(when (and (= (:task-type task) :goal)
-          (= (:statement task) '[--&gt; ballpos [int-set equal]]))
-    (println &quot;concept ballpos equ exists&quot;))
-  (case (:task-type task)
-    :belief (process-belief state task 0)
-    :goal (process-goal state task 0)
-    :question (process-question state task)
-    :quest (process-quest state task)))</pre></td></tr><tr><td class="docs">
+  [from [_ [task_]]]
+  (when true
+    (let [foreign-penalty (if (not-statement-and-conceptid-equal (:statement task_)
+                            (:id @state))
+                            1.0
+                            1.0)
+          eternal-penalty (if (= (:occurrence task_) :eternal)
+                            1.0
+                            1.0)
+          task (assoc task_ :budget [(* foreign-penalty eternal-penalty (first (:budget task_)))
+                                     (second (:budget task_))
+                                     (nth (:budget task_) 2)])]
+      (debuglogger search display [&quot;task processed:&quot; task])
+      (refresh-termlinks task)
+      ; check observable and set if necessary
+      (when-not (:observable @state)
+        ;(println &quot;obs1&quot;)
+        (let [{:keys [occurrence source]} task]
+          (when (and (not= occurrence :eternal) (= source :input) (statement-and-conceptid-equal (:statement task) (:id @state)))
+            (set-state! (assoc @state :observable true)))))
+      #_(when (and (= (:task-type task) :goal)
+                   (= (:statement task) '[--&gt; ballpos [int-set equal]]))
+          (println &quot;concept ballpos equ exists&quot;))
+      (case (:task-type task)
+        :belief (process-belief state task 0)
+        :goal (process-goal state task 0)
+        :question (process-question state task)
+        :quest (process-quest state task)))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn belief-request-handler
   [from [_ [task-concept-id task]]]
   (try                                                      ;update termlinks at first
@@ -6055,7 +6157,7 @@ this variable is purely for visualization/debugging purposes!!</p>
   ;todo get a belief which has highest confidence when projected to task time
   (try
     (let [tasks (get-tasks state)
-          beliefs (filter #(and (= (:statement %) (:id @state))
+          beliefs (filter #(and (statement-and-conceptid-equal (:statement %) (:id @state))
                                 (= (:task-type %) :belief)) tasks)
           projected-belief-tuples (map (fn [z] [z (project-eternalize-to (:occurrence task) z @nars-time)]) beliefs)]
       (when (not-empty projected-belief-tuples)
@@ -6071,19 +6173,35 @@ this variable is purely for visualization/debugging purposes!!</p>
   [from message]
   (let [task-bag (:tasks @state)]
     (when true
+      ;(println (syntactic-complexity (:id @state)))
       (when (pos? (b/count-elements task-bag))
         (let [[el] (b/lookup-by-index task-bag (selection-fn (b/count-elements task-bag)))]
           (debuglogger search display [&quot;selected inference task:&quot; el])
-          (when-let [c-ref (select-termlink-ref)]
+          (when-let [[c-id c-ref] (select-termlink-ref (:record (:task el)) (:lbudgets (:task el)))]
+            (set-state!
+              (assoc @state :tasks
+                            (b/update-element task-bag
+                                              (assoc-in el [:task :record]
+                                                        (if (nil? (:record (:task el)))
+                                                          [[c-id @nars-time]];;;
+                                                          (if (some (fn [[id _]] (= id c-id)) (:record (:task el)))
+                                                            (filter not-outdated-record-entry (:record (:task el)))
+                                                            (take termlink-record-size (filter not-outdated-record-entry
+                                                                                               (concat [[c-id @nars-time]]
+                                                                                                       (:record (:task el)))))))))))
+            (try                                                  ;update termlinks at first
+              (update-termlink c-id)          ;task concept here
+              (catch Exception e (debuglogger search display (str &quot;task side termlink strength error &quot; (.toString e)))))
             (cast! c-ref [:belief-request-msg [(:id @state) (:task el)]])))))))</pre></td></tr><tr><td class="docs"><p>Strenghtens the termlink between two concepts or creates it if not existing.
    A link is {key value] where key is term and value is budget [priority durability]</p>
 </td><td class="codes"><pre class="brush: clojure">(defn termlink-strengthen-handler
   [from [_ [term]]]
   (try (let
          [termlinks (:termlinks @state)
-          old-link-strength (termlinks term)
-          new-link-strength (calc-link-strength term (if old-link-strength old-link-strength [0.5 0.0]))]
-     (set-state! (assoc-in @state [:termlinks term] new-link-strength)))
+          old-link-strength (when termlinks (termlinks term))
+          temporal-link-bonus [0.5 0.01]
+          new-link-strength (calc-link-strength term (if old-link-strength old-link-strength temporal-link-bonus))]
+         (set-state! (assoc-in @state [:termlinks term] new-link-strength)))
        (catch Exception e (println &quot;termlink strenghten fatal error&quot;))))</pre></td></tr><tr><td class="docs"><p>Sends a copy of the actor state to requesting actor</p>
 </td><td class="codes"><pre class="brush: clojure">(defn concept-state-handler
   [from _]
@@ -6095,11 +6213,12 @@ this variable is purely for visualization/debugging purposes!!</p>
   (let [elements (:elements-map (:tasks new-state))]
     (set-state! (assoc @state :tasks (b/default-bag max-tasks)))
     (doseq [[_ el] elements]
-     (set-state! (assoc @state :tasks (b/add-element (:tasks @state) el))))))</pre></td></tr><tr><td class="docs"><p>update cocnept budget</p>
+      (set-state! (assoc @state :tasks (b/add-element (:tasks @state) el))))))</pre></td></tr><tr><td class="docs"><p>update cocnept budget</p>
 </td><td class="codes"><pre class="brush: clojure">(defn concept-forget-handler
   [from [_ new-state]]
   (forget-tasks)
-  (forget-termlinks)
+  (forget-termlinks-relative)
+  (forget-termlinks-absolute)
   (update-concept-budget @state @self))</pre></td></tr><tr><td class="docs"><p>Processes :shutdown-msg and shuts down actor</p>
 </td><td class="codes"><pre class="brush: clojure">(defn shutdown-handler
   [from msg]
@@ -6109,7 +6228,7 @@ this variable is purely for visualization/debugging purposes!!</p>
 </td><td class="codes"><pre class="brush: clojure">(defn initialise
   [name]
   (set-state! {:id                       name
-               :priority                 0.5
+               :priority                 0.01
                :quality                  0.0
                :tasks                    (b/default-bag max-tasks)
                :termlinks                {}
@@ -6158,6 +6277,7 @@ this variable is purely for visualization/debugging purposes!!</p>
     [narjure.memory-management.concept :as c]
     [narjure.bag :as b]
     [narjure.defaults :refer [c-priority]]
+    [nal.term_utils :refer [concept-term-transform]]
     [taoensso.timbre :refer [debug info]]
     [narjure.debug-util :refer :all])
   (:refer-clojure :exclude [promise await]))</pre></td></tr><tr><td class="docs">
@@ -6173,9 +6293,10 @@ this variable is purely for visualization/debugging purposes!!</p>
    exist. Then post the task back to task-dispatcher.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn create-concept-handler
   [from [_ [task-concept-id belief-concept-id {:keys [statement] :as task}]]]
-  (doseq [term (:terms task)]
-    (when-not (b/exists? @c-bag term)
-      (make-general-concept term)))
+  (doseq [term_ (:terms task)]
+    (let [term (concept-term-transform term_)]
+      (when-not (b/exists? @c-bag term)
+        (make-general-concept term))))
   (cast! from [:task-from-cmanager-msg [task-concept-id belief-concept-id task]]))</pre></td></tr><tr><td class="docs"><p>Posts :concept-state-request-msg to each concept in c-map</p>
 </td><td class="codes"><pre class="brush: clojure">(defn persist-state-handler
   [from [_ path]]
@@ -6266,6 +6387,7 @@ this variable is purely for visualization/debugging purposes!!</p>
      [goal-processor :refer [process-goal]]
      [quest-processor :refer [process-quest]]
      [question-processor :refer [process-question]]]
+    [nal.term_utils :refer [syntactic-complexity]]
     [nal.deriver
      [truth :refer [w2c t-or t-and confidence frequency expectation revision]]
      [projection-eternalization :refer [project-eternalize-to]]])
@@ -6292,13 +6414,13 @@ this variable is purely for visualization/debugging purposes!!</p>
         budget (:budget task)
         lambda (/ (- 1.0 (second budget)) inverse-decay-rate)
         temporal-distance (if (= el-time :eternal) 0.0 (Math/abs (- el-time @nars-time)))
-        occurrence-decay (if (= el-time :eternal) 1.0 (/ 1.0 (+ 1.0 (* temporal-distance
+        occurrence-decay 1.0 #_(if (= el-time :eternal) 1.0 (/ 1.0 (+ 1.0 (* temporal-distance
                                                                        temporal-distance))))
         k-quality-occurrence-decay 10000.0
         distance-for-quality (/ temporal-distance k-quality-occurrence-decay)
-        occurrence-decay-for-quality (if (= el-time :eternal) 1.0 (/ 1.0 (+ 1.0 (* distance-for-quality
+        occurrence-decay-for-quality (if (= el-time :eternal) 0.9 (/ 1.0 (+ 1.0 (* distance-for-quality
                                                                                    distance-for-quality))))
-        new-quality (* occurrence-decay-for-quality (nth budget 2))
+        new-quality (* #_occurrence-decay-for-quality (nth budget 2))
         fr (Math/exp (* -1.0 (* lambda (- @nars-time last-forgotten))))
         new-priority (max (round2 4 (* (:priority el) fr occurrence-decay))
                           new-quality) ;quality of task
@@ -6317,14 +6439,24 @@ this variable is purely for visualization/debugging purposes!!</p>
         ;(println (str &quot;forgetting: &quot; (get-in el' [:task :statement])))
         (set-state! (assoc @state :tasks (b/add-element (:tasks @state) el')))))
     (set-state! (assoc @state :last-forgotten @nars-time))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn concept-has-by-task-not-yet-recorded-link [state task]
+  (let [recorded-terms (if (:record task) (map first (:record task)) [])
+        links (:termlinks state)]
+    (some (fn [tl-term] (not (some #{tl-term} recorded-terms)))
+          (map first links))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn update-concept-budget [state, self]
   &quot;Update the concept budget&quot;
   (let [els (:elements-map (:tasks state))      ; :priority-index ok here
         n (count els)
-        p (round2 3 (reduce max 0 (for [[id {task :task}] els] (first (:budget task)))))
+        p (/ (/ (round2 3 (reduce + 0 (for [[id {task :task}] els] ;rec
+                                        (if (concept-has-by-task-not-yet-recorded-link state task)
+                                          (first (:budget task))
+                                          0.0 #_(nth (:budget task) 2)))))
+                (syntactic-complexity (:id state)))
+             max-tasks)
         q (round2 3 (reduce + 0 (for [[id {task :task}] els] (nth (:budget task) 2))))
         k  0.9999                                             ; long term quality forgetting
-        new-q (if (pos? n) (* k (/ q n)) 0.0)
+        new-q 0.0 #_(if (pos? n) (* k (/ q n)) 0.0) ;already managed by tasks
         el {:id       (:id state)
             :priority (max p new-q)
             :quality new-q
@@ -6385,6 +6517,8 @@ this variable is purely for visualization/debugging purposes!!</p>
     [narjure.control-utils :refer :all]
     [narjure.global-atoms :refer :all]
     [narjure.defaults :refer :all]
+    [nal.term_utils :refer [not-statement-and-conceptid-equal
+                            statement-and-conceptid-equal]]
     [narjure.perception-action.task-creator :refer [event? get-id]]
     [narjure.memory-management.local-inference.local-inference-utils :refer :all]
     [nal.term_utils :refer :all]
@@ -6428,18 +6562,21 @@ this variable is purely for visualization/debugging purposes!!</p>
   in Narsese-negation representation.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn create-negated-negative-confirmation-task
   [neg-confirmation]
-  (assoc neg-confirmation :statement ['-- (:statement neg-confirmation)] :truth (nal.deriver.truth/negation (:truth neg-confirmation) [0.0 0.0])))</pre></td></tr><tr><td class="docs"><p>Is the task observable and derived so potentially predicted?</p>
+  (assoc neg-confirmation :statement ['-- (:statement neg-confirmation)] :truth (nal.deriver.truth/negation (:truth neg-confirmation) [0.0 0.0])))</pre></td></tr><tr><td class="docs"><p>Is the t
+  ask observable and derived so potentially predicted?</p>
 </td><td class="codes"><pre class="brush: clojure">(defn confirmable-observable?
   [task]
-  (and (:observable @state) (not= (:occurrence task) :eternal)
+  (and #_(:observable @state) (not= (:occurrence task) :eternal)
        (= (:source task) :derived)))</pre></td></tr><tr><td class="docs"><p>The by anticipation disappointment created task.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn create-anticipation-task
   [task]
-  (let [k anticipation-scale-dependent-tolerance
-        scale (/ (Math/abs (- (:occurrence task) @nars-time)) k)]
+  (let [  ;example: i23 would still be i16 but i25 would be i32, border 24
+          ;i13 would be i16, but i11 would be i8, border 12
+        leftborder (/ (Math/abs (- (:occurrence task) @nars-time)) 4.0)
+        rightborder (/ (Math/abs (- (:occurrence task) @nars-time)) 2.0)]
     (assoc task :task-type :anticipation
-                :minconfirm (- (:occurrence task) scale) ;left side limit
-               :expiry (+ (:occurrence task scale)))))      ;right side limit</pre></td></tr><tr><td class="docs"><p>right side limit</p>
+                :minconfirm (- (:occurrence task) leftborder) ;left side limit
+               :expiry (+ (:occurrence task) rightborder))))      ;right side limit</pre></td></tr><tr><td class="docs"><p>right side limit</p>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Budget change based on the satisfaction of the goal by the belief</p>
 </td><td class="codes"><pre class="brush: clojure">(defn satisfaction-based-budget-change
   [state belief-task goals]
@@ -6487,7 +6624,7 @@ this variable is purely for visualization/debugging purposes!!</p>
 </td><td class="codes"><pre class="brush: clojure">(defn process-belief
   [state task cnt]
     ;also allow revision in subterm concepts! this is why statement is compared to task statement, not to ID!!
-  (when (not (and (= (:statement task) (:id @state))
+  (when true #_(not (and (= (:statement task) (:id @state))
                   (:observable @state)
                   (= (:task-type task) :belief)
                   (= (:occurrence task) :eternal)))
@@ -6503,7 +6640,7 @@ this variable is purely for visualization/debugging purposes!!</p>
            (satisfaction-based-budget-change state (:task (first (b/get-by-id (:tasks @state) (get-task-id processed-task)))) (filter #(= (:task-type %) :goal) (get-tasks state)))
            (answer-based-budget-change state (:task (first (b/get-by-id (:tasks @state) (get-task-id processed-task)))) (filter #(= (:task-type %) :question) (get-tasks state))))))
     ; processing revised anticipations
-  (when (and (event? task) (= (:source task) :input) (belief? task))
+  (when (and (event? task) #_(= (:source task) :input) (belief? task))
     (when (pos? (count (:anticipations @state)))
       (doseq [[id anticipation] (:anticipations @state)]  ;{task-id task task-id2 task2}
         (when (and (= (:statement anticipation) (:statement task))
@@ -6527,13 +6664,13 @@ this variable is purely for visualization/debugging purposes!!</p>
            (cast! (whereis :task-dispatcher) [:task-msg [nil nil negated-neg-confirmation]])
            ;hypothesis correction:
            (when (:anticipation-precondition-task neg-confirmation)
-             (cast! (whereis :inference-request-router) [:do-inference-msg [nil nil neg-confirmation (:anticipation-precondition-task neg-confirmation)]])
+             (cast! (whereis :inference-request-router) [:do-inference-msg [nil nil (:anticipation-precondition-task neg-confirmation) neg-confirmation :belief]])
              (println &quot;hypothesis corrected!!! with task: &quot; (:anticipation-precondition-task neg-confirmation) &quot;\n&quot;
                       &quot;belief: &quot; neg-confirmation))))))
     ;when task is confirmable and observabnle
     ;add an anticipation tasks to tasks
     (when (and (= (:task-type task) :belief)
-            (= (:statement task)                             ;only allow anticipation with concept content
+            (statement-and-conceptid-equal (:statement task)                             ;only allow anticipation with concept content
               (:id @state)))
       (when (and (confirmable-observable? task)
                  (&gt; (:occurrence task) @nars-time))
@@ -6558,6 +6695,8 @@ this variable is purely for visualization/debugging purposes!!</p>
     [narjure.debug-util :refer [narsese-print]]
     [narjure.bag :as b]
     [narjure.defaults :refer [truth-value]]
+    [nal.term_utils :refer [not-statement-and-conceptid-equal
+                            statement-and-conceptid-equal]]
     [nal.term_utils :refer [syntactic-complexity termlink-subterms]]
     [nal.deriver.truth :refer [intersection deduction]]
     [narjure.debug-util :refer :all]
@@ -6567,7 +6706,7 @@ this variable is purely for visualization/debugging purposes!!</p>
     [clojure.core.unify :refer [unify]]
     [nal.term_utils :refer [operation? negation-of-operation? syntactic-complexity]]
     [narjure.memory-management.local-inference.local-inference-utils :refer :all]
-    [nal.deriver.truth :refer [t-or frequency confidence expectation desire-strong]]
+    [nal.deriver.truth :refer [t-or frequency confidence expectation desire-strong intersection]]
     [nal.deriver.projection-eternalization :refer [project-eternalize-to]])
   (:refer-clojure :exclude [promise await]))</pre></td></tr><tr><td class="docs"><p>Budget change based on the satisfaction of the goal by the belief</p>
 </td><td class="codes"><pre class="brush: clojure">(defn satisfaction-based-budget-change
@@ -6588,7 +6727,7 @@ this variable is purely for visualization/debugging purposes!!</p>
             (update-task-in-tasks state new-goal-with-solution goal-task))
           (let [new-belief (increased-belief-budget-by-goal belief-task-projected-to-goal goal-task)]
             (update-task-in-tasks state (assoc belief :budget (:budget new-belief)) belief)))))))</pre></td></tr><tr><td class="docs"><p>how big the truth expectation has to be in order to allow execution.</p>
-</td><td class="codes"><pre class="brush: clojure">(def decision-threshold 0.51)                                ;0.6</pre></td></tr><tr><td class="docs"><p>0.6</p>
+</td><td class="codes"><pre class="brush: clojure">(def decision-threshold 0.5)                                ;0.6</pre></td></tr><tr><td class="docs"><p>0.6</p>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>only execute if desire expectation is above decision threshold</p>
 </td><td class="codes"><pre class="brush: clojure">(defn execute?
   [task]
@@ -6610,7 +6749,10 @@ this variable is purely for visualization/debugging purposes!!</p>
                 new-quest-with-solution (assoc new-quest :solution goal-task)]
             (update-task-in-tasks state new-quest-with-solution quest))
           (let [new-goal (increased-goal-budget-by-quest goal-task-projected-to-quest quest)]
-            (update-task-in-tasks state (assoc goal-task :budget (:budget new-goal)) goal-task)))))))</pre></td></tr><tr><td class="docs">
+            (update-task-in-tasks state (assoc goal-task :budget (:budget new-goal)) goal-task)))))))</pre></td></tr><tr><td class="docs"><p>Is the term an interval?</p>
+</td><td class="codes"><pre class="brush: clojure">(defn interval?
+  [content]
+  (and (sequential? content) (= (first content) :interval)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def truth-tolerance 0.005)                                 ;TODO put to nal.deriver.truth?</pre></td></tr><tr><td class="docs"><p>TODO put to nal.deriver.truth?
 &lt;(&amp;&amp;,&lt;(*,{SELF}) --> op_down>,(&amp;/,<ballpos --> [above]>,i2048)) =/> <ballpos --> [below]>>. :|12197|: %1.0;0.20954585215002955%" "</p>
 </td><td class="codes"><pre class="brush: clojure">(defn best-operation-selection [beliefs goal]
@@ -6627,10 +6769,10 @@ this variable is purely for visualization/debugging purposes!!</p>
    &lt;(&amp;/,&lt;{ball} --&gt; [down]&gt;,move_up({SELF})) =/&gt; &lt;{ball} --&gt; [equal]&gt;&gt;. %0.4;09% Premise   &lt;- truth_B
     &lt;{ball} --&gt; [equal]&gt;!  Premise                                                        &lt;- desire
     |-
-    (&amp;/,&lt;{ball} --&gt; [down]&gt;,move_up({SELF}))!  Desire:Strong
+    (&amp;/,&lt;{ball} --&gt; [down]&gt;,move_up({SELF}))!  Desire:Deduction
     &lt;{ball} --&gt; [down]&gt;.         Premise                                        &lt;- truth_A
     |-
-    move_up({SELF})!  Desire:Strong
+    move_up({SELF})!  Desire:Deduction
   for goal &lt;{ball} --&gt; [equal]&gt;!
   &lt;(&amp;/,&lt;{ball} --&gt; [up]&gt;,move_up({SELF})) =/&gt;
   &lt;{ball} --&gt; [equal]&gt;&gt;
@@ -6639,16 +6781,17 @@ this variable is purely for visualization/debugging purposes!!</p>
   &lt;(&amp;/,&lt;{ball} --&gt; [down]&gt;,move_up({SELF})) =/&gt;
   &lt;{ball} --&gt; [equal]&gt;&gt;. %0.4;09%&quot;
   #_(when (and (= (:id @state) (:statement goal))
-             (= (:occurrence goal) :eternal)
-             (= (:task-type goal) :goal)
-             (= (:statement goal) '[--&gt; ballpos [int-set equal]])
-             (println &quot;concept ballpos equ goal processed&quot;)))
+               (= (:occurrence goal) :eternal)
+               (= (:task-type goal) :goal)
+               (= (:statement goal) '[--&gt; ballpos [int-set equal]])
+               (println &quot;concept ballpos equ goal processed&quot;)))
   ;1.: find all beliefs that predict the goal ''=/&gt; =|&gt;  &lt;|&gt; &lt;/&gt;''
-  (when (and (= (:occurrence goal) :eternal)
-             (= (:id @state) (:statement goal)))
+  (when (statement-and-conceptid-equal (:statement goal)
+                                       (:id @state)) #_(and (= (:occurrence goal) :eternal)
+                    (= (:id @state) (:statement goal)))
     #_(when (and (= (:task-type goal) :goal)
-               (= (:statement goal) '[--&gt; ballpos [int-set equal]]))
-      (println &quot;concept ballpos equ goal processed&quot;))
+                 (= (:statement goal) '[--&gt; ballpos [int-set equal]]))
+        (println &quot;concept ballpos equ goal processed&quot;))
     (let [debugme (= (:statement goal) '[--&gt; ballpos [int-set equal]])
           println2 (fn [a] (when debugme (println a)))
           ;2. filter those with (precondition,op) =&gt; goal   ;so this one is for future improvement
@@ -6660,6 +6803,7 @@ this variable is purely for visualization/debugging purposes!!</p>
                                                                      (= ((second z) '?goal) (:statement goal))
                                                                      (operation? ((second z) '?operation))
                                                                      (not (operation? ((second z) '?precondition)))
+                                                                     (interval? ((second z) '?interval1))
                                                                      (not (negation-of-operation? ((second z) '?precondition)))
                                                                      (not (operation? ((second z) '?goal)))
                                                                      (not (negation-of-operation? ((second z) '?goal)))))
@@ -6678,34 +6822,35 @@ this variable is purely for visualization/debugging purposes!!</p>
                                          (let [budget (:budget belief)
                                                new-quality (t-or (expectation (:truth belief)) (t-or (second (:truth goal)) 0.8))] ;TODO see budget-functions (unify)
                                            #_(println (str &quot;rewarding &quot; (narsese-print (:statement belief)) &quot; &quot; (:truth belief)))
-                                           (update-task-in-tasks state (assoc belief :budget [(max new-quality
+                                           #_(update-task-in-tasks state (assoc belief :budget [(max new-quality
                                                                                                    (first (:budget belief)))
                                                                                               (second (:budget belief))
                                                                                               new-quality]) ;new quality
                                                                  belief))
                                          (let [precondition (unificaton-map '?precondition)
                                                [precondition-concept bag] (b/get-by-id @c-bag precondition)
-                                               strongest-belief-about-now (project-eternalize-to @nars-time (:strongest-belief-about-now precondition-concept) @nars-time)]
+                                               strongest-belief-about-now (project-eternalize-to @nars-time (:strongest-belief-event-about-now precondition-concept) @nars-time)]
                                            (when (and precondition-concept
                                                       (:truth strongest-belief-about-now)
-                                                      (:truth belief))
+                                                      (:truth belief)
+                                                      (&gt; (second (:truth strongest-belief-about-now)) 0.3))
                                              [(:truth strongest-belief-about-now) (:truth belief) (:evidence strongest-belief-about-now) (:evidence belief) unificaton-map belief]))))
           #_print3 #_(println (str &quot;step 3.3\n&quot; (vec truth-A-B-unification-maps)))
           ;3.3 desire = desire value of goal
           desire (:truth (project-eternalize-to @nars-time goal @nars-time))
           #_print4 #_(println (str &quot;step 3.4\n&quot; desire))
-          ;3.4 execution desire expectation is: D=desire_strong(desire_strong(desire,truth_B),truth_A)
-          D-unification-maps (for [[truth-A truth-B evidence-A evidence-B unification-map debug-belief] (filter (fn [u] u) truth-A-B-unification-maps)]
+          ;3.4 execution desire expectation is: D=desire_strong(intersection(desire,truth_B),truth_A)          ;[truth-A truth-B evidence-A evidence-B unification-map debug-belief]
+          D-unification-maps (for [[truth-A truth-B evidence-A evidence-B unification-map debug-belief] (filter (fn [a] a) truth-A-B-unification-maps)]
                                (do
                                  #_(println (str desire truth-B truth-A))
-                                 {:D               (desire-strong (desire-strong desire truth-B) truth-A)
-                                 :evidence-A      evidence-A
-                                 :evidence-B      evidence-B
-                                 :unification-map unification-map
-                                 :debug-belief    debug-belief
-                                 :truth-A         truth-A
-                                 :truth-B         truth-B}))
-          ;print5 (println (str &quot;3 get best\n&quot; (vec D-unification-maps)))
+                                 {:D               (intersection (intersection desire truth-B) truth-A)
+                                  :evidence-A      evidence-A
+                                  :evidence-B      evidence-B
+                                  :unification-map unification-map
+                                  :debug-belief    debug-belief
+                                  :truth-A         truth-A
+                                  :truth-B         truth-B}))
+          #_print5 #_(println (str &quot;3 get best\n&quot; (vec D-unification-maps)))
           ;by using the one whose expectation(D) is highest
           k-expectation-randomize 50.0
           best-option (apply max-key (comp (fn [a] (+ a (/ (rand) k-expectation-randomize))) expectation :D) ;not always the best one but tend to.
@@ -6714,54 +6859,54 @@ this variable is purely for visualization/debugging purposes!!</p>
                                                          (non-overlapping-evidence? (:evidence goal) (:evidence-B z)))) D-unification-maps))
           #_print6 #_(println (str &quot;finished 3 \n&quot;best-option))
           ]
-     ;4. create a result operation goal task with the from the predictive statement first operation and evidence trail being the summary of all evidence trails
-     (when (and best-option
-                (best-option :D)
-                (&gt; (second (best-option :D)) truth-tolerance))
-       #_(println (str &quot;had best operator option &quot; (best-option :D)))
-       (let [unimap (:unification-map best-option)
-             statement (unimap '?operation)
-             new-task {:statement  statement
-                       :truth      (best-option :D)
-                       :evidence   (make-evidence (make-evidence (best-option :evidence-A) (best-option :evidence-B)) (:evidence goal))
-                       :occurrence @nars-time               ;needs to be occurrence time of now since task creator leaves derived task occurrences un-touched
-                       :budget     (:budget goal)
-                       :task-type  :goal
-                       :sc (syntactic-complexity statement)}]
-         (println (str &quot;based on &quot; (best-option :debug-belief)))
-         (println (str &quot;operator selector sending to task-creator &quot; (:statement new-task) (:truth new-task) (expectation (:truth new-task))))
-         (when (&gt; (expectation (:truth new-task)) decision-threshold)
-           ;create prediction for consequence:
-           (let [
-                 cont (unimap '?goal)
-                 subj ['seq-conj (unimap '?precondition) (unimap '?interval1) (unimap '?operation)]]
-             #_(println &quot;test1&quot;)
-             (cast! (whereis :task-dispatcher)
-                   [:task-msg
-                    [nil ;TODO could provide link feedback
-                     nil
-                     {:truth                          (deduction (intersection truth-value (:truth-A best-option))
-                                                                 (:truth-B best-option))
-                      :budget                         (:budget goal)
-                      :occurrence                     (+ @nars-time (second ((:unification-map best-option) '?interval2)))
-                      :source                         :derived
-                      :evidence                       (:evidence best-option)
-                      :sc                             (syntactic-complexity cont)
-                      :terms                          (termlink-subterms cont)
-                      :solution                       nil
-                      :task-type                      :belief
-                      :statement                      cont
-                      ;for hypothesis correction:
-                      :anticipation-precondition-task {:truth      (intersection truth-value (:truth-A best-option))
-                                                       :budget     (:budget goal)
-                                                       :occurrence @nars-time
-                                                       :source     :derived
-                                                       :evidence   (list (get-id))
-                                                       :task-type :belief
-                                                       :statement subj
-                                                       }}]])
-             #_(println &quot;sent&quot;)))
-         (cast! (whereis :task-creator) [:derived-sentence-msg [nil nil new-task]]))))))</pre></td></tr><tr><td class="docs"><p>Process a goal task: revise, put into the task bag, check for satisfaction and whether it
+      ;4. create a result operation goal task with the from the predictive statement first operation and evidence trail being the summary of all evidence trails
+      (when (and best-option
+                 (best-option :D)
+                 (&gt; (second (best-option :D)) truth-tolerance))
+        #_(println (str &quot;had best operator option &quot; (best-option :D)))
+        (let [unimap (:unification-map best-option)
+              statement (unimap '?operation)
+              new-task {:statement  statement
+                        :truth      (best-option :D)
+                        :evidence   (make-evidence (make-evidence (best-option :evidence-A) (best-option :evidence-B)) (:evidence goal))
+                        :occurrence @nars-time               ;needs to be occurrence time of now since task creator leaves derived task occurrences un-touched
+                        :budget     (:budget goal)
+                        :task-type  :goal
+                        :sc (syntactic-complexity statement)}]
+          (when (&gt; (expectation (:truth new-task)) decision-threshold)
+            (println (str &quot;based on &quot; (best-option :debug-belief)))
+            #_(println (str &quot;operator selector sending to task-creator &quot; (:statement new-task) (:truth new-task) (expectation (:truth new-task))))
+            ;create prediction for consequence:
+            #_(let [
+                  cont (unimap '?goal)
+                  subj ['seq-conj (unimap '?precondition) (unimap '?interval1) (unimap '?operation)]]
+              #_(println &quot;test1&quot;)
+              (cast! (whereis :task-dispatcher)
+                     [:task-msg
+                      [nil ;TODO could provide link feedback
+                       nil
+                       {:truth                          (intersection (intersection truth-value (:truth-A best-option))
+                                                                   (:truth-B best-option))
+                        :budget                         (:budget goal)
+                        :occurrence                     (+ @nars-time (second ((:unification-map best-option) '?interval2)))
+                        :source                         :derived
+                        :evidence                       (:evidence best-option)
+                        :sc                             (syntactic-complexity cont)
+                        :terms                          (termlink-subterms cont)
+                        :solution                       nil
+                        :task-type                      :belief
+                        :statement                      cont
+                        ;for hypothesis correction:
+                        :anticipation-precondition-task {:truth      (intersection truth-value (:truth-A best-option))
+                                                         :budget     (:budget goal)
+                                                         :occurrence @nars-time
+                                                         :source     :derived
+                                                         :evidence   (list (get-id))
+                                                         :task-type :belief
+                                                         :statement subj
+                                                         }}]])
+              #_(println &quot;sent&quot;)))
+          (cast! (whereis :task-creator) [:derived-sentence-msg [nil nil new-task]]))))))</pre></td></tr><tr><td class="docs"><p>Process a goal task: revise, put into the task bag, check for satisfaction and whether it
    is answered or answers a quest, and see whether it needs to execute.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn process-goal
   [state task cnt]
@@ -6787,33 +6932,33 @@ this variable is purely for visualization/debugging purposes!!</p>
           (satisfaction-based-budget-change state (:task (first (b/get-by-id (:tasks @state) (get-task-id total-revision)))) (filter #(= (:task-type %) :belief) (get-tasks state)))
           (answer-based-budget-change state (:task (first (b/get-by-id (:tasks @state) (get-task-id total-revision)))) (filter #(= (:task-type %) :quest) (get-tasks state)))
           #_(when (and (= (:id @state) (:statement total-revision))
-                  (= (:occurrence total-revision) :eternal)
+                       (= (:occurrence total-revision) :eternal)
                        (= (:task-type total-revision) :goal)
                        (= (:statement total-revision) '[--&gt; ballpos [int-set equal]]))
               (println &quot;concept ballpos equ goal processed&quot;))
           (try
             (best-operation-selection (filter #(= (:task-type %) :belief) (get-tasks state))
                                       (:task (first (b/get-by-id (:tasks @state) (get-task-id total-revision)))))
-            (catch Exception e () #_(println &quot;operator selector error&quot;))))))
-      ;best operation project goal to current time
-      ; if above decision threshold then execute#
-      (let [projected-goals (map #(project-eternalize-to @nars-time % @nars-time)
-                                 (filter #(= (:statement %) (:statement task))
-                                         (filter #(= (:task-type %) :goal) ;re-getting the goals because we also want our just added goal
-                                                 (conj tasks task))))] ;needs new task as well
-        (if (not-empty projected-goals)
-          (let [possible-operations (filter #(and (operation? (:statement %)) (execute? %) (= (:statement %) (:id @state))) projected-goals)
-                operation (if (not-empty possible-operations)
-                            (apply max-key confidence possible-operations)
-                            nil)]
-            (when-not (= nil operation)                   ;todo change to - when operation
-                #_(println (str (:truth operation) (expectation (:truth operation))))
-                ;(println (str  &quot;goal: &quot; operation))
-                (when-not (:execution-evidence @state)
-                  (set-state! (assoc @state :execution-evidence '())))
-                (when (some (fn [z] (not (some #{z} (:execution-evidence @state)))) (:evidence operation))
-                  (cast! (whereis :operator-executor) [:operator-execution-msg operation])
-                  (set-state! (assoc @state :execution-evidence (take 50 (concat (:evidence operation) (:execution-evidence @state))))))))))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#narjure.memory-management.local-inference.local-inference-utils" name="narjure.memory-management.local-inference.local-inference-utils"><h1 class="project-name">narjure.memory-management.local-inference.local-inference-utils</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+            (catch Exception e () #_(println (str &quot;operator selector error&quot; e)))))))
+    ;best operation project goal to current time
+    ; if above decision threshold then execute#
+    (let [projected-goals (map #(project-eternalize-to @nars-time % @nars-time)
+                               (filter #(= (:statement %) (:statement task))
+                                       (filter #(= (:task-type %) :goal) ;re-getting the goals because we also want our just added goal
+                                               (conj tasks task))))] ;needs new task as well
+      (if (not-empty projected-goals)
+        (let [possible-operations (filter #(and (operation? (:statement %)) (execute? %) (statement-and-conceptid-equal (:statement %) (:id @state))) projected-goals)
+              operation (if (not-empty possible-operations)
+                          (apply max-key confidence possible-operations)
+                          nil)]
+          (when-not (= nil operation)                   ;todo change to - when operation
+            #_(println (str (:truth operation) (expectation (:truth operation))))
+            ;(println (str  &quot;goal: &quot; operation))
+            (when-not (:execution-evidence @state)
+              (set-state! (assoc @state :execution-evidence '())))
+            (when true #_(some (fn [z] (not (some #{z} (:execution-evidence @state)))) (:evidence operation))
+              (cast! (whereis :operator-executor) [:operator-execution-msg operation])
+              (set-state! (assoc @state :execution-evidence (take 50 (concat (:evidence operation) (:execution-evidence @state))))))))))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#narjure.memory-management.local-inference.local-inference-utils" name="narjure.memory-management.local-inference.local-inference-utils"><h1 class="project-name">narjure.memory-management.local-inference.local-inference-utils</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns narjure.memory-management.local-inference.local-inference-utils
   (:require
     [co.paralleluniverse.pulsar
@@ -6829,7 +6974,8 @@ this variable is purely for visualization/debugging purposes!!</p>
     [nal.deriver :refer [occurrence-type]]
     [nal.deriver.truth :refer [t-and t-or frequency confidence expectation]]
     [nal.deriver.projection-eternalization :refer [project-eternalize-to]]
-    [narjure.debug-util :refer :all])
+    [narjure.debug-util :refer :all]
+    [narjure.budget-functions :refer [derived-budget]])
   (:refer-clojure :exclude [promise await]))</pre></td></tr><tr><td class="docs"><p>Truth rounding to 2 commas</p>
 </td><td class="codes"><pre class="brush: clojure">(defn truth-round
   [[f c :as truth]]
@@ -6838,8 +6984,8 @@ this variable is purely for visualization/debugging purposes!!</p>
     [(round2 2 f)
     (round2 2 c)]))</pre></td></tr><tr><td class="docs"><p>The ID defining when elements in the task bag need to be merged.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn get-task-id
-  [task]
-  [(:statement task) (:task-type task) (occurrence-type (:occurrence task))])</pre></td></tr><tr><td class="docs"><p>The ID defining when elements in the anticipations bag need to be merged.</p>
+  [task] ;not using concept-term-transform would demand huge task bag size or less bias in complexity
+  [(concept-term-transform (:statement task)) (:task-type task) (occurrence-type (:occurrence task))])</pre></td></tr><tr><td class="docs"><p>The ID defining when elements in the anticipations bag need to be merged.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn get-anticipation-id
   [task]
   [(:statement task) (:task-type task) (:occurrence task)])</pre></td></tr><tr><td class="docs"><p>The budget evaluation for task bag element quality.</p>
@@ -6894,14 +7040,23 @@ this variable is purely for visualization/debugging purposes!!</p>
 </td><td class="codes"><pre class="brush: clojure">(defn update-task-in-tasks
   [state task old-task]
   (let [[element bag] (b/get-by-id (:tasks @state) (get-task-id old-task))]
-    (when (not= nil element)
+    (when element
       (set-state! (assoc @state :tasks bag))))
-  (set-state! (assoc @state :tasks (b/add-element (:tasks @state) (make-element task)))))</pre></td></tr><tr><td class="docs"><p>Revision of two tasks.</p>
+  (set-state! (assoc @state :tasks (b/add-element (:tasks @state) (make-element task)))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn inc-budget ;task was revised, this is further evidence for the quality of the task
+  [[p d q]] ;as it seems to take part in summarizing experience instead of describing one-time phenomena
+  [(t-or p 0.3) (t-or d 0.1) (t-or q 0.3)])</pre></td></tr><tr><td class="docs"><p>Revision of two tasks.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn revise
   [t1 t2]
   (let [revised-truth (nal.deriver.truth/revision (:truth t1) (:truth t2))
-        evidence (make-evidence (:evidence t1) (:evidence t2))]
-    (assoc t1 :truth revised-truth :source :derived :evidence evidence :budget (max-budget (:budget t1) (:budget t2)))))</pre></td></tr><tr><td class="docs"><p>The quality of an answer, which is the confidence for y/n questions,
+        evidence (make-evidence (:evidence t1) (:evidence t2))
+        lbudget-left (if-let [budg (:lbudgets t1)] budg {})
+        lbudget-right (if-let [budg (:lbudgets t2)] budg {})]
+    (let [revised-task (dissoc (assoc t1 :truth revised-truth :source :derived :evidence evidence
+                                 :budget (max-budget (:budget t1) (:budget t2))
+                                         :lbudgets (merge lbudget-left lbudget-right))
+                       :record)]
+      (assoc revised-task :budget (inc-budget (:budget revised-task)) #_(derived-budget t1 revised-task)))))</pre></td></tr><tr><td class="docs"><p>The quality of an answer, which is the confidence for y/n questions,
   and the truth expectation, also taking complexity into account for what-questions</p>
 </td><td class="codes"><pre class="brush: clojure">(defn answer-quality
   [question solution]
@@ -7094,6 +7249,7 @@ increased-belief-budget-by-question</p>
     [co.paralleluniverse.pulsar
      [core :refer :all]
      [actors :refer :all]]
+    [nal.term_utils :refer [concept-term-transform]]
     [narjure.global-atoms :refer [c-bag]]
     [narjure.memory-management.local-inference.local-inference-utils :refer [get-task-id]]
     [narjure.bag :as b]
@@ -7112,28 +7268,30 @@ increased-belief-budget-by-question</p>
    otherwise, dispatch task to respective concepts. Also, if task is an event
    dispatch task to event buffer actor.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn task-handler
-  [from [_ [task-concept-id belief-concept-id task]]]
-  (let [terms (:terms task)]
+  [from [_ [task-concept-id_ belief-concept-id_ task]]]
+  (let [task-concept-id (concept-term-transform task-concept-id_)
+        belief-concept-id (concept-term-transform belief-concept-id_)
+        terms (map concept-term-transform (:terms task))]
     (if (every? term-exists? terms)
       (let [task (dissoc task :terms)]
+        (when task-concept-id
+          (when-let [{c-ref :ref} ((:elements-map @c-bag) task-concept-id)]
+            (cast! c-ref [:link-feedback-msg [task belief-concept-id]])))
         (doseq [term terms]
-          (when task-concept-id
-            (when-let [{c-ref :ref} ((:elements-map @c-bag) task-concept-id)]
-              (cast! c-ref [:link-feedback-msg [task belief-concept-id]])))
           (when-let [{c-ref :ref} ((:elements-map @c-bag) term)]
             (cast! c-ref [:task-msg [task]]))))
       (cast! (whereis :concept-manager) [:create-concept-msg [task-concept-id belief-concept-id task]]))))</pre></td></tr><tr><td class="docs"><p>If concept, or any sub concepts, do not exist post task to concept-creator,
    otherwise, dispatch task to respective concepts. Also, if task is an event
    dispatch task to event buffer actor.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn task-from-cmanager-handler
-  [from [_ [task-concept-id belief-concept-id task]]]
-  (let [terms (:terms task)]
+  [from [_ [task-concept-id belief-concept-id task]]] ;interval transform already applied to task-concept-id, belief-concept-id
+  (let [terms (map concept-term-transform (:terms task))]
     (let [task (dissoc task :terms)]
+      (when task-concept-id
+        (when-let [{c-ref :ref} ((:elements-map @c-bag) task-concept-id)]
+          (cast! c-ref [:link-feedback-msg [task belief-concept-id]])))
       (doseq [term terms]
         (when (b/exists? @c-bag term)
-          (when task-concept-id
-            (when-let [{c-ref :ref} ((:elements-map @c-bag) task-concept-id)]
-              (cast! c-ref [:link-feedback-msg [task belief-concept-id]])))
           (when-let [{c-ref :ref} ((:elements-map @c-bag) term)]
             (cast! c-ref [:task-msg [task]])))))))</pre></td></tr><tr><td class="docs"><p>Identifies message type and selects the correct message handler.
    if there is no match it generates a log message for the unhandled message</p>
@@ -7176,7 +7334,7 @@ increased-belief-budget-by-question</p>
     [clojure.core.unify :refer [unifier]]
     [nal.term_utils :refer [syntactic-complexity termlink-subterms]]
     [narjure.memory-management.local-inference
-     [local-inference-utils :refer [get-task-id get-tasks]]
+     [local-inference-utils :refer [get-task-id get-tasks update-task-in-tasks]]
      [belief-processor :refer [process-belief]]
      [goal-processor :refer [process-goal]]
      [quest-processor :refer [process-quest]]
@@ -7193,15 +7351,18 @@ increased-belief-budget-by-question</p>
   [links]
   (filter #(b/exists? @c-bag %) (keys links)))</pre></td></tr><tr><td class="docs"><p>This one is for absolute forgetting of links: Remove termlinks whose concepts were forgot,
   remove worst termlinks if above max termlink count.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn forget-termlinks
+</td><td class="codes"><pre class="brush: clojure">(defn forget-termlinks-absolute
   []
-  ;TODO test
   (doseq [[tl _] (:termlinks @state)]
     (when (not (b/exists? @c-bag tl))
       (set-state! (assoc @state :termlinks (dissoc (:termlinks @state) tl)))))
   (while (&gt; (count (:termlinks @state)) concept-max-termlinks)
     (let [worst (apply min-key (comp expectation second) (:termlinks @state))]
-      (set-state! (assoc @state :termlinks (dissoc (:termlinks @state) (first worst)))))))</pre></td></tr><tr><td class="docs"><p>Adds a termlink with term tl and strength strength.</p>
+      (set-state! (assoc @state :termlinks (dissoc (:termlinks @state) (first worst)))))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn forget-termlinks-relative []
+  &quot;Forget termlinks relative.&quot;
+  (set-state! (assoc @state :termlinks (apply merge (for [[tl [f c]] (:termlinks @state)]
+                                                      {tl (revision [f c] [0.0 0.001])})))))</pre></td></tr><tr><td class="docs"><p>Adds a termlink with term tl and strength strength.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn add-termlink
   [tl strength]
   (set-state! (assoc @state :termlinks (assoc (:termlinks @state)
@@ -7209,16 +7370,20 @@ increased-belief-budget-by-question</p>
   ;(forget-termlinks))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn calc-link-strength
   ([tl]
-    (calc-link-strength tl [0.5 0.0]))
+    (calc-link-strength tl [0.5 0.01]))
   ([tl old-strength]
-  (let [prio-me (concept-priority (:id @state))
+  old-strength
+    #_(let [prio-me (concept-priority (:id @state))
         prio-other (concept-priority tl)
+        evidence-mul 0.5
         association (t-and prio-me prio-other)
         disassocation (t-and prio-me (- 1.0 prio-other))]
-    (revision [0.0 disassocation] (revision old-strength [1.0 association])))))</pre></td></tr><tr><td class="docs">
+    (revision [0.0 (* evidence-mul disassocation)]
+              (revision old-strength [1.0 (* evidence-mul association)])))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn update-termlink [tl]                                  ;term
   (let [old-strength ((:termlinks @state) tl)]
-    (add-termlink tl (calc-link-strength tl old-strength))))</pre></td></tr><tr><td class="docs">
+    (add-termlink tl (calc-link-strength tl (if old-strength old-strength [0.5 0.0])))
+    (forget-termlinks-absolute)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn use-stronger [t1 t2]
   (let [all-keys (set/union (map first t1) (map first t2))]
     (apply merge (for [k all-keys]
@@ -7242,51 +7407,76 @@ increased-belief-budget-by-question</p>
                                                                                                          (concept-prio tl)) (second termlink-default-budget)]}))
                             (:termlinks @state))
         valid-links (select-keys newtermlinks (get-existing-terms-from-links newtermlinks))];only these keys which exist in concept bag
-    (set-state! (merge @state {:termlinks valid-links}))))</pre></td></tr><tr><td class="docs"><p>Link growth by contextual relevance of the inference and the result, as well as usefulness of the result.</p>
+    (set-state! (merge @state {:termlinks valid-links}))))</pre></td></tr><tr><td class="docs"><p>https://clojuredocs.org/clojure.core/when-let</p>
+</td><td class="codes"><pre class="brush: clojure">(defmacro when-let*
+  ([bindings &amp; body]
+   (if (seq bindings)
+     `(when-let [~(first bindings) ~(second bindings)]
+        (when-let* ~(drop 2 bindings) ~@body))
+     `(do ~@body))))</pre></td></tr><tr><td class="docs"><p>Link growth by contextual relevance of the inference and the result, as well as usefulness of the result.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn link-feedback-handler
   [from [_ [derived-task belief-concept-id]]]                       ;this one uses the usual priority durability semantics
   (try
     ;TRADITIONAL BUDGET INFERENCE (BLINK PART)
-    (let [complexity (if (:truth derived-task) (syntactic-complexity belief-concept-id) 1.0)
-          truth-quality (if (:truth derived-task)
+    (let [truth-quality (if (:truth derived-task)
                  (truth-to-quality (:truth derived-task))
                  (w2c 1.0))
-          #_quality #_(/ truth-quality complexity)
           truth-quality-to-confidence (* truth-quality 1.0)
-          [result-concept _]  (b/get-by-id @c-bag (:statement derived-task))
-          #_activation #_(:priority result-concept)
-          [f c] ((:termlinks @state) belief-concept-id)]
+          [f c] ((:termlinks @state) belief-concept-id)
+          premise-task-id (first (:parent-statement derived-task))]
       (when (and f c (:truth derived-task)) ;just revise by using the truth value directly
-        ;as evidence for the usefulness
-        (add-termlink belief-concept-id [1.0 truth-quality-to-confidence])))
-    (catch Exception e () #_(println &quot;fail&quot;))))</pre></td></tr><tr><td class="docs"><p>Get the link endpoints, namely the concepts which the concept links to: their id as well as priority.</p>
+        (add-termlink belief-concept-id (revision [1.0 truth-quality-to-confidence] [f c]))
+        (forget-termlinks-absolute)
+        (when-let* [[element _] (b/get-by-id (:tasks @state) premise-task-id)
+                   elem-task (:task element)
+                    lbudgets (if-let [buds (:lbudgets elem-task)] buds {})
+                    lbudget (if-let [bud (belief-concept-id lbudgets)] bud [0.5 0.0])
+                    lbudget* (revision [1.0 truth-quality-to-confidence] lbudget)
+                    lbudgets* (assoc lbudgets belief-concept-id lbudget*)
+                    task* (assoc elem-task :lbudgets lbudgets*)]
+                   (update-task-in-tasks state task* elem-task))))
+    (catch Exception e () #_(println &quot;fail&quot;))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn not-outdated-record-entry [[id time]]
+  (&lt; (- @nars-time time) 25))</pre></td></tr><tr><td class="docs"><p>Get the link endpoints, namely the concepts which the concept links to: their id as well as priority.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn get-termlink-endpoints
-  []
-  (let [initbag (b/default-bag concept-max-termlinks)]
+  [record link-budgets]
+  (let [initbag (b/default-bag concept-max-termlinks)
+        get-link-budget-exp (fn [k] (if (and link-budgets (k link-budgets))
+                                  (expectation (k link-budgets))
+                                  0.0))
+        individual-budget-weight 1.0]
     (try
-      (reduce (fn [a b] (b/add-element a b)) initbag (for [[k v] (:termlinks @state)]
-                                                      {:priority (+ (expectation v)
-                                                                       (:priority (first (b/get-by-id @c-bag k))))
+      (reduce (fn [a b] (b/add-element a b)) initbag (for [[k v] (filter (fn [[k _]] (or (nil? record)
+                                                                                         (not (some (fn [[id time]]
+                                                                                                      (and
+                                                                                                        (not-outdated-record-entry [id time])
+                                                                                                        (= id k)))
+                                                                                                    record))))
+                                                                         (:termlinks @state))]
+                                                      {:priority (+    (expectation v)
+                                                                       (* individual-budget-weight (get-link-budget-exp k))
+                                                                   (:priority (first (b/get-by-id @c-bag k))))
                                                        :id       k}))
       (catch Exception e (print &quot;&quot;)
                          ;(println (str &quot;error in get-termlink-endpoints: &quot; e)))))</pre></td></tr><tr><td class="docs"><p>Select the termlink probabilistically, taking link strength and target priorities into account.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn select-termlink-ref
-  []
+  [record link-budgets]
   ;now search through termlinks, get the endpoint concepts, and form a bag of them
   (let [initbag (b/default-bag concept-max-termlinks)
-        resbag (get-termlink-endpoints)]
+        resbag (get-termlink-endpoints record link-budgets)]
     ;now select an element from this bag
     (if (and resbag (pos? (b/count-elements resbag)))
       (let [[beliefconcept _] (b/get-by-index resbag (selection-fn (b/count-elements resbag)))]
         #_(forget-termlink (:id beliefconcept))               ;apply forgetting for termlinks only on selection
-        (get-ref-from-term (:id beliefconcept)))
+        [(:id beliefconcept) (get-ref-from-term (:id beliefconcept))])
       nil)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#narjure.narsese" name="narjure.narsese"><h1 class="project-name">narjure.narsese</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns narjure.narsese
   (:require [instaparse.core :as i]
             [clojure.java.io :as io]
             [narjure.defaults :refer :all]
             [nal.term_utils :refer :all]
-            [clojure.string :as str]))</pre></td></tr><tr><td class="docs">
+            [clojure.string :as str]
+            [nal.deriver.normalization :refer [sort-commutative]]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def bnf-file &quot;narsese.bnf&quot;)</pre></td></tr><tr><td class="docs"><p>Loads narsese.bnf into instaparse</p>
 </td><td class="codes"><pre class="brush: clojure">(def parser
   (i/parser (io/resource bnf-file) :auto-whitespace :standard))</pre></td></tr><tr><td class="docs">
@@ -7440,7 +7630,7 @@ increased-belief-budget-by-question</p>
         parsedstmt (assoc (parse (str (first (str/split stmt #&quot;\:\|&quot;))
                                       (second (str/split stmt #&quot;\|\:&quot;)))) :occurrence time)]
     (let [parsed (interval-reduction (parser-workaround parsedstmt (parse-intervals (:statement parsedstmt))))]
-      (no-truth-for-questions-and-quests parsed))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#narjure.perception-action.derived-load-reducer" name="narjure.perception-action.derived-load-reducer"><h1 class="project-name">narjure.perception-action.derived-load-reducer</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+      (no-truth-for-questions-and-quests (assoc parsed :statement (sort-commutative (:statement parsed)))))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#narjure.perception-action.derived-load-reducer" name="narjure.perception-action.derived-load-reducer"><h1 class="project-name">narjure.perception-action.derived-load-reducer</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns narjure.perception-action.derived-load-reducer
   (:require
     [co.paralleluniverse.pulsar
@@ -7507,6 +7697,7 @@ increased-belief-budget-by-question</p>
      [actors :refer :all]]
     [taoensso.timbre :refer [debug info]]
     [narjure.debug-util :refer :all]
+    [narjure.defaults :refer [budgets]]
     [narjure.global-atoms :refer :all])
   (:refer-clojure :exclude [promise await]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def aname :operator-executor)                              ; actor name</pre></td></tr><tr><td class="docs">
@@ -7518,10 +7709,12 @@ increased-belief-budget-by-question</p>
 </td><td class="codes"><pre class="brush: clojure">(defn operator-execution-handler
   [from [msg operationgoal]]
   (let [feedback (assoc operationgoal :task-type :belief
-                                      :occurrence 0)
+                                      :occurrence 0
+                                      :source :input
+                                      :budget (budgets :belief))
         operation (:statement operationgoal)
-        arguments (rest (second operation))
-        operator (nth operation 2)]
+        arguments (if (coll? operation) (rest (second operation)) [])
+        operator (if (coll? operation) (nth operation 2) operation)]
     (try (let [func (@registered-operator-functions operator)]
            (if (not= nil func)
              (let [success (func arguments operationgoal)]
@@ -7530,18 +7723,16 @@ increased-belief-budget-by-question</p>
                  (do
                    (cast! (whereis :task-creator) [:sentence-msg feedback])
                    #_(when (coll? success)                  ;TODO collides with operation task idea
-                     (doseq [custom-feedback success] ;also allowing custom feedback tasks
-                       (cast! (whereis :task-creator) [:sentence-msg custom-feedback]))))
-                 (cast! (whereis :task-creator) [:sentence-msg (assoc feedback :truth
+                       (doseq [custom-feedback success] ;also allowing custom feedback tasks
+                         (cast! (whereis :task-creator) [:sentence-msg custom-feedback]))))
+                 #_(cast! (whereis :task-creator) [:sentence-msg (assoc feedback :truth
                                                                                [(- 1.0 (first (:truth feedback)))
                                                                                 (second (:truth feedback))])])))
              (do ;if no function is registered, just enter the feedback, eliminates the issue that we need to register ops just to use them in examples
                (output-task :execution operationgoal)
                (cast! (whereis :task-creator) [:sentence-msg feedback]))))
-      (catch Exception e (debuglogger search display (str &quot;operator execution error &quot; (.toString e)))))
-    (output-task :execution operationgoal)
-    (cast! (whereis :task-creator) [:sentence-msg feedback]))) ;derived-sentence so we keep evidence trail</pre></td></tr><tr><td class="docs"><p>derived-sentence so we keep evidence trail</p>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>Identifies message type and selects the correct message handler.
+         (catch Exception e (debuglogger search display (str &quot;operator execution error &quot; (.toString e)))))
+    (output-task :execution operationgoal)))</pre></td></tr><tr><td class="docs"><p>Identifies message type and selects the correct message handler.
    if there is no match it generates a log message for the unhandled message </p>
 </td><td class="codes"><pre class="brush: clojure">(defn msg-handler
   [from [type :as message]]
@@ -7661,7 +7852,8 @@ increased-belief-budget-by-question</p>
      :solution   nil
      :task-type  (:task-type sentence)
      :statement  content
-     :parent-statement (:parent-statement sentence)}))</pre></td></tr><tr><td class="docs"><p>tests whether the passed task sentence is an event</p>
+     :parent-statement (:parent-statement sentence)}))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn budgetify [task])</pre></td></tr><tr><td class="docs"><p>tests whether the passed task sentence is an event</p>
 </td><td class="codes"><pre class="brush: clojure">(defn event?
   [sentence]
   (not= :eternal (:occurrence sentence)))</pre></td></tr><tr><td class="docs">
@@ -7669,16 +7861,25 @@ increased-belief-budget-by-question</p>
    if the sentence is an event, and posts to task-dispatcher.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn sentence-handler
   [from [_ sentence]]
-  (let [syntactic-complexity (syntactic-complexity (:statement sentence))]
+  (let [synt-complexity (syntactic-complexity (:statement sentence))]
     (when true #_(&lt; syntactic-complexity max-term-complexity)
+      (reset! max-term-complexity (max @max-term-complexity   ;adapt max. term complexity in respect to examples for now
+                                      (+ term-complexity-offset
+                                         synt-complexity)))
       (let [new-task (create-new-task
                        sentence
-                       syntactic-complexity)
+                       synt-complexity)
             task-dispatcher (whereis :task-dispatcher)]
         (cast! task-dispatcher [:task-msg [nil nil new-task]])
         (output-task :input new-task)
         (when (event? sentence)
-          (when (belief? new-task)
+          (when (and @lastevent
+                     (= (:task-type new-task) :belief)
+                     (&gt; (first (:truth new-task)) 0.5))
+            (cast! (whereis :inference-request-router) [:do-inference-msg [nil nil new-task @lastevent]]))
+          (when (and (belief? new-task)
+                     (not (operation? (:statement new-task)))
+                     (&gt; (first (:truth new-task)) 0.5))
             (reset! lastevent new-task))
           (cast! task-dispatcher [:task-msg [nil nil (create-eternal-task new-task)]]))))))</pre></td></tr><tr><td class="docs"><p>processes a :derived-sentence-msg and posts to task-dispatcher</p>
 </td><td class="codes"><pre class="brush: clojure">(defn derived-sentence-handler
@@ -7907,12 +8108,12 @@ increased-belief-budget-by-question</p>
 </td><td class="codes"><pre class="brush: clojure">(def init-size 800)
 (def task-filter (atom ))
 (def input-string (atom (atom )))
-(def invert-colors (atom true))
+(def invert-colors (atom false))
 (def prio-threshold (atom 0.0))
 (def link-labels (atom false))
 (def concept-filter (atom ))
 (def inputstr (atom ))
-(def speed (atom &quot;slow&quot;))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gui.gui" name="gui.gui"><h1 class="project-name">gui.gui</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+(def speed (atom &quot;medium&quot;))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gui.gui" name="gui.gui"><h1 class="project-name">gui.gui</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns gui.gui
   (:require [seesaw.core :refer :all]
             [gui.globals :refer :all]
@@ -8093,6 +8294,13 @@ increased-belief-budget-by-question</p>
   (reset! speed &quot;fast&quot;)
   (stop-timers)
   (start-timers))</pre></td></tr><tr><td class="docs"><p>TODO put at proper place</p>
+</td><td class="codes"><pre class="brush: clojure">(defn set-medium-speed []
+  &quot;Sets the speed of the reasoner to fast&quot;
+  (reset! system-tick-interval system-tick-interval-medium)
+  (reset! inference-tick-interval inference-tick-interval-medium)
+  (reset! speed &quot;medium&quot;)
+  (stop-timers)
+  (start-timers))</pre></td></tr><tr><td class="docs"><p>TODO put at proper place</p>
 </td><td class="codes"><pre class="brush: clojure">(defn set-slow-speed []
   &quot;Sets the speed of the reasoner to slow&quot;
   (reset! system-tick-interval system-tick-interval-slow)
@@ -8103,7 +8311,9 @@ increased-belief-budget-by-question</p>
 </td><td class="codes"><pre class="brush: clojure">(defn swap-speed []
   (if (= @speed &quot;slow&quot;)
     (set-fast-speed)
-    (set-slow-speed)))</pre></td></tr><tr><td class="docs">
+    (if (= @speed &quot;fast&quot;)
+      (set-medium-speed)
+      (set-slow-speed))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def nodes [{:name :pop-up :px 710 :py 0 :onclick (fn [state]
                                                        (cast! (whereis :sentence-parser) [:narsese-string-msg (str (input &quot;Add Narsese&quot; :to-string :name) &quot;\n&quot;)]))
              :backcolor backcolor}
@@ -8188,7 +8398,8 @@ increased-belief-budget-by-question</p>
             [narjure.bag :as b]
             [narjure.defaults :refer [priority-threshold max-concept-selections max-tasks]]
             [clojure.set :as set]
-            [clojure.string :as str]))</pre></td></tr><tr><td class="docs"><p>Bag string format: each id goes into a new line</p>
+            [clojure.string :as str])
+  (:gen-class))</pre></td></tr><tr><td class="docs"><p>Bag string format: each id goes into a new line</p>
 </td><td class="codes"><pre class="brush: clojure">(defn bag-format
   [st]
   (clojure.string/replace (clojure.string/replace st &quot;(:id&quot; &quot;\n( :id&quot;) &quot;(\n( &quot; &quot;((&quot;))</pre></td></tr><tr><td class="docs"><p>Filter the bag for these entries which contain the filter content</p>
@@ -8440,18 +8651,19 @@ increased-belief-budget-by-question</p>
 </td><td class="codes"><pre class="brush: clojure">(defn lense-mousepress [state event]
   (hnav/mouse-pressed graphs debugmessage false state event)
   (hnav/mouse-pressed (atom [hud]) debugmessage true state event))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(q/defsketch example
-             :size [(hnav/width) (hnav/height)]
-             :setup setup
-             :draw draw
-             :update update
-             :mouse-pressed lense-mousepress
-             :mouse-dragged hnav/mouse-dragged
-             :mouse-wheel hnav/mouse-wheel
-             :key-pressed key-pressed
-             :middleware [m/fun-mode]
-             :features [ :resizable ]
-             :title &quot;OpenNARS 2.0.0: Lense&quot;)</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#examples.ircbot" name="examples.ircbot"><h1 class="project-name">examples.ircbot</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn -main []
+  (q/defsketch example
+              :size [(hnav/width) (hnav/height)]
+              :setup setup
+              :draw draw
+              :update update
+              :mouse-pressed lense-mousepress
+              :mouse-dragged hnav/mouse-dragged
+              :mouse-wheel hnav/mouse-wheel
+              :key-pressed key-pressed
+              :middleware [m/fun-mode]
+              :features [:resizable]
+              :title &quot;OpenNARS 2.0.0: Lense&quot;))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#examples.ircbot" name="examples.ircbot"><h1 class="project-name">examples.ircbot</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns examples.ircbot
   (:require [irclj.core :refer :all]
             [irclj.parser :refer :all]
@@ -8563,7 +8775,6 @@ increased-belief-budget-by-question</p>
   (prn args)
   (println))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn -main [&amp; args]
-  (set-fast-speed)
   (println &quot;Connecting...&quot; server)
   (def irc (connect server port bot-nick :callbacks {:privmsg callback}))
   (setup-nars irc)
@@ -8577,7 +8788,8 @@ increased-belief-budget-by-question</p>
             [gui.gui-utils :refer [invert-comp]]
             [narjure.global-atoms :refer :all]
             [narjure.core :as nar]
-            [narjure.sensorimotor :refer :all]))</pre></td></tr><tr><td class="docs">
+            [narjure.sensorimotor :refer :all])
+  (:gen-class))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def py (atom 280))
 (def direction (atom 0))
 (def barheight 50)
@@ -8608,8 +8820,8 @@ increased-belief-budget-by-question</p>
                       :direction-y 1
                       :iteration 0}))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">&quot;
-&lt;(&amp;/,(&amp;/,&lt;ballpos --&gt; [below]&gt;,i1,&lt;(*,{SELF}) --&gt; op_down&gt;),i1) =/&gt; &lt;ballpos --&gt; [equal]&gt;&gt;.
-&lt;(&amp;/,(&amp;/,&lt;ballpos --&gt; [above]&gt;,i1,&lt;(*,{SELF}) --&gt; op_up&gt;),i1) =/&gt; &lt;ballpos --&gt; [equal]&gt;&gt;.
+&lt;(&amp;/,(&amp;/,&lt;ballpos --&gt; [below]&gt;,i4,&lt;(*,{SELF}) --&gt; op_down&gt;),i4) =/&gt; &lt;ballpos --&gt; [equal]&gt;&gt;.
+&lt;(&amp;/,(&amp;/,&lt;ballpos --&gt; [above]&gt;,i4,&lt;(*,{SELF}) --&gt; op_up&gt;),i4) =/&gt; &lt;ballpos --&gt; [equal]&gt;&gt;.
 &quot;</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def allow-continuous-feedback true)
 (def updown-state (atom &quot;equal&quot;))</pre></td></tr><tr><td class="docs"><p>World state transition</p>
@@ -8630,7 +8842,7 @@ increased-belief-budget-by-question</p>
                                         &quot;&lt;(*,{SELF}) --&gt; op_down&gt;! :|:&quot;
                                         #_&quot;&lt;(*,{SELF}) --&gt; op_stop&gt;! :|:&quot;]))))
   ;also give info from time to time
-  (when (= (mod (:iteration state) 80) 0)                    ;1
+  #_(when (= (mod (:iteration state) 80) 0)                    ;1
     #_(nars-input-narsese (str &quot;&lt;{&quot; (int (* 100 (quot (:ball-py state) 100))) &quot;} --&gt; ballpos&gt;. :|:&quot; ))
     #_(nars-input-narsese (str &quot;&lt;{&quot; (int (* 100 (quot @py 100))) &quot;} --&gt; barpos&gt;. :|:&quot; ))
     (if (and (&gt;= (:ball-py state) @py)
@@ -8661,8 +8873,8 @@ increased-belief-budget-by-question</p>
              (&lt;= (:ball-py state) (+ @py barheight)))
       (when (not= @updown-state &quot;equal&quot;)
         (nars-input-narsese &quot;&lt;ballpos --&gt; [equal]&gt;. :|: %1.0;0.9%&quot;)
-        (nars-input-narsese &quot;&lt;ballpos --&gt; [above]&gt;. :|: %0%&quot;)
-        (nars-input-narsese &quot;&lt;ballpos --&gt; [below]&gt;. :|: %0%&quot;)
+        #_(nars-input-narsese &quot;&lt;ballpos --&gt; [above]&gt;. :|: %0%&quot;)
+        #_(nars-input-narsese &quot;&lt;ballpos --&gt; [below]&gt;. :|: %0%&quot;)
         (reset! updown-state &quot;equal&quot;)
         #_(when allow-continuous-feedback
             ;(println &quot;good NARS&quot;)
@@ -8670,16 +8882,16 @@ increased-belief-budget-by-question</p>
       (if (&gt; (:ball-py state) @py)
         (when (not= @updown-state &quot;below&quot;)
           (nars-input-narsese &quot;&lt;ballpos --&gt; [below]&gt;. :|:&quot;)
-          (nars-input-narsese &quot;&lt;ballpos --&gt; [above]&gt;. :|: %0%&quot;)
-          (nars-input-narsese &quot;&lt;ballpos --&gt; [equal]&gt;. :|: %0%&quot;)
+          #_(nars-input-narsese &quot;&lt;ballpos --&gt; [above]&gt;. :|: %0%&quot;)
+          #_(nars-input-narsese &quot;&lt;ballpos --&gt; [equal]&gt;. :|: %0%&quot;)
           (reset! updown-state &quot;below&quot;)
           #_(when allow-continuous-feedback
               ;(println &quot;bad NARS&quot;)
               (nars-input-narsese &quot;&lt;{SELF} --&gt; [good]&gt;. :|: %0.0;0.9%&quot;)))
         (when (not= @updown-state &quot;above&quot;)
           (nars-input-narsese &quot;&lt;ballpos --&gt; [above]&gt;. :|:&quot;)
-          (nars-input-narsese &quot;&lt;ballpos --&gt; [below]&gt;. :|: %0%&quot;)
-          (nars-input-narsese &quot;&lt;ballpos --&gt; [equal]&gt;. :|: %0%&quot;)
+          #_(nars-input-narsese &quot;&lt;ballpos --&gt; [below]&gt;. :|: %0%&quot;)
+          #_(nars-input-narsese &quot;&lt;ballpos --&gt; [equal]&gt;. :|: %0%&quot;)
           (reset! updown-state &quot;above&quot;)
           #_(when allow-continuous-feedback
               ;(println &quot;bad NARS&quot;)
@@ -8737,17 +8949,405 @@ increased-belief-budget-by-question</p>
   (q/fill 128)
   (q/rect 25 @py 10 barheight)
   (q/rect (:ball-px state) (:ball-py state) 10 10))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(q/defsketch pong
-             :size [(hnav/width) (hnav/height)]
-             :setup setup-pong
-             :draw draw-pong
-             :update update-pong
-             :mouse-pressed (partial hnav/mouse-pressed [] {} false)
-             :mouse-dragged hnav/mouse-dragged
-             :mouse-wheel hnav/mouse-wheel
-             :middleware [m/fun-mode]
-             :features [ :resizable ]
-             :title &quot;OpenNARS 2.0.0: Pong&quot;)</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/gdeer81/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a><div id="floating-toc"><ul><li class="floating-toc-li" id="floating-toc_nal.core">nal.core</li><li class="floating-toc-li" id="floating-toc_nal.deriver.backward-rules">nal.deriver.backward-rules</li><li class="floating-toc-li" id="floating-toc_nal.deriver.key-path">nal.deriver.key-path</li><li class="floating-toc-li" id="floating-toc_nal.deriver.list-expansion">nal.deriver.list-expansion</li><li class="floating-toc-li" id="floating-toc_nal.deriver.matching">nal.deriver.matching</li><li class="floating-toc-li" id="floating-toc_nal.deriver.normalization">nal.deriver.normalization</li><li class="floating-toc-li" id="floating-toc_nal.deriver.preconditions">nal.deriver.preconditions</li><li class="floating-toc-li" id="floating-toc_nal.deriver.premises-swapping">nal.deriver.premises-swapping</li><li class="floating-toc-li" id="floating-toc_nal.deriver.projection-eternalization">nal.deriver.projection-eternalization</li><li class="floating-toc-li" id="floating-toc_nal.deriver.rules">nal.deriver.rules</li><li class="floating-toc-li" id="floating-toc_nal.deriver.set-functions">nal.deriver.set-functions</li><li class="floating-toc-li" id="floating-toc_nal.deriver.substitution">nal.deriver.substitution</li><li class="floating-toc-li" id="floating-toc_nal.deriver.terms-permutation">nal.deriver.terms-permutation</li><li class="floating-toc-li" id="floating-toc_nal.deriver.truth">nal.deriver.truth</li><li class="floating-toc-li" id="floating-toc_nal.deriver.utils">nal.deriver.utils</li><li class="floating-toc-li" id="floating-toc_nal.deriver">nal.deriver</li><li class="floating-toc-li" id="floating-toc_nal.reader">nal.reader</li><li class="floating-toc-li" id="floating-toc_nal.rules">nal.rules</li><li class="floating-toc-li" id="floating-toc_nal.term_utils">nal.term_utils</li><li class="floating-toc-li" id="floating-toc_nal.test_utils">nal.test_utils</li><li class="floating-toc-li" id="floating-toc_narjure.actor.utils">narjure.actor.utils</li><li class="floating-toc-li" id="floating-toc_narjure.bag">narjure.bag</li><li class="floating-toc-li" id="floating-toc_narjure.budget-functions">narjure.budget-functions</li><li class="floating-toc-li" id="floating-toc_narjure.control-utils">narjure.control-utils</li><li class="floating-toc-li" id="floating-toc_narjure.core">narjure.core</li><li class="floating-toc-li" id="floating-toc_narjure.debug-util">narjure.debug-util</li><li class="floating-toc-li" id="floating-toc_narjure.defaults">narjure.defaults</li><li class="floating-toc-li" id="floating-toc_narjure.general-inference.concept-selector">narjure.general-inference.concept-selector</li><li class="floating-toc-li" id="floating-toc_narjure.general-inference.general-inferencer">narjure.general-inference.general-inferencer</li><li class="floating-toc-li" id="floating-toc_narjure.general-inference.inference-request-router">narjure.general-inference.inference-request-router</li><li class="floating-toc-li" id="floating-toc_narjure.global-atoms">narjure.global-atoms</li><li class="floating-toc-li" id="floating-toc_narjure.memory-management.concept">narjure.memory-management.concept</li><li class="floating-toc-li" id="floating-toc_narjure.memory-management.concept-manager">narjure.memory-management.concept-manager</li><li class="floating-toc-li" id="floating-toc_narjure.memory-management.concept-utils">narjure.memory-management.concept-utils</li><li class="floating-toc-li" id="floating-toc_narjure.memory-management.forgettor">narjure.memory-management.forgettor</li><li class="floating-toc-li" id="floating-toc_narjure.memory-management.local-inference.belief-processor">narjure.memory-management.local-inference.belief-processor</li><li class="floating-toc-li" id="floating-toc_narjure.memory-management.local-inference.goal-processor">narjure.memory-management.local-inference.goal-processor</li><li class="floating-toc-li" id="floating-toc_narjure.memory-management.local-inference.local-inference-utils">narjure.memory-management.local-inference.local-inference-utils</li><li class="floating-toc-li" id="floating-toc_narjure.memory-management.local-inference.question-processor">narjure.memory-management.local-inference.question-processor</li><li class="floating-toc-li" id="floating-toc_narjure.memory-management.local-inference.quest-processor">narjure.memory-management.local-inference.quest-processor</li><li class="floating-toc-li" id="floating-toc_narjure.memory-management.task-dispatcher">narjure.memory-management.task-dispatcher</li><li class="floating-toc-li" id="floating-toc_narjure.memory-management.termlink-utils">narjure.memory-management.termlink-utils</li><li class="floating-toc-li" id="floating-toc_narjure.narsese">narjure.narsese</li><li class="floating-toc-li" id="floating-toc_narjure.perception-action.derived-load-reducer">narjure.perception-action.derived-load-reducer</li><li class="floating-toc-li" id="floating-toc_narjure.perception-action.operator-executor">narjure.perception-action.operator-executor</li><li class="floating-toc-li" id="floating-toc_narjure.perception-action.sentence-parser">narjure.perception-action.sentence-parser</li><li class="floating-toc-li" id="floating-toc_narjure.perception-action.task-creator">narjure.perception-action.task-creator</li><li class="floating-toc-li" id="floating-toc_narjure.projection-utils">narjure.projection-utils</li><li class="floating-toc-li" id="floating-toc_narjure.repl">narjure.repl</li><li class="floating-toc-li" id="floating-toc_narjure.runtime-utils">narjure.runtime-utils</li><li class="floating-toc-li" id="floating-toc_narjure.sensorimotor">narjure.sensorimotor</li><li class="floating-toc-li" id="floating-toc_gui.actors">gui.actors</li><li class="floating-toc-li" id="floating-toc_gui.globals">gui.globals</li><li class="floating-toc-li" id="floating-toc_gui.gui">gui.gui</li><li class="floating-toc-li" id="floating-toc_gui.gui-utils">gui.gui-utils</li><li class="floating-toc-li" id="floating-toc_gui.hnav">gui.hnav</li><li class="floating-toc-li" id="floating-toc_gui.hud">gui.hud</li><li class="floating-toc-li" id="floating-toc_gui.lense">gui.lense</li><li class="floating-toc-li" id="floating-toc_examples.ircbot">examples.ircbot</li><li class="floating-toc-li" id="floating-toc_examples.pong">examples.pong</li></ul></div></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
+</td><td class="codes"><pre class="brush: clojure">(defn -main []
+  (q/defsketch pong
+              :size [(hnav/width) (hnav/height)]
+              :setup setup-pong
+              :draw draw-pong
+              :update update-pong
+              :mouse-pressed (partial hnav/mouse-pressed [] {} false)
+              :mouse-dragged hnav/mouse-dragged
+              :mouse-wheel hnav/mouse-wheel
+              :middleware [m/fun-mode]
+              :features [:resizable]
+              :title &quot;OpenNARS 2.0.0: Pong&quot;))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#examples.simplenario" name="examples.simplenario"><h1 class="project-name">examples.simplenario</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns examples.simplenario
+  (:require [quil.core :as q]
+            [quil.middleware :as m]
+            [gui.hnav :as hnav]
+            [gui.gui-utils :refer [invert-comp]]
+            [narjure.global-atoms :refer :all]
+            [narjure.core :as nar]
+            [narjure.sensorimotor :refer :all])
+  (:gen-class))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def px (atom 10))
+(def py (atom 280))
+(def direction (atom 0))
+(def direction-x (atom 0))
+(def barheight 125)
+(def fieldmax 760)
+(def fieldmax-x 76000)
+(def fieldmin 20)</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn with-print [x]
+  #_(println (str x))
+  x)</pre></td></tr><tr><td class="docs"><p>e &lt;-> <ballpos --> [equal]>
+u &lt;-> ballpos --> [above]</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Registers the operations</p>
+</td><td class="codes"><pre class="brush: clojure">(defn setup-pong
+  []
+  (nars-input-narsese &quot;right! :|:&quot;)
+  (q/frame-rate 80)
+  (nars-register-operation 'self_op_up (fn [args operationgoal]
+                                    (do
+                                      (when (= @py (- fieldmax barheight (- fieldmin)))
+                                        (reset! direction -1))
+                                      (with-print (= @py (- fieldmax barheight (- fieldmin)))))))
+  (nars-register-operation 'self_op_right (fn [args operationgoal]
+                                      (do
+                                        (when (= (:source operationgoal) :derived)
+                                          #_(println &quot;system decided down&quot;))
+                                        (reset! direction-x 1)
+                                        true)))
+  (nars-register-operation 'self_op_left (fn [args operationgoal]
+                                            (do
+                                              (when (= (:source operationgoal) :derived)
+                                                #_(println &quot;system decided down&quot;))
+                                              (reset! direction-x -1)
+                                              true)))
+  (merge hnav/states {:ball-px 80
+                      :ball-py 750
+                      :direction-x 1
+                      :direction-y 1
+                      :iteration 0}))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">&quot;
+&lt;(&amp;/,(&amp;/,equal,i4,self_op_up),i4) =/&gt; right&gt;.
+&lt;(&amp;/,(&amp;/,down,i4,self_op_right),i4) =/&gt; right&gt;.
+&quot;</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def allow-continuous-feedback true)
+(def updown-state (atom &quot;equal&quot;))</pre></td></tr><tr><td class="docs"><p>World state transition</p>
+</td><td class="codes"><pre class="brush: clojure">(def ballpx-tmp (atom 10))
+(def ballpy-tmp (atom 10))
+(def pxmax (atom 100000))
+(def collide (atom 0))
+(defn update-pong
+  [state]
+  (reset! collide 0)
+  (reset! pxmax 100000)
+  (when (and (&lt; (Math/abs (- @px (:ball-px state))) 10)
+             (&lt; (Math/abs (- (+ @py (/ barheight 2.0)) (:ball-py state))) (/ barheight 2.0)))
+    #_(reset! direction-x -1)
+    (reset! collide 1)
+    (reset! pxmax @px))
+  (reset! px (min (+ @direction-x @px)
+                  @pxmax))
+  (reset! direction-x (* 0.98 @direction-x))
+  (reset! direction (+ 0.01 @direction))
+  (reset! ballpx-tmp (:ball-px state))
+  (reset! ballpy-tmp (:ball-py state))
+  (reset! py (+ @py (* 3.0 @direction)))
+  (when (&gt; @px (+ 50.0 @ballpx-tmp))
+    (reset! ballpx-tmp (+ @px (+ 100.0 (* 30.0 (Math/random)))))
+    (reset! ballpy-tmp (- fieldmax (* 200.0 (Math/random)))))
+  (when (= (mod (:iteration state) 25) 0)
+    #_(println (str &quot;above truth &quot; (vec (:truth (lense-max-statement-confidence-projected-to-now 'above :belief :event)))
+                  &quot; below truth &quot; (vec (:truth (lense-max-statement-confidence-projected-to-now 'below :belief :event)))
+                  &quot; equal truth &quot; (vec (:truth (lense-max-statement-confidence-projected-to-now 'equal :belief :event)))))
+    (nars-input-narsese &quot;right! :|:&quot;))
+  (when (= (mod (:iteration state) 200) 1)
+    (println &quot;rand action&quot;)
+    (nars-input-narsese (str (rand-nth [&quot;self_op_up! :|:&quot;
+                                        &quot;self_op_left! :|:&quot;
+                                        &quot;self_op_right! :|:&quot;
+                                        #_&quot;&lt;(*,{SELF}) --&gt; op_stop&gt;! :|:&quot;]))))
+  (when (and (= (mod (:iteration state) 60) 0)
+             (= @collide 1))
+    (nars-input-narsese &quot;collide. :|: %1.0;0.9%&quot;))
+    ;also give info from time to time
+  (when (and (not= @collide 1)
+             (= (mod (:iteration state) 60) 0))                     ;1
+    #_(nars-input-narsese (str &quot;&lt;{&quot; (int (* 100 (quot (:ball-py state) 100))) &quot;} --&gt; ballpos&gt;. :|:&quot; ))
+    #_(nars-input-narsese (str &quot;&lt;{&quot; (int (* 100 (quot @py 100))) &quot;} --&gt; barpos&gt;. :|:&quot; ))
+    (when (&gt; @direction-x 0.1)
+      (nars-input-narsese &quot;right. :|: %1.0;0.9%&quot;))
+    (if (and (&gt;= (:ball-py state) @py)
+             (&lt;= (:ball-py state) (+ @py barheight)))
+      (when true
+        (nars-input-narsese &quot;nocoll. :|: %1.0;0.9%&quot;)
+        (reset! updown-state &quot;equal&quot;)
+        #_(when allow-continuous-feedback
+            ;(println &quot;good NARS&quot;)
+            (nars-input-narsese &quot;&lt;{SELF} --&gt; [good]&gt;. :|: %1.0;0.9%&quot;)))
+      (if (&gt; (:ball-py state) @py)
+        (when true
+          (nars-input-narsese (str &quot;nocoll. :|:&quot;))
+          (reset! updown-state &quot;below&quot;)
+          #_(when allow-continuous-feedback
+              ;(println &quot;bad NARS&quot;)
+              (nars-input-narsese &quot;&lt;{SELF} --&gt; [good]&gt;. :|: %0.0;0.9%&quot;)))
+        (when true
+          (nars-input-narsese (str &quot;nocoll. :|:&quot;))
+          (reset! updown-state &quot;above&quot;)
+          #_(when allow-continuous-feedback
+              ;(println &quot;bad NARS&quot;)
+              (nars-input-narsese &quot;&lt;{SELF} --&gt; [good]&gt;. :|: %0.0;0.9%&quot;))))))
+  (when (and (= (mod (:iteration state) 1) 0)
+             (not= @collide 1))                    ;1
+    #_(nars-input-narsese (str &quot;&lt;{&quot; (int (* 100 (quot (:ball-py state) 100))) &quot;} --&gt; ballpos&gt;. :|:&quot; ))
+    #_(nars-input-narsese (str &quot;&lt;{&quot; (int (* 100 (quot @py 100))) &quot;} --&gt; barpos&gt;. :|:&quot; ))
+    (if (and (&gt;= (:ball-py state) @py)
+             (&lt;= (:ball-py state) (+ @py barheight)))
+      (when (not= @updown-state &quot;equal&quot;)
+        (nars-input-narsese &quot;nocoll. :|: %1.0;0.9%&quot;)
+        #_(nars-input-narsese &quot;above. :|: %0%&quot;)
+        #_(nars-input-narsese &quot;below. :|: %0%&quot;)
+        (reset! updown-state &quot;equal&quot;)
+        #_(when allow-continuous-feedback
+            ;(println &quot;good NARS&quot;)
+            (nars-input-narsese &quot;&lt;{SELF} --&gt; [good]&gt;. :|: %1.0;0.9%&quot;)))
+      (if (&gt; (:ball-py state) @py)
+        (when (not= @updown-state &quot;below&quot;)
+          (nars-input-narsese &quot;nocoll. :|:&quot;)
+          #_(nars-input-narsese &quot;above. :|: %0%&quot;)
+          #_ (nars-input-narsese &quot;equal. :|: %0%&quot;)
+          (reset! updown-state &quot;below&quot;)
+          #_(when allow-continuous-feedback
+              ;(println &quot;bad NARS&quot;)
+              (nars-input-narsese &quot;&lt;{SELF} --&gt; [good]&gt;. :|: %0.0;0.9%&quot;)))
+        (when (not= @updown-state &quot;above&quot;)
+          (nars-input-narsese &quot;nocoll. :|:&quot;)
+          #_(nars-input-narsese &quot;below. :|: %0%&quot;)
+          #_(nars-input-narsese &quot;equal. :|: %0%&quot;)
+          (reset! updown-state &quot;above&quot;)
+          #_(when allow-continuous-feedback
+              ;(println &quot;bad NARS&quot;)
+              (nars-input-narsese &quot;&lt;{SELF} --&gt; [good]&gt;. :|: %0.0;0.9%&quot;))))))
+  (let [kset-x (+ 0.6 (/ (Math/random) 2.0))
+        kset-y (+ 0.6 (/ (Math/random) 2.0))
+        state2 (assoc state
+                 :ball-px @ballpx-tmp
+                 :ball-py @ballpy-tmp)
+        state3 state2
+        state4 state3
+        state5 (if (&gt;= (:ball-py state4)                     ;collided on upper wall
+                       fieldmax)
+                 (assoc state4 :direction-y (- kset-y))
+                 state4)
+        state6 (if (&lt;= (:ball-py state5)                     ;collided on down wall
+                       fieldmin)
+                 (assoc state5 :direction-y kset-y)
+                 state5)
+        state7 (if (and (&lt;= (:ball-px state6) 40)            ;got it
+                        (&gt;= (:ball-py state6) @py)
+                        (&lt;= (:ball-py state6) (+ @py barheight)))
+                 (do
+                   #_(nars-input-narsese &quot;&lt;{SELF} --&gt; [good]&gt;. :|: %1.0;0.9%&quot;)
+                   #_(nars-input-narsese &quot;&lt;{SELF} --&gt; [good]&gt;! :|:&quot;)
+                   ;(println &quot;good NARS&quot;)
+                   (assoc state6 :direction-x kset-x))
+                 state6)]
+    (when (&gt; @py (- fieldmax barheight (- fieldmin)))
+      (reset! py (- fieldmax barheight (- fieldmin))))
+    (when (&lt; @py fieldmin)
+      (reset! py fieldmin))
+    (assoc state7
+      :ball-px (max fieldmin (min (:ball-px state7) fieldmax-x))
+      :ball-py (max fieldmin (min (:ball-py state7) fieldmax))
+      :iteration (inc (:iteration state7)))))</pre></td></tr><tr><td class="docs"><p>Draw the game</p>
+</td><td class="codes"><pre class="brush: clojure">(defn draw-pong
+  [state]
+  (q/background (invert-comp 255))
+  (q/stroke (invert-comp 0))
+  (q/reset-matrix)
+  (hnav/transform state)
+  (q/fill (invert-comp 255))
+  (q/rect -1000 fieldmin fieldmax-x fieldmax)
+  (q/fill 128)
+  (q/rect @px @py 10 barheight)
+  (q/rect (:ball-px state) (:ball-py state) 10 10))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn -main []
+  (q/defsketch pong
+              :size [(hnav/width) (hnav/height)]
+              :setup setup-pong
+              :draw draw-pong
+              :update update-pong
+              :mouse-pressed (partial hnav/mouse-pressed [] {} false)
+              :mouse-dragged hnav/mouse-dragged
+              :mouse-wheel hnav/mouse-wheel
+              :middleware [m/fun-mode]
+              :features [:resizable]
+              :title &quot;OpenNARS 2.0.0: Pong&quot;))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#examples.simplepong" name="examples.simplepong"><h1 class="project-name">examples.simplepong</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns examples.simplepong
+  (:require [quil.core :as q]
+            [quil.middleware :as m]
+            [gui.hnav :as hnav]
+            [gui.gui-utils :refer [invert-comp]]
+            [narjure.global-atoms :refer :all]
+            [narjure.core :as nar]
+            [narjure.sensorimotor :refer :all])
+  (:gen-class))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def py (atom 280))
+(def direction (atom 0))
+(def barheight 125)
+(def fieldmax 760)
+(def fieldmin 20)</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn with-print [x]
+  #_(println (str x))
+  x)</pre></td></tr><tr><td class="docs"><p>e &lt;-> <ballpos --> [equal]>
+u &lt;-> ballpos --> [above]</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Registers the operations</p>
+</td><td class="codes"><pre class="brush: clojure">(defn setup-pong
+  []
+  (nars-input-narsese &quot;equal! :|:&quot;)
+  (q/frame-rate 100)
+  (nars-register-operation 'self_op_up (fn [args operationgoal]
+                                    (do
+                                      (when (= (:source operationgoal) :derived)
+                                        #_(println &quot;system decided up&quot;))
+                                      (reset! direction -1)
+                                      (with-print (not= @py fieldmin)))))
+  (nars-register-operation 'self_op_down (fn [args operationgoal]
+                                      (do
+                                        (when (= (:source operationgoal) :derived)
+                                          #_(println &quot;system decided down&quot;))
+                                        (reset! direction 1)
+                                        (with-print (not= @py (- fieldmax barheight (- fieldmin)))))))
+  (merge hnav/states {:ball-px 380
+                      :ball-py 400
+                      :direction-x 1
+                      :direction-y 1
+                      :iteration 0}))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">&quot;
+&lt;(&amp;/,(&amp;/,below,i4,self_op_down),i4) =/&gt; equal&gt;.
+&lt;(&amp;/,(&amp;/,above,i4,self_op_up),i4) =/&gt; equal&gt;.
+&quot;</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def allow-continuous-feedback true)
+(def updown-state (atom &quot;equal&quot;))</pre></td></tr><tr><td class="docs"><p>World state transition</p>
+</td><td class="codes"><pre class="brush: clojure">(defn update-pong
+  [state]
+  (when (= @direction -1)
+    (reset! py (+ @py -3)))
+  (when (= @direction 1)
+    (reset! py (+ @py 3)))
+  (when (= (mod (:iteration state) 25) 0)
+    #_(println (str &quot;above truth &quot; (vec (:truth (lense-max-statement-confidence-projected-to-now 'above :belief :event)))
+                  &quot; below truth &quot; (vec (:truth (lense-max-statement-confidence-projected-to-now 'below :belief :event)))
+                  &quot; equal truth &quot; (vec (:truth (lense-max-statement-confidence-projected-to-now 'equal :belief :event)))))
+    (nars-input-narsese &quot;equal! :|:&quot;))
+  (when (= (mod (:iteration state) 125) 1)
+    (println &quot;rand action&quot;)
+    (nars-input-narsese (str (rand-nth [&quot;self_op_up! :|:&quot;
+                                        &quot;self_op_down! :|:&quot;
+                                        #_&quot;&lt;(*,{SELF}) --&gt; op_stop&gt;! :|:&quot;]))))
+  ;also give info from time to time
+  #_(when (= (mod (:iteration state) 80) 0)                    ;1
+    #_(nars-input-narsese (str &quot;&lt;{&quot; (int (* 100 (quot (:ball-py state) 100))) &quot;} --&gt; ballpos&gt;. :|:&quot; ))
+    #_(nars-input-narsese (str &quot;&lt;{&quot; (int (* 100 (quot @py 100))) &quot;} --&gt; barpos&gt;. :|:&quot; ))
+    (if (and (&gt;= (:ball-py state) @py)
+             (&lt;= (:ball-py state) (+ @py barheight)))
+      (when true
+        (nars-input-narsese &quot;&lt;ballpos --&gt; [equal]&gt;. :|: %1.0;0.9%&quot;)
+        (reset! updown-state &quot;equal&quot;)
+        #_(when allow-continuous-feedback
+            ;(println &quot;good NARS&quot;)
+            (nars-input-narsese &quot;&lt;{SELF} --&gt; [good]&gt;. :|: %1.0;0.9%&quot;)))
+      (if (&gt; (:ball-py state) @py)
+        (when true
+          (nars-input-narsese (str &quot;&lt;ballpos --&gt; [below]&gt;. :|:&quot;))
+          (reset! updown-state &quot;below&quot;)
+          #_(when allow-continuous-feedback
+              ;(println &quot;bad NARS&quot;)
+              (nars-input-narsese &quot;&lt;{SELF} --&gt; [good]&gt;. :|: %0.0;0.9%&quot;)))
+        (when true
+          (nars-input-narsese (str &quot;&lt;ballpos --&gt; [above]&gt;. :|:&quot;))
+          (reset! updown-state &quot;above&quot;)
+          #_(when allow-continuous-feedback
+              ;(println &quot;bad NARS&quot;)
+              (nars-input-narsese &quot;&lt;{SELF} --&gt; [good]&gt;. :|: %0.0;0.9%&quot;))))))
+  (when (= (mod (:iteration state) 1) 0)                    ;1
+    #_(nars-input-narsese (str &quot;&lt;{&quot; (int (* 100 (quot (:ball-py state) 100))) &quot;} --&gt; ballpos&gt;. :|:&quot; ))
+    #_(nars-input-narsese (str &quot;&lt;{&quot; (int (* 100 (quot @py 100))) &quot;} --&gt; barpos&gt;. :|:&quot; ))
+    (if (and (&gt;= (:ball-py state) @py)
+             (&lt;= (:ball-py state) (+ @py barheight)))
+      (when (not= @updown-state &quot;equal&quot;)
+        (nars-input-narsese &quot;equal. :|: %1.0;0.9%&quot;)
+        #_(nars-input-narsese &quot;above. :|: %0%&quot;)
+        #_(nars-input-narsese &quot;below. :|: %0%&quot;)
+        (reset! updown-state &quot;equal&quot;)
+        #_(when allow-continuous-feedback
+            ;(println &quot;good NARS&quot;)
+            (nars-input-narsese &quot;&lt;{SELF} --&gt; [good]&gt;. :|: %1.0;0.9%&quot;)))
+      (if (&gt; (:ball-py state) @py)
+        (when (not= @updown-state &quot;below&quot;)
+          (nars-input-narsese &quot;below. :|:&quot;)
+          #_(nars-input-narsese &quot;above. :|: %0%&quot;)
+          #_ (nars-input-narsese &quot;equal. :|: %0%&quot;)
+          (reset! updown-state &quot;below&quot;)
+          #_(when allow-continuous-feedback
+              ;(println &quot;bad NARS&quot;)
+              (nars-input-narsese &quot;&lt;{SELF} --&gt; [good]&gt;. :|: %0.0;0.9%&quot;)))
+        (when (not= @updown-state &quot;above&quot;)
+          (nars-input-narsese &quot;above. :|:&quot;)
+          #_(nars-input-narsese &quot;below. :|: %0%&quot;)
+          #_(nars-input-narsese &quot;equal. :|: %0%&quot;)
+          (reset! updown-state &quot;above&quot;)
+          #_(when allow-continuous-feedback
+              ;(println &quot;bad NARS&quot;)
+              (nars-input-narsese &quot;&lt;{SELF} --&gt; [good]&gt;. :|: %0.0;0.9%&quot;))))))
+  (let [kset-x (+ 0.6 (/ (Math/random) 2.0))
+        kset-y (+ 0.6 (/ (Math/random) 2.0))
+        state2 (assoc state
+                 :ball-px #_(:ball-px state) (+ (:ball-px state) (* (:direction-x state) 1 1))
+                 :ball-py #_(:ball-py state) (+ (:ball-py state) (* (:direction-y state) 1 1)))
+        state3 (if (&gt;= (:ball-px state2)                     ;collided on right wall
+                       fieldmax)
+                 (assoc state2 :direction-x (- kset-x))
+                 state2)
+        state4 (if (&lt;= (:ball-px state3)                     ;collided on left wall!!
+                       fieldmin)
+                 (do
+                   #_(nars-input-narsese &quot;&lt;{SELF} --&gt; [good]&gt;. :|: %0.0;0.9%&quot;)
+                   #_(nars-input-narsese &quot;&lt;{SELF} --&gt; [good]&gt;! :|:&quot;)
+                   ;(println &quot;bad NARS&quot;)
+                   (assoc state3 :direction-x kset-x))
+                 state3)
+        state5 (if (&gt;= (:ball-py state4)                     ;collided on upper wall
+                       fieldmax)
+                 (assoc state4 :direction-y (- kset-y))
+                 state4)
+        state6 (if (&lt;= (:ball-py state5)                     ;collided on down wall
+                       fieldmin)
+                 (assoc state5 :direction-y kset-y)
+                 state5)
+        state7 (if (and (&lt;= (:ball-px state6) 40)            ;got it
+                        (&gt;= (:ball-py state6) @py)
+                        (&lt;= (:ball-py state6) (+ @py barheight)))
+                 (do
+                   #_(nars-input-narsese &quot;&lt;{SELF} --&gt; [good]&gt;. :|: %1.0;0.9%&quot;)
+                   #_(nars-input-narsese &quot;&lt;{SELF} --&gt; [good]&gt;! :|:&quot;)
+                   ;(println &quot;good NARS&quot;)
+                   (assoc state6 :direction-x kset-x))
+                 state6)]
+    (when (&gt; @py (- fieldmax barheight (- fieldmin)))
+      (reset! py (- fieldmax barheight (- fieldmin))))
+    (when (&lt; @py fieldmin)
+      (reset! py fieldmin))
+    (assoc state7
+      :ball-px (max fieldmin (min (:ball-px state7) fieldmax))
+      :ball-py (max fieldmin (min (:ball-py state7) fieldmax))
+      :iteration (inc (:iteration state7)))))</pre></td></tr><tr><td class="docs"><p>Draw the game</p>
+</td><td class="codes"><pre class="brush: clojure">(defn draw-pong
+  [state]
+  (q/background (invert-comp 255))
+  (q/stroke (invert-comp 0))
+  (q/reset-matrix)
+  (hnav/transform state)
+  (q/fill (invert-comp 255))
+  (q/rect fieldmin fieldmin fieldmax fieldmax)
+  (q/fill 128)
+  (q/rect 25 @py 10 barheight)
+  (q/rect (:ball-px state) (:ball-py state) 10 10))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn -main []
+  (q/defsketch pong
+              :size [(hnav/width) (hnav/height)]
+              :setup setup-pong
+              :draw draw-pong
+              :update update-pong
+              :mouse-pressed (partial hnav/mouse-pressed [] {} false)
+              :mouse-dragged hnav/mouse-dragged
+              :mouse-wheel hnav/mouse-wheel
+              :middleware [m/fun-mode]
+              :features [:resizable]
+              :title &quot;OpenNARS 2.0.0: Pong&quot;))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/gdeer81/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a><div id="floating-toc"><ul><li class="floating-toc-li" id="floating-toc_nal.core">nal.core</li><li class="floating-toc-li" id="floating-toc_nal.deriver.backward-rules">nal.deriver.backward-rules</li><li class="floating-toc-li" id="floating-toc_nal.deriver.key-path">nal.deriver.key-path</li><li class="floating-toc-li" id="floating-toc_nal.deriver.list-expansion">nal.deriver.list-expansion</li><li class="floating-toc-li" id="floating-toc_nal.deriver.matching">nal.deriver.matching</li><li class="floating-toc-li" id="floating-toc_nal.deriver.normalization">nal.deriver.normalization</li><li class="floating-toc-li" id="floating-toc_nal.deriver.preconditions">nal.deriver.preconditions</li><li class="floating-toc-li" id="floating-toc_nal.deriver.premises-swapping">nal.deriver.premises-swapping</li><li class="floating-toc-li" id="floating-toc_nal.deriver.projection-eternalization">nal.deriver.projection-eternalization</li><li class="floating-toc-li" id="floating-toc_nal.deriver.rules">nal.deriver.rules</li><li class="floating-toc-li" id="floating-toc_nal.deriver.set-functions">nal.deriver.set-functions</li><li class="floating-toc-li" id="floating-toc_nal.deriver.substitution">nal.deriver.substitution</li><li class="floating-toc-li" id="floating-toc_nal.deriver.terms-permutation">nal.deriver.terms-permutation</li><li class="floating-toc-li" id="floating-toc_nal.deriver.truth">nal.deriver.truth</li><li class="floating-toc-li" id="floating-toc_nal.deriver.utils">nal.deriver.utils</li><li class="floating-toc-li" id="floating-toc_nal.deriver">nal.deriver</li><li class="floating-toc-li" id="floating-toc_nal.reader">nal.reader</li><li class="floating-toc-li" id="floating-toc_nal.rules">nal.rules</li><li class="floating-toc-li" id="floating-toc_nal.term_utils">nal.term_utils</li><li class="floating-toc-li" id="floating-toc_nal.test_utils">nal.test_utils</li><li class="floating-toc-li" id="floating-toc_narjure.actor.utils">narjure.actor.utils</li><li class="floating-toc-li" id="floating-toc_narjure.bag">narjure.bag</li><li class="floating-toc-li" id="floating-toc_narjure.budget-functions">narjure.budget-functions</li><li class="floating-toc-li" id="floating-toc_narjure.control-utils">narjure.control-utils</li><li class="floating-toc-li" id="floating-toc_narjure.core">narjure.core</li><li class="floating-toc-li" id="floating-toc_narjure.debug-util">narjure.debug-util</li><li class="floating-toc-li" id="floating-toc_narjure.defaults">narjure.defaults</li><li class="floating-toc-li" id="floating-toc_narjure.general-inference.concept-selector">narjure.general-inference.concept-selector</li><li class="floating-toc-li" id="floating-toc_narjure.general-inference.general-inferencer">narjure.general-inference.general-inferencer</li><li class="floating-toc-li" id="floating-toc_narjure.general-inference.inference-request-router">narjure.general-inference.inference-request-router</li><li class="floating-toc-li" id="floating-toc_narjure.global-atoms">narjure.global-atoms</li><li class="floating-toc-li" id="floating-toc_narjure.memory-management.concept">narjure.memory-management.concept</li><li class="floating-toc-li" id="floating-toc_narjure.memory-management.concept-manager">narjure.memory-management.concept-manager</li><li class="floating-toc-li" id="floating-toc_narjure.memory-management.concept-utils">narjure.memory-management.concept-utils</li><li class="floating-toc-li" id="floating-toc_narjure.memory-management.forgettor">narjure.memory-management.forgettor</li><li class="floating-toc-li" id="floating-toc_narjure.memory-management.local-inference.belief-processor">narjure.memory-management.local-inference.belief-processor</li><li class="floating-toc-li" id="floating-toc_narjure.memory-management.local-inference.goal-processor">narjure.memory-management.local-inference.goal-processor</li><li class="floating-toc-li" id="floating-toc_narjure.memory-management.local-inference.local-inference-utils">narjure.memory-management.local-inference.local-inference-utils</li><li class="floating-toc-li" id="floating-toc_narjure.memory-management.local-inference.question-processor">narjure.memory-management.local-inference.question-processor</li><li class="floating-toc-li" id="floating-toc_narjure.memory-management.local-inference.quest-processor">narjure.memory-management.local-inference.quest-processor</li><li class="floating-toc-li" id="floating-toc_narjure.memory-management.task-dispatcher">narjure.memory-management.task-dispatcher</li><li class="floating-toc-li" id="floating-toc_narjure.memory-management.termlink-utils">narjure.memory-management.termlink-utils</li><li class="floating-toc-li" id="floating-toc_narjure.narsese">narjure.narsese</li><li class="floating-toc-li" id="floating-toc_narjure.perception-action.derived-load-reducer">narjure.perception-action.derived-load-reducer</li><li class="floating-toc-li" id="floating-toc_narjure.perception-action.operator-executor">narjure.perception-action.operator-executor</li><li class="floating-toc-li" id="floating-toc_narjure.perception-action.sentence-parser">narjure.perception-action.sentence-parser</li><li class="floating-toc-li" id="floating-toc_narjure.perception-action.task-creator">narjure.perception-action.task-creator</li><li class="floating-toc-li" id="floating-toc_narjure.projection-utils">narjure.projection-utils</li><li class="floating-toc-li" id="floating-toc_narjure.repl">narjure.repl</li><li class="floating-toc-li" id="floating-toc_narjure.runtime-utils">narjure.runtime-utils</li><li class="floating-toc-li" id="floating-toc_narjure.sensorimotor">narjure.sensorimotor</li><li class="floating-toc-li" id="floating-toc_gui.actors">gui.actors</li><li class="floating-toc-li" id="floating-toc_gui.globals">gui.globals</li><li class="floating-toc-li" id="floating-toc_gui.gui">gui.gui</li><li class="floating-toc-li" id="floating-toc_gui.gui-utils">gui.gui-utils</li><li class="floating-toc-li" id="floating-toc_gui.hnav">gui.hnav</li><li class="floating-toc-li" id="floating-toc_gui.hud">gui.hud</li><li class="floating-toc-li" id="floating-toc_gui.lense">gui.lense</li><li class="floating-toc-li" id="floating-toc_examples.ircbot">examples.ircbot</li><li class="floating-toc-li" id="floating-toc_examples.pong">examples.pong</li><li class="floating-toc-li" id="floating-toc_examples.simplenario">examples.simplenario</li><li class="floating-toc-li" id="floating-toc_examples.simplepong">examples.simplepong</li></ul></div></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
 SyntaxHighlighter.all();
 
 // hackity hack

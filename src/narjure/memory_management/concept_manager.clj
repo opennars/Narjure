@@ -8,6 +8,7 @@
     [narjure.memory-management.concept :as c]
     [narjure.bag :as b]
     [narjure.defaults :refer [c-priority]]
+    [nal.term_utils :refer [concept-term-transform]]
     [taoensso.timbre :refer [debug info]]
     [narjure.debug-util :refer :all])
   (:refer-clojure :exclude [promise await]))
@@ -28,9 +29,10 @@
   "Create a concept for each term in statement, if they dont
    exist. Then post the task back to task-dispatcher."
   [from [_ [task-concept-id belief-concept-id {:keys [statement] :as task}]]]
-  (doseq [term (:terms task)]
-    (when-not (b/exists? @c-bag term)
-      (make-general-concept term)))
+  (doseq [term_ (:terms task)]
+    (let [term (concept-term-transform term_)]
+      (when-not (b/exists? @c-bag term)
+        (make-general-concept term))))
   (cast! from [:task-from-cmanager-msg [task-concept-id belief-concept-id task]]))
 
 (defn persist-state-handler

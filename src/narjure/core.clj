@@ -17,7 +17,7 @@
      [operator-executor :refer [operator-executor]]
      [sentence-parser :refer [sentence-parser]]
      [derived-load-reducer :refer [derived-load-reducer]]
-     [task-creator :refer [task-creator]]]
+     [task-creator :refer [task-creator lastevent]]]
     [narjure.narsese :refer [parse2]]
     [taoensso.timbre :refer [info set-level!]]
     [narjure.bag :as b]
@@ -102,6 +102,8 @@
 
 (defn run []
 
+  (reset! lastevent nil)
+  (reset! max-term-complexity max-term-complexity-init)
   (info "reset question filter")
   (reset! last-qu-answers [])
   (info "Resetting concepts bagss:")

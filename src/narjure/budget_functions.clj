@@ -8,15 +8,14 @@
      [defaults :refer :all]
      [global-atoms :refer :all]
      [control-utils :refer [round2]]
-     [debug-util :refer :all]]
-    [narjure.memory-management.concept-utils :refer :all]))
+     [debug-util :refer :all]]))
 
 (defn truth-to-quality
   "The task quality judged by its truth."
   [t]
   (let [exp (expectation t)
         positive-truth-bias 0.75]
-    (max exp (* (- 1.0 exp) positive-truth-bias))))
+    exp #_(max exp (* (- 1.0 exp) positive-truth-bias))))
 
 (defn occurrence-penalty-tr
   "Occurrence budget penalty. Currently not used as forgetting seems to suffice."
@@ -39,10 +38,6 @@
     (if (and (:truth derived-task)
              match)
       (do
-        ;(println "1")
-        ;(println (str "1.1" match))
-        ;(println (str "1.2" (match '?goal)))
-        ;(println (str "1.3" (highest-desire-in-respect-to-now (match '?goal))))
         (let [goal (match '?goal)
               precondition (match '?precondition)
               goal-desire (highest-desire-in-respect-to-now goal)]
@@ -50,14 +45,17 @@
           (if (= precondition goal)
             nil
             (if goal-desire
-              (let [quality (max (nth budget 2)
-                                 (t-or (expectation (:truth derived-task)) (t-or (second goal-desire) 0.8)))] ;TODO see goal-processor (unify)
+              (let [quality (t-or (t-or (expectation (:truth derived-task))
+                                        (nth budget 2))
+                                       (t-or (second goal-desire)
+                                             (t-or (/ 1.0 (:sc derived-task))
+                                                   0.3)))] ;TODO see goal-processor (unify)
                 (do
                   (println "INCREASED DERIVED BUDGET")
                   (println (narsese-print (:statement derived-task)) " " (:truth derived-task) " " (:occurrence derived-task))
-                  [(max (first budget) quality)
-                   (max (second budget) 0.9)
-                   (nth budget 2)]))
+                  [(max (first budget) quality) #_(max (first budget) quality)
+                   (second budget) #_(max (second budget) 0.9)
+                   (t-or 0.6 (t-or (nth budget 2) (/ 1.0 (:sc derived-task))))]))
               not-matched-or-not-desired-budget))))
       not-matched-or-not-desired-budget))                   ;tODO too radical
   )
@@ -66,15 +64,14 @@
 (defn derived-budget
   "The budget of a by general inference derived task."
   [task derived-task]
-  (when (< (:sc derived-task) max-term-complexity)
-    (let [activation-gain 0.95
-          priority (max 1.0 (t-or activation-gain (first (:budget task))))
-         durability (/ (second (:budget task)) (Math/sqrt (:sc derived-task)))
-         truth-quality (if (:truth derived-task) (truth-to-quality (:truth derived-task))
-                                                 0.0 #_(w2c 1.0))
-         complexity (:sc derived-task)
-         rescale-factor 0.4 ;should probably not above input belief quality!
-         quality (* truth-quality
-                    rescale-factor
-                    #_(/ 1.0 (Math/sqrt complexity)))]
-     (structural-reward-budget [priority durability quality] derived-task))))
+  (when (< (:sc derived-task) @max-term-complexity)
+    (let [durability (/ (second (:budget task)) (:sc derived-task))
+          truth-quality (if (:truth derived-task) (truth-to-quality (:truth derived-task))
+                                                  0.0)
+          priority (/ (* (t-or truth-quality (first (:budget task)))
+                         (occurrence-penalty-tr (:occurrence derived-task)))
+                      (/ (:sc derived-task) 1.0))
+          rescale-factor 0.1 ;should probably not above input belief quality!
+          quality (* priority
+                     rescale-factor)]
+      (structural-reward-budget [priority durability quality] derived-task))))

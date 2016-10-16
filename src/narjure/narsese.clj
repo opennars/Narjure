@@ -3,7 +3,8 @@
             [clojure.java.io :as io]
             [narjure.defaults :refer :all]
             [nal.term_utils :refer :all]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [nal.deriver.normalization :refer [sort-commutative]]))
 
 (def bnf-file "narsese.bnf")
 
@@ -189,4 +190,4 @@
         parsedstmt (assoc (parse (str (first (str/split stmt #"\:\|"))
                                       (second (str/split stmt #"\|\:")))) :occurrence time)]
     (let [parsed (interval-reduction (parser-workaround parsedstmt (parse-intervals (:statement parsedstmt))))]
-      (no-truth-for-questions-and-quests parsed))))
+      (no-truth-for-questions-and-quests (assoc parsed :statement (sort-commutative (:statement parsed)))))))

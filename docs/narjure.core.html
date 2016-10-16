@@ -2885,7 +2885,7 @@ net.brehaut.ClojureTools = (function (SH) {
      [operator-executor :refer [operator-executor]]
      [sentence-parser :refer [sentence-parser]]
      [derived-load-reducer :refer [derived-load-reducer]]
-     [task-creator :refer [task-creator]]]
+     [task-creator :refer [task-creator lastevent]]]
     [narjure.narsese :refer [parse2]]
     [taoensso.timbre :refer [info set-level!]]
     [narjure.bag :as b]
@@ -2951,6 +2951,8 @@ net.brehaut.ClojureTools = (function (SH) {
     [&quot;8&quot; :permanent 5 5 :sec 100 (sentence-parser)]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def sup (atom '()))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn run []
+  (reset! lastevent nil)
+  (reset! max-term-complexity max-term-complexity-init)
   (info &quot;reset question filter&quot;)
   (reset! last-qu-answers [])
   (info &quot;Resetting concepts bagss:&quot;)

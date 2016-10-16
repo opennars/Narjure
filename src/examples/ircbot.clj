@@ -137,7 +137,6 @@
   (println))
 
 (defn -main [& args]
-  (set-fast-speed)
   (println "Connecting..." server)
   (def irc (connect server port bot-nick :callbacks {:privmsg callback}))
   (setup-nars irc)
