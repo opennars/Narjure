@@ -2912,10 +2912,10 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(def inverse-decay-rate 10)                                        ; forgetting adjustment rate for concepts e^-lt where l = (1.0 - durabiity) / decay-rate</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def system-tick-interval-slow 136)
 (def inference-tick-interval-slow 100)
-(def system-tick-interval-medium 50)
-(def inference-tick-interval-medium 25)
-(def system-tick-interval-fast 20)
-(def inference-tick-interval-fast 10)
+(def system-tick-interval-medium 60)
+(def inference-tick-interval-medium 30)
+(def system-tick-interval-fast 30)
+(def inference-tick-interval-fast 15)
 (def system-tick-interval (atom system-tick-interval-medium))                               ;make big enough</pre></td></tr><tr><td class="docs"><p>make big enough</p>
 </td><td class="codes"><pre class="brush: clojure">(def inference-tick-interval (atom inference-tick-interval-medium))
 (def anticipation-scale-dependent-tolerance 4.0)            ;has to be 4 since interval rounding has to agree with time measurement in 2-power</pre></td></tr><tr><td class="docs"><p>has to be 4 since interval rounding has to agree with time measurement in 2-power</p>

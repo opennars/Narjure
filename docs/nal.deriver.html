@@ -2872,7 +2872,7 @@ net.brehaut.ClojureTools = (function (SH) {
     [nal.deriver.key-path :refer [mall-paths all-paths mpath-invariants
                                   path-with-max-level]]
     [nal.deriver.rules :refer [rule]]
-    [nal.deriver.normalization :refer [commutative-ops]]
+    [nal.deriver.normalization :refer [commutative-ops sort-commutative]]
     [clojure.set :as set]
     [nal.term_utils :refer :all]
     [clojure.core.memoize :refer [lru]]
@@ -2884,17 +2884,39 @@ net.brehaut.ClojureTools = (function (SH) {
     (case (count matchers)
       0 (constantly [])
       1 (first matchers)
-      (fn [t1 t2] (mapcat #(% t1 t2) matchers)))))</pre></td></tr><tr><td class="docs"><p>generate conclusions not taking commutative subterms of premises into account</p>
+      (fn [t1 t2] (mapcat #(% t1 t2) matchers)))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">#_(def mget-matcher (memoize get-matcher))
 (def mget-matcher (lru get-matcher :lru/threshold 50))
 #_(def mget-matcher get-matcher)
 #_(def mpath (memoize path-with-max-level))
 (def mpath (lru path-with-max-level :lru/threshold 50))
 #_(def mpath path-with-max-level)
-(defn generate-conclusions-no-commutativity
+(defn parallel-conj [term]
+  (and (coll? term)
+       (= (first term) '&amp;|)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn sequ-conj [term]
+  (and (coll? term)
+       (= (first term) 'seq-conj)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn parallel-conj-reduce [term layer]
+  term
+  (if (parallel-conj term)
+    (let [reduced (apply concat
+                         (for [x term]
+                           (if (parallel-conj x)
+                             (parallel-conj-reduce x (inc layer))
+                             (if (= x '&amp;|)
+                               []
+                               [x]))))]
+      (if (= layer 0)
+        (vec (conj reduced '&amp;|))
+        (vec reduced)))
+    term))</pre></td></tr><tr><td class="docs"><p>generate conclusions not taking commutative subterms of premises into account</p>
+</td><td class="codes"><pre class="brush: clojure">(defn generate-conclusions-no-commutativity
   [rules {p1 :statement :as t1} {p2 :statement :as t2}]
-  (let [matcher (mget-matcher rules (mpath p1) (mpath p2))]
-    (matcher t1 t2)))</pre></td></tr><tr><td class="docs"><p>USE COUNTER (global seed, for making testcased deterministic</p>
+  (let [matcher (mget-matcher rules (mpath p1) (mpath p2))
+        result (set (matcher t1 t2))]
+    (for [z result]
+      (assoc z :statement (sort-commutative (parallel-conj-reduce (:statement z) 0))))))</pre></td></tr><tr><td class="docs"><p>USE COUNTER (global seed, for making testcased deterministic</p>
 </td><td class="codes"><pre class="brush: clojure">(def use-counter (ref 0))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn use-counter-reset []
   (do
@@ -2959,6 +2981,10 @@ http://stackoverflow.com/questions/24553212/how-to-take-n-random-items-from-a-co
     #_(some #(= % (first term)) '[--&gt; &lt;-&gt; ==&gt; pred-impl retro-impl
                                 =|&gt; &lt;=&gt; &lt;/&gt; &lt;|&gt;
                                 -- || conj seq-conj &amp;|])
+    ;temporal copula only allowed once
+    (&lt;= (count (filter '#{==&gt; pred-impl retro-impl
+                        =|&gt; &lt;=&gt; &lt;/&gt; &lt;|&gt;} (flatten term)))
+       1)
     ;inheritance and Similarity can't have independent vars
     (not (and (coll? term)
               (some #(= % (first term)) '[--&gt; &lt;-&gt;])

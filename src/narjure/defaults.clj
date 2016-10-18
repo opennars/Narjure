@@ -59,10 +59,10 @@
 ; decay-rate of 10 would fully decay it in 100 cycles
 (def system-tick-interval-slow 136)
 (def inference-tick-interval-slow 100)
-(def system-tick-interval-medium 50)
-(def inference-tick-interval-medium 25)
-(def system-tick-interval-fast 20)
-(def inference-tick-interval-fast 10)
+(def system-tick-interval-medium 60)
+(def inference-tick-interval-medium 30)
+(def system-tick-interval-fast 30)
+(def inference-tick-interval-fast 15)
 (def system-tick-interval (atom system-tick-interval-medium))                               ;make big enough
 (def inference-tick-interval (atom inference-tick-interval-medium))
 (def anticipation-scale-dependent-tolerance 4.0)            ;has to be 4 since interval rounding has to agree with time measurement in 2-power

@@ -5,12 +5,13 @@
             [gui.gui-utils :refer [invert-comp]]
             [narjure.global-atoms :refer :all]
             [narjure.core :as nar]
+            [narjure.defaults :refer [max-term-complexity]]
             [narjure.sensorimotor :refer :all])
   (:gen-class))
 
 (def py (atom 280))
 (def direction (atom 0))
-(def barheight 50)
+(def barheight 125)
 (def fieldmax 760)
 (def fieldmin 20)
 
@@ -21,6 +22,7 @@
 (defn setup-pong
   "Registers the operations"
   []
+  (reset! max-term-complexity 21)
   (nars-input-narsese "<ballpos --> [equal]>! :|:")
   (q/frame-rate 100)
   (nars-register-operation 'op_up (fn [args operationgoal]
@@ -28,13 +30,13 @@
                                       (when (= (:source operationgoal) :derived)
                                         #_(println "system decided up"))
                                       (reset! direction -1)
-                                      true #_(with-print (not= @py fieldmin)))))
+                                      (with-print (not= @py fieldmin)))))
   (nars-register-operation 'op_down (fn [args operationgoal]
                                       (do
                                         (when (= (:source operationgoal) :derived)
                                           #_(println "system decided down"))
                                         (reset! direction 1)
-                                        true #_(with-print (not= @py (- fieldmax barheight (- fieldmin)))))))
+                                        (with-print (not= @py (- fieldmax barheight (- fieldmin)))))))
 
   (merge hnav/states {:ball-px 380
                       :ball-py 400
@@ -63,7 +65,7 @@
                   " below truth " (vec (:truth (lense-max-statement-confidence-projected-to-now '[--> ballpos [int-set below]] :belief :event)))
                   " equal truth " (vec (:truth (lense-max-statement-confidence-projected-to-now '[--> ballpos [int-set equal]] :belief :event)))))
     (nars-input-narsese "<ballpos --> [equal]>! :|:"))
-  (when (= (mod (:iteration state) 250) 1)
+  (when (= (mod (:iteration state) 125) 1)
     (println "rand action")
     (nars-input-narsese (str (rand-nth ["<(*,{SELF}) --> op_up>! :|:"
                                         "<(*,{SELF}) --> op_down>! :|:"
@@ -132,8 +134,8 @@
   (let [kset-x (+ 0.6 (/ (Math/random) 2.0))
         kset-y (+ 0.6 (/ (Math/random) 2.0))
         state2 (assoc state
-                 :ball-px #_(:ball-px state) (+ (:ball-px state) (* (:direction-x state) 1 3))
-                 :ball-py #_(:ball-py state) (+ (:ball-py state) (* (:direction-y state) 1 3)))
+                 :ball-px #_(:ball-px state) (+ (:ball-px state) (* (:direction-x state) 1 1))
+                 :ball-py #_(:ball-py state) (+ (:ball-py state) (* (:direction-y state) 1 1)))
 
         state3 (if (>= (:ball-px state2)                     ;collided on right wall
                        fieldmax)

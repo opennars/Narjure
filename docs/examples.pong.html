@@ -2873,11 +2873,12 @@ net.brehaut.ClojureTools = (function (SH) {
             [gui.gui-utils :refer [invert-comp]]
             [narjure.global-atoms :refer :all]
             [narjure.core :as nar]
+            [narjure.defaults :refer [max-term-complexity]]
             [narjure.sensorimotor :refer :all])
   (:gen-class))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def py (atom 280))
 (def direction (atom 0))
-(def barheight 50)
+(def barheight 125)
 (def fieldmax 760)
 (def fieldmin 20)</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn with-print [x]
@@ -2885,6 +2886,7 @@ net.brehaut.ClojureTools = (function (SH) {
   x)</pre></td></tr><tr><td class="docs"><p>Registers the operations</p>
 </td><td class="codes"><pre class="brush: clojure">(defn setup-pong
   []
+  (reset! max-term-complexity 21)
   (nars-input-narsese &quot;&lt;ballpos --&gt; [equal]&gt;! :|:&quot;)
   (q/frame-rate 100)
   (nars-register-operation 'op_up (fn [args operationgoal]
@@ -2892,13 +2894,13 @@ net.brehaut.ClojureTools = (function (SH) {
                                       (when (= (:source operationgoal) :derived)
                                         #_(println &quot;system decided up&quot;))
                                       (reset! direction -1)
-                                      true #_(with-print (not= @py fieldmin)))))
+                                      (with-print (not= @py fieldmin)))))
   (nars-register-operation 'op_down (fn [args operationgoal]
                                       (do
                                         (when (= (:source operationgoal) :derived)
                                           #_(println &quot;system decided down&quot;))
                                         (reset! direction 1)
-                                        true #_(with-print (not= @py (- fieldmax barheight (- fieldmin)))))))
+                                        (with-print (not= @py (- fieldmax barheight (- fieldmin)))))))
   (merge hnav/states {:ball-px 380
                       :ball-py 400
                       :direction-x 1
@@ -2921,7 +2923,7 @@ net.brehaut.ClojureTools = (function (SH) {
                   &quot; below truth &quot; (vec (:truth (lense-max-statement-confidence-projected-to-now '[--&gt; ballpos [int-set below]] :belief :event)))
                   &quot; equal truth &quot; (vec (:truth (lense-max-statement-confidence-projected-to-now '[--&gt; ballpos [int-set equal]] :belief :event)))))
     (nars-input-narsese &quot;&lt;ballpos --&gt; [equal]&gt;! :|:&quot;))
-  (when (= (mod (:iteration state) 250) 1)
+  (when (= (mod (:iteration state) 125) 1)
     (println &quot;rand action&quot;)
     (nars-input-narsese (str (rand-nth [&quot;&lt;(*,{SELF}) --&gt; op_up&gt;! :|:&quot;
                                         &quot;&lt;(*,{SELF}) --&gt; op_down&gt;! :|:&quot;
@@ -2984,8 +2986,8 @@ net.brehaut.ClojureTools = (function (SH) {
   (let [kset-x (+ 0.6 (/ (Math/random) 2.0))
         kset-y (+ 0.6 (/ (Math/random) 2.0))
         state2 (assoc state
-                 :ball-px #_(:ball-px state) (+ (:ball-px state) (* (:direction-x state) 1 3))
-                 :ball-py #_(:ball-py state) (+ (:ball-py state) (* (:direction-y state) 1 3)))
+                 :ball-px #_(:ball-px state) (+ (:ball-px state) (* (:direction-x state) 1 1))
+                 :ball-py #_(:ball-py state) (+ (:ball-py state) (* (:direction-y state) 1 1)))
         state3 (if (&gt;= (:ball-px state2)                     ;collided on right wall
                        fieldmax)
                  (assoc state2 :direction-x (- kset-x))

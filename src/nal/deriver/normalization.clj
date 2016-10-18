@@ -65,10 +65,12 @@
   this is needed because they need to end up in the same concept!"
   [conclusions]
   (if (coll? conclusions)
-    (let [f (first conclusions)]
-      (if (commutative-ops f)
-        (vec (conj (sort-by hash (drop 1 conclusions)) f))
-        conclusions))
+    (if (= (first conclusions) '--)
+      ['-- (sort-commutative (second conclusions))]
+      (let [f (first conclusions)]
+        (if (commutative-ops f)
+          (vec (conj (sort-by hash (drop 1 conclusions)) f))
+          conclusions)))
     conclusions))
 
 ;https://gist.github.com/TonyLo1/a3f8e05458c5e90c2e72

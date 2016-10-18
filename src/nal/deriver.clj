@@ -4,7 +4,7 @@
     [nal.deriver.key-path :refer [mall-paths all-paths mpath-invariants
                                   path-with-max-level]]
     [nal.deriver.rules :refer [rule]]
-    [nal.deriver.normalization :refer [commutative-ops]]
+    [nal.deriver.normalization :refer [commutative-ops sort-commutative]]
     [clojure.set :as set]
     [nal.term_utils :refer :all]
     [clojure.core.memoize :refer [lru]]
@@ -26,11 +26,36 @@
 (def mpath (lru path-with-max-level :lru/threshold 50))
 #_(def mpath path-with-max-level)
 
+(defn parallel-conj [term]
+  (and (coll? term)
+       (= (first term) '&|)))
+
+(defn sequ-conj [term]
+  (and (coll? term)
+       (= (first term) 'seq-conj)))
+
+(defn parallel-conj-reduce [term layer]
+  term
+  (if (parallel-conj term)
+    (let [reduced (apply concat
+                         (for [x term]
+                           (if (parallel-conj x)
+                             (parallel-conj-reduce x (inc layer))
+                             (if (= x '&|)
+                               []
+                               [x]))))]
+      (if (= layer 0)
+        (vec (conj reduced '&|))
+        (vec reduced)))
+    term))
+
 (defn generate-conclusions-no-commutativity
   "generate conclusions not taking commutative subterms of premises into account"
   [rules {p1 :statement :as t1} {p2 :statement :as t2}]
-  (let [matcher (mget-matcher rules (mpath p1) (mpath p2))]
-    (matcher t1 t2)))
+  (let [matcher (mget-matcher rules (mpath p1) (mpath p2))
+        result (set (matcher t1 t2))]
+    (for [z result]
+      (assoc z :statement (sort-commutative (parallel-conj-reduce (:statement z) 0))))))
 
 ;USE COUNTER (global seed, for making testcased deterministic
 (def use-counter (ref 0))
@@ -105,6 +130,11 @@
     #_(some #(= % (first term)) '[--> <-> ==> pred-impl retro-impl
                                 =|> <=> </> <|>
                                 -- || conj seq-conj &|])
+
+    ;temporal copula only allowed once
+    (<= (count (filter '#{==> pred-impl retro-impl
+                        =|> <=> </> <|>} (flatten term)))
+       1)
 
     ;inheritance and Similarity can't have independent vars
     (not (and (coll? term)

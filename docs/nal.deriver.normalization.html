@@ -2919,10 +2919,12 @@ not commutative: --> ==> =/> => </> &amp;/ - ~</p>
 </td><td class="codes"><pre class="brush: clojure">(defn sort-commutative
   [conclusions]
   (if (coll? conclusions)
-    (let [f (first conclusions)]
-      (if (commutative-ops f)
-        (vec (conj (sort-by hash (drop 1 conclusions)) f))
-        conclusions))
+    (if (= (first conclusions) '--)
+      ['-- (sort-commutative (second conclusions))]
+      (let [f (first conclusions)]
+        (if (commutative-ops f)
+          (vec (conj (sort-by hash (drop 1 conclusions)) f))
+          conclusions)))
     conclusions))</pre></td></tr><tr><td class="docs"><p>the union set operation for extensional and intensional sets</p>
 
 <p>https://gist.github.com/TonyLo1/a3f8e05458c5e90c2e72</p>
