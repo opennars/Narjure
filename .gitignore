@@ -15,3 +15,5 @@ pom.xml.asc
 \#*\#
 .\#*
 /src/nal/experiments.clj
+*.pyc
+*.log
